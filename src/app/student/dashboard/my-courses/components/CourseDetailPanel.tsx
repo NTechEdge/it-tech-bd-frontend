@@ -3,10 +3,16 @@
 import { useState } from "react";
 
 const lessons = [
-  { id: 1, title: "ভূমিকা (Intro)", duration: "৫.৫ মিনিট", active: true },
-  { id: 2, title: "HTML বেসিক", duration: "১২ মিনিট", active: false },
-  { id: 3, title: "CSS ফান্ডামেন্টালস", duration: "১৮ মিনিট", active: false },
-  { id: 4, title: "JavaScript পরিচিতি", duration: "২০ মিনিট", active: false },
+  { id: 1, title: " Intro", duration: "5.5 min", active: true },
+  { id: 2, title: "HTML basics", duration: "12 min", active: false },
+  { id: 3, title: "CSS fundamentals", duration: "18 min", active: false },
+  { id: 4, title: "JavaScript introduction", duration: "20 min", active: false },
+  { id: 5, title: "Building a simple webpage", duration: "25 min", active: false },
+  { id: 6, title: "Responsive design", duration: "15 min", active: false },
+  { id: 7, title: "CSS Flexbox & Grid", duration: "22 min", active: false },
+  { id: 8, title: "JavaScript DOM manipulation", duration: "30 min", active: false },
+  { id: 9, title: "Adding interactivity with JS", duration: "28 min", active: false },
+  { id: 10, title: "Project setup and deployment", duration: "35 min", active: false },
 ];
 
 function StarRating({ rating }: { rating: number }) {
@@ -69,14 +75,14 @@ export default function CourseDetailPanel() {
           <StarRating rating={5} />
           <span className="text-sm text-gray-600">5 (324)</span>
           <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
-            শিক্ষার্থী
+            Student
           </span>
         </div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          ওয়েব ডেভেলপমেন্ট — শুরু থেকে শেষ
+          Web Development — From Scratch to Finish
         </h2>
         <p className="text-gray-600 text-sm">
-          HTML, CSS, JavaScript দিয়ে সম্পূর্ণ ওয়েবসাইট তৈরি শিখুন। বাংলায় সহজ ভাষায় বোঝানো হয়েছে।
+          Learn to build complete websites with HTML, CSS, and JavaScript. Explained in simple language.
         </p>
       </div>
 
@@ -87,20 +93,20 @@ export default function CourseDetailPanel() {
             র
           </div>
           <div>
-            <p className="font-semibold text-gray-900 text-sm">রাহেলা বেগম</p>
-            <p className="text-xs text-gray-500">সিনিয়র ওয়েব ডেভেলপার</p>
+            <p className="font-semibold text-gray-900 text-sm">Rahela Begum</p>
+            <p className="text-xs text-gray-500">Senior Web Developer</p>
           </div>
         </div>
         <button className="bg-[#E8630A] hover:bg-[#d05a09] text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors">
-          ভর্তি হন — ৳1200
+          Enroll — $1200
         </button>
       </div>
 
       {/* Curriculum */}
       <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-bold text-gray-900">কোর্সের বিষয়বস্তু</h3>
-          <span className="text-xs text-gray-500">১৮টি ক্লাস • 4h 20m</span>
+          <h3 className="font-bold text-gray-900">Course Content</h3>
+          <span className="text-xs text-gray-500">18 lessons • 4h 20m</span>
         </div>
         <div className="space-y-2">
           {lessons.map((lesson) => (
