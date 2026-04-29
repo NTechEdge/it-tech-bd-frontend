@@ -81,7 +81,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-gray-700 shrink-0">
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -101,7 +101,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive
-                      ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30"
+                      ? "bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30"
                       : "text-gray-300 hover:bg-white/10 hover:text-white"
                   }`}
                 >
@@ -119,37 +119,15 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       {/* Auth/User Section */}
       <div className="p-4 border-t border-gray-700 shrink-0">
         {isAuthenticated && user ? (
-          <>
-            <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800 mb-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold shrink-0">
-                {user.name?.[0] || "U"}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white truncate">{user.name || "User"}</p>
-                <p className="text-xs text-gray-400 truncate">{user.email || "user@example.com"}</p>
-              </div>
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold shrink-0">
+              {user.name?.[0] || "U"}
             </div>
-            <div className="space-y-1">
-              <Link
-                href={user.role === "admin" ? "/admin/dashboard" : "/student/dashboard"}
-                className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-xl transition-all duration-200 font-medium"
-              >
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Dashboard
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-red-600/20 hover:text-red-400 rounded-xl transition-all duration-200 font-medium"
-              >
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                Logout
-              </button>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white truncate">{user.name || "User"}</p>
+              <p className="text-xs text-gray-400 truncate">{user.email || "user@example.com"}</p>
             </div>
-          </>
+          </div>
         ) : (
           <div className="space-y-1">
             <Link
@@ -160,7 +138,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
             </Link>
             <Link
               href="/register"
-              className="w-full flex items-center gap-3 px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl transition-all duration-200 font-medium"
+              className="w-full flex items-center gap-3 px-4 py-3 text-white bg-linear-to-r from-orange-500 to-orange-600 rounded-xl transition-all duration-200 font-medium"
             >
               Sign Up
             </Link>
@@ -220,8 +198,11 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                 </svg>
               </button>
 
-              {/* Search Bar */}
-              <div className="flex-1 max-w-xl">
+              {/* Left spacer for balance on large screens */}
+              <div className="hidden lg:block flex-1"></div>
+
+              {/* Search Bar - centered on large screens */}
+              <div className="flex-1 lg:flex-none lg:w-96 max-w-xl">
                 <div className="relative">
                   <input
                     type="text"
@@ -234,27 +215,33 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                 </div>
               </div>
 
+              {/* Right spacer for balance on large screens */}
+              <div className="hidden lg:block flex-1"></div>
+
               {/* Right actions */}
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                 {isAuthenticated ? (
                   <>
-                    <button className="relative w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors">
-                      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                      </svg>
-                      <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
-                    </button>
+                    {/* Dashboard */}
                     <Link
                       href={user?.role === "admin" ? "/admin/dashboard" : "/student/dashboard"}
-                      className="hidden sm:block px-4 py-2 text-sm font-medium text-gray-700 hover:text-orange-600 transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors group"
                     >
-                      Dashboard
+                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
+                      <span className="hidden sm:inline text-sm font-medium text-gray-700">Dashboard</span>
                     </Link>
+
+                    {/* Logout */}
                     <button
                       onClick={handleLogout}
-                      className="hidden sm:block px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors group"
                     >
-                      Logout
+                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600 group-hover:text-red-600">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      <span className="hidden sm:inline text-sm font-medium text-gray-700 group-hover:text-red-600">Logout</span>
                     </button>
                   </>
                 ) : (
@@ -267,7 +254,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                     </Link>
                     <Link
                       href="/register"
-                      className="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
+                      className="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-orange-500 to-orange-600 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
                     >
                       Sign Up
                     </Link>
@@ -290,7 +277,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               {/* Company Info */}
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>

@@ -89,8 +89,8 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
     <>
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-gray-700 shrink-0">
-        <Link href="/student/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -110,7 +110,7 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive
-                      ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30"
+                      ? "bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30"
                       : "text-gray-300 hover:bg-white/10 hover:text-white"
                   }`}
                 >
@@ -128,7 +128,7 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
       {/* User Profile Section */}
       <div className="p-4 border-t border-gray-700 shrink-0">
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800 mb-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold shrink-0">
+          <div className="w-10 h-10 rounded-full bg-linear-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold shrink-0">
             {user?.name?.[0] || "S"}
           </div>
           <div className="flex-1 min-w-0">
