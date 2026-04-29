@@ -82,58 +82,35 @@ export default function AdminStudentsPage() {
 
       {/* Students Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop table */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Joined
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {loading ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
-                    Loading...
-                  </td>
-                </tr>
+                <tr><td colSpan={4} className="px-6 py-4 text-center text-gray-500">Loading...</td></tr>
               ) : students.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
-                    No students found
-                  </td>
-                </tr>
+                <tr><td colSpan={4} className="px-6 py-4 text-center text-gray-500">No students found</td></tr>
               ) : (
                 students.map((student) => (
                   <tr key={student._id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {student.name}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">{student.name}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{student.email}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          student.isVerified
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {student.isVerified ? 'Verified' : 'Pending'}
-                      </span>
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        student.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}>{student.isVerified ? 'Verified' : 'Pending'}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(student.createdAt).toLocaleDateString()}
@@ -143,6 +120,28 @@ export default function AdminStudentsPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="sm:hidden divide-y divide-gray-100">
+          {loading ? (
+            <p className="px-4 py-6 text-center text-gray-500 text-sm">Loading...</p>
+          ) : students.length === 0 ? (
+            <p className="px-4 py-6 text-center text-gray-500 text-sm">No students found</p>
+          ) : (
+            students.map((student) => (
+              <div key={student._id} className="px-4 py-3 space-y-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-900">{student.name}</p>
+                  <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
+                    student.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  }`}>{student.isVerified ? 'Verified' : 'Pending'}</span>
+                </div>
+                <p className="text-xs text-gray-500">{student.email}</p>
+                <p className="text-xs text-gray-400">Joined {new Date(student.createdAt).toLocaleDateString()}</p>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Pagination */}

@@ -53,18 +53,18 @@ export default function MyCoursesPage() {
   return (
     <PublicLayout>
       <div className="min-h-screen">
-        <section className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-12">
+        <section className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-10 sm:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold mb-2">My Courses</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1">My Courses</h1>
                 <p className="text-orange-100">
                   {approvedCourses.length} active {approvedCourses.length === 1 ? 'course' : 'courses'}
                 </p>
               </div>
               <Link
                 href="/courses"
-                className="px-6 py-3 bg-white text-orange-600 font-semibold rounded-xl hover:bg-gray-100 transition-all shadow-lg flex items-center gap-2"
+                className="self-start sm:self-auto px-5 py-2.5 bg-white text-orange-600 font-semibold rounded-xl hover:bg-gray-100 transition-all shadow-lg flex items-center gap-2 text-sm"
               >
                 Browse More Courses
               </Link>

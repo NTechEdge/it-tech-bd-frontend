@@ -99,8 +99,8 @@ export default function CoursePage() {
       <div className="min-h-screen bg-gray-50">
         {/* Hero */}
         <div className="bg-gray-900 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
               <div className="lg:col-span-2">
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
                   <button onClick={() => router.push('/courses')} className="hover:text-white transition-colors">
@@ -109,10 +109,10 @@ export default function CoursePage() {
                   <span>/</span>
                   <span className="text-orange-400">{course.category}</span>
                 </div>
-                <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-4">{course.title}</h1>
                 <p className="text-gray-300 mb-6">{course.shortDesc}</p>
 
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
+                <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400 mb-6">
                   <span className="flex items-center gap-1">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-orange-400">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />

@@ -98,23 +98,23 @@ export default function CourseFormPage() {
   const addSection = () => {
     setFormData({
       ...formData,
-      sections: [...formData.sections, { title: '', lessons: [] }],
+      sections: [...(formData.sections || []), { title: '', lessons: [] }],
     });
   };
 
   const updateSection = (index: number, title: string) => {
-    const newSections = [...formData.sections];
+    const newSections = [...(formData.sections || [])];
     newSections[index].title = title;
     setFormData({ ...formData, sections: newSections });
   };
 
   const removeSection = (index: number) => {
-    const newSections = formData.sections.filter((_, i) => i !== index);
+    const newSections = (formData.sections || []).filter((_, i) => i !== index);
     setFormData({ ...formData, sections: newSections });
   };
 
   const addLesson = (sectionIndex: number) => {
-    const newSections = [...formData.sections];
+    const newSections = [...(formData.sections || [])];
     newSections[sectionIndex].lessons.push({
       title: '',
       youtubeUrl: '',
@@ -125,13 +125,16 @@ export default function CourseFormPage() {
   };
 
   const updateLesson = (sectionIndex: number, lessonIndex: number, field: keyof CourseLesson, value: string | number) => {
-    const newSections = [...formData.sections];
-    newSections[sectionIndex].lessons[lessonIndex][field] = value;
+    const newSections = [...(formData.sections || [])];
+    newSections[sectionIndex].lessons[lessonIndex] = {
+      ...newSections[sectionIndex].lessons[lessonIndex],
+      [field]: value,
+    };
     setFormData({ ...formData, sections: newSections });
   };
 
   const removeLesson = (sectionIndex: number, lessonIndex: number) => {
-    const newSections = [...formData.sections];
+    const newSections = [...(formData.sections || [])];
     newSections[sectionIndex].lessons = newSections[sectionIndex].lessons.filter((_, i) => i !== lessonIndex);
     setFormData({ ...formData, sections: newSections });
   };
@@ -146,7 +149,7 @@ export default function CourseFormPage() {
       return;
     }
 
-    if (formData.sections.length === 0) {
+    if (!formData.sections || formData.sections.length === 0) {
       setError('Please add at least one section');
       return;
     }
@@ -411,7 +414,7 @@ export default function CourseFormPage() {
             </button>
           </div>
 
-          {formData.sections.length === 0 ? (
+          {(!formData.sections || formData.sections.length === 0) ? (
             <p className="text-gray-500 text-center py-8">No sections added yet. Click "Add Section" to start.</p>
           ) : (
             <div className="space-y-6">

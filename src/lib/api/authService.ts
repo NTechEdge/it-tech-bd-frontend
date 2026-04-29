@@ -4,7 +4,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'student' | 'admin';
+  role: 'student' | 'admin' | 'super_admin';
   isVerified?: boolean;
   createdAt?: string;
   enrolledCourses?: string[];

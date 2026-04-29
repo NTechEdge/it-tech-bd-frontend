@@ -22,7 +22,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    href: "/my-courses",
+    href: "/student/dashboard/my-courses",
     label: "My Courses",
     icon: (
       <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -89,7 +89,7 @@ export interface Course {
   fullDesc: string;
   price: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
-  instructorId: string | { name: string; email: string };
+  instructorId: string | { _id: string; name: string; email: string };
   sections: CourseSection[];
   isActive: boolean;
   createdAt: string;

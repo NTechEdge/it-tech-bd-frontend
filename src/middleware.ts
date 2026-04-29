@@ -91,12 +91,32 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Check for my-courses route
-  if (pathname.startsWith('/my-courses')) {
+  // Redirect /my-courses to /student/dashboard/my-courses for authenticated students
+  if (pathname === '/my-courses' || pathname === '/my-courses/') {
     if (!token) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
       url.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(url);
+    }
+
+    try {
+      const user = userCookie ? JSON.parse(decodeURIComponent(userCookie)) : null;
+      const url = request.nextUrl.clone();
+
+      // Redirect students to their dashboard
+      if (user?.role === 'student') {
+        url.pathname = '/student/dashboard/my-courses';
+        return NextResponse.redirect(url);
+      }
+      // Admins accessing /my-courses go to student view
+      else if (user?.role === 'admin' || user?.role === 'super_admin') {
+        url.pathname = '/student/dashboard/my-courses';
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
       return NextResponse.redirect(url);
     }
   }

@@ -76,7 +76,7 @@ export default function AdminPaymentsPage() {
         </div>
 
         {/* Status Filter */}
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {(['all', 'pending', 'approved', 'rejected'] as const).map((status) => (
             <button
               key={status}
@@ -104,87 +104,48 @@ export default function AdminPaymentsPage() {
 
       {/* Payments Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop table */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Student
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Course
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Transaction ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {loading ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
-                    Loading...
-                  </td>
-                </tr>
+                <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">Loading...</td></tr>
               ) : payments.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
-                    No payments found
-                  </td>
-                </tr>
+                <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">No payments found</td></tr>
               ) : (
                 payments.map((payment) => (
                   <tr key={payment._id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {payment.userId.name}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {payment.userId.email}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">{payment.userId.name}</div>
+                      <div className="text-sm text-gray-500">{payment.userId.email}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {payment.courseId.title}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        ৳{payment.courseId.price.toLocaleString()}
-                      </div>
+                      <div className="text-sm text-gray-900">{payment.courseId.title}</div>
+                      <div className="text-sm text-gray-500">৳{payment.courseId.price.toLocaleString()}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 font-mono">
-                        {payment.trxId}
-                      </div>
+                      <div className="text-sm text-gray-900 font-mono">{payment.trxId}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        ৳{payment.amount.toLocaleString()}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">৳{payment.amount.toLocaleString()}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          payment.paymentStatus === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : payment.paymentStatus === 'rejected'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {payment.paymentStatus}
-                      </span>
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        payment.paymentStatus === 'approved' ? 'bg-green-100 text-green-800'
+                        : payment.paymentStatus === 'rejected' ? 'bg-red-100 text-red-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                      }`}>{payment.paymentStatus}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(payment.purchasedAt).toLocaleDateString()}
@@ -192,34 +153,65 @@ export default function AdminPaymentsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {payment.paymentStatus === 'pending' && (
                         <div className="flex gap-2">
-                          <button
-                            onClick={() => handleApprove(payment._id)}
-                            disabled={processingId === payment._id}
-                            className="text-green-600 hover:text-green-900 font-medium disabled:opacity-50"
-                          >
+                          <button onClick={() => handleApprove(payment._id)} disabled={processingId === payment._id} className="text-green-600 hover:text-green-900 font-medium disabled:opacity-50">
                             {processingId === payment._id ? '...' : 'Approve'}
                           </button>
-                          <button
-                            onClick={() => handleReject(payment._id)}
-                            disabled={processingId === payment._id}
-                            className="text-red-600 hover:text-red-900 font-medium disabled:opacity-50"
-                          >
+                          <button onClick={() => handleReject(payment._id)} disabled={processingId === payment._id} className="text-red-600 hover:text-red-900 font-medium disabled:opacity-50">
                             {processingId === payment._id ? '...' : 'Reject'}
                           </button>
                         </div>
                       )}
-                      {payment.paymentStatus === 'approved' && (
-                        <span className="text-green-600">✓ Approved</span>
-                      )}
-                      {payment.paymentStatus === 'rejected' && (
-                        <span className="text-red-600">✗ Rejected</span>
-                      )}
+                      {payment.paymentStatus === 'approved' && <span className="text-green-600">✓ Approved</span>}
+                      {payment.paymentStatus === 'rejected' && <span className="text-red-600">✗ Rejected</span>}
                     </td>
                   </tr>
                 ))
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile/Tablet card list */}
+        <div className="lg:hidden divide-y divide-gray-100">
+          {loading ? (
+            <p className="px-4 py-6 text-center text-gray-500 text-sm">Loading...</p>
+          ) : payments.length === 0 ? (
+            <p className="px-4 py-6 text-center text-gray-500 text-sm">No payments found</p>
+          ) : (
+            payments.map((payment) => (
+              <div key={payment._id} className="p-4 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{payment.userId.name}</p>
+                    <p className="text-xs text-gray-500">{payment.userId.email}</p>
+                  </div>
+                  <span className={`shrink-0 px-2 py-0.5 text-xs font-semibold rounded-full ${
+                    payment.paymentStatus === 'approved' ? 'bg-green-100 text-green-800'
+                    : payment.paymentStatus === 'rejected' ? 'bg-red-100 text-red-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                  }`}>{payment.paymentStatus}</span>
+                </div>
+                <p className="text-sm text-gray-700">{payment.courseId.title}</p>
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span className="font-mono">{payment.trxId}</span>
+                  <span className="font-semibold text-gray-900">৳{payment.amount.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-400">{new Date(payment.purchasedAt).toLocaleDateString()}</span>
+                  {payment.paymentStatus === 'pending' && (
+                    <div className="flex gap-3">
+                      <button onClick={() => handleApprove(payment._id)} disabled={processingId === payment._id} className="text-sm text-green-600 font-semibold disabled:opacity-50">
+                        {processingId === payment._id ? '...' : 'Approve'}
+                      </button>
+                      <button onClick={() => handleReject(payment._id)} disabled={processingId === payment._id} className="text-sm text-red-600 font-semibold disabled:opacity-50">
+                        {processingId === payment._id ? '...' : 'Reject'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Pagination */}

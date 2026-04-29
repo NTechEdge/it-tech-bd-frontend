@@ -59,7 +59,7 @@ export default function HomePage() {
                     Browse Courses
                   </Link>
                   <Link
-                    href="/my-courses"
+                    href="/student/dashboard/my-courses"
                     className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20 text-lg"
                   >
                     My Learning
