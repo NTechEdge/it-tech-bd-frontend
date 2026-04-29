@@ -444,7 +444,7 @@ export default function CourseFormPage() {
           ) : (
             <div className="space-y-6">
               {formData.sections.map((section, sectionIndex) => (
-                <div key={sectionIndex} className="border rounded-lg p-4">
+                <div key={sectionIndex} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-4">
                     <input
                       type="text"
@@ -465,7 +465,7 @@ export default function CourseFormPage() {
 
                   <div className="space-y-2">
                     {section.lessons.map((lesson, lessonIndex) => (
-                      <div key={lessonIndex} className="border rounded p-3 bg-gray-50">
+                      <div key={lessonIndex} className="border border-gray-200 rounded p-3 bg-gray-50 overflow-hidden">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
                           <input
                             type="text"
@@ -490,18 +490,18 @@ export default function CourseFormPage() {
                             className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                             required
                           />
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 min-w-0">
                             <input
                               type="number"
                               value={lesson.durationSeconds}
                               onChange={(e) => updateLesson(sectionIndex, lessonIndex, 'durationSeconds', parseInt(e.target.value) || 0)}
                               placeholder="Duration (seconds)"
-                              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
+                              className="min-w-0 flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                             />
                             <button
                               type="button"
                               onClick={() => removeLesson(sectionIndex, lessonIndex)}
-                              className="px-3 py-1 text-sm text-red-600 hover:text-red-800"
+                              className="shrink-0 px-3 py-1 text-sm text-red-600 hover:text-red-800"
                             >
                               Remove
                             </button>
