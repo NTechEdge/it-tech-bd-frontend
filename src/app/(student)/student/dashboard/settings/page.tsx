@@ -4,8 +4,15 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { profileService, Address, ProfileStatus } from '@/lib/api/profileService';
 import { authService } from '@/lib/api/authService';
+import { ReactNode } from 'react';
 
 type TabType = 'profile' | 'security' | 'interests';
+
+interface Tab {
+  id: TabType;
+  label: string;
+  icon: ReactNode;
+}
 
 export default function StudentSettingsPage() {
   const { user, refreshUser } = useAuth();
@@ -186,9 +193,33 @@ export default function StudentSettingsPage() {
   };
 
   const tabs = [
-    { id: 'profile' as TabType, label: 'Profile', icon: '👤' },
-    { id: 'security' as TabType, label: 'Security', icon: '🔒' },
-    { id: 'interests' as TabType, label: 'Interests', icon: '❤️' },
+    {
+      id: 'profile' as TabType,
+      label: 'Profile',
+      icon: (
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      )
+    },
+    {
+      id: 'security' as TabType,
+      label: 'Security',
+      icon: (
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      )
+    },
+    {
+      id: 'interests' as TabType,
+      label: 'Interests',
+      icon: (
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      )
+    },
   ];
 
   return (
@@ -231,13 +262,15 @@ export default function StudentSettingsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-4 font-medium text-sm border-b-2 transition-colors ${
+                className={`px-6 py-4 font-medium text-sm border-b-2 transition-colors flex items-center gap-2 ${
                   activeTab === tab.id
                     ? 'border-orange-500 text-orange-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <span className="mr-2">{tab.icon}</span>
+                <span className={`${activeTab === tab.id ? 'text-orange-600' : 'text-gray-500'}`}>
+                  {tab.icon}
+                </span>
                 {tab.label}
               </button>
             ))}
