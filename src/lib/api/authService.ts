@@ -8,6 +8,7 @@ export interface User {
   isVerified?: boolean;
   createdAt?: string;
   enrolledCourses?: string[];
+  interestedTopics?: string[];
 }
 
 export interface LoginCredentials {
