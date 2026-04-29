@@ -143,9 +143,29 @@ export default function CourseFormPage() {
     e.preventDefault();
     setError('');
 
-    // Validation
-    if (!formData.title || !formData.category || !formData.thumbnailUrl || !formData.shortDesc || !formData.fullDesc) {
-      setError('Please fill in all required fields');
+    // Validation - check each field individually for better error messages
+    if (!formData.title?.trim()) {
+      setError('Course Title is required');
+      return;
+    }
+    if (!formData.category?.trim()) {
+      setError('Category is required');
+      return;
+    }
+    if (!formData.thumbnailUrl?.trim()) {
+      setError('Please upload a course thumbnail');
+      return;
+    }
+    if (!formData.shortDesc?.trim()) {
+      setError('Short Description is required');
+      return;
+    }
+    if (!formData.fullDesc?.trim()) {
+      setError('Full Description is required');
+      return;
+    }
+    if (!formData.instructorId?.trim()) {
+      setError('Please select an instructor');
       return;
     }
 
@@ -184,15 +204,20 @@ export default function CourseFormPage() {
         isActive: formData.isActive,
       };
 
+      console.log('Submitting course data:', submitData);
+
       if (isEditing) {
         await adminService.updateCourse(courseId, submitData);
       } else {
-        await adminService.createCourse(submitData);
+        const result = await adminService.createCourse(submitData);
+        console.log('Course creation result:', result);
       }
 
       router.push('/admin/dashboard/courses');
     } catch (err) {
-      setError(err instanceof Error ? err.message : `Failed to ${isEditing ? 'update' : 'create'} course`);
+      console.error('Course submission error:', err);
+      const errorMessage = err instanceof Error ? err.message : `Failed to ${isEditing ? 'update' : 'create'} course`;
+      setError(errorMessage);
     } finally {
       setSaving(false);
     }
