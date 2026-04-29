@@ -132,13 +132,13 @@ export default function AdminPaymentsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{payment.courseId.title}</div>
-                      <div className="text-sm text-gray-500">৳{payment.courseId.price.toLocaleString()}</div>
+                      <div className="text-sm text-gray-500">TK{payment.courseId.price.toLocaleString()}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 font-mono">{payment.trxId}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">৳{payment.amount.toLocaleString()}</div>
+                      <div className="text-sm font-medium text-gray-900">TK{payment.amount.toLocaleString()}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -161,8 +161,22 @@ export default function AdminPaymentsPage() {
                           </button>
                         </div>
                       )}
-                      {payment.paymentStatus === 'approved' && <span className="text-green-600">✓ Approved</span>}
-                      {payment.paymentStatus === 'rejected' && <span className="text-red-600">✗ Rejected</span>}
+                      {payment.paymentStatus === 'approved' && (
+                        <span className="inline-flex items-center gap-1 text-green-600">
+                          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          Approved
+                        </span>
+                      )}
+                      {payment.paymentStatus === 'rejected' && (
+                        <span className="inline-flex items-center gap-1 text-red-600">
+                          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          Rejected
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -194,7 +208,7 @@ export default function AdminPaymentsPage() {
                 <p className="text-sm text-gray-700">{payment.courseId.title}</p>
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span className="font-mono">{payment.trxId}</span>
-                  <span className="font-semibold text-gray-900">৳{payment.amount.toLocaleString()}</span>
+                  <span className="font-semibold text-gray-900">TK{payment.amount.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-400">{new Date(payment.purchasedAt).toLocaleDateString()}</span>

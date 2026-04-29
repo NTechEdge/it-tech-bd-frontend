@@ -8,6 +8,11 @@ export interface DashboardStats {
     totalStudents: number;
     totalCourses: number;
     activeCourses: number;
+    inactiveCourses: number;
+    totalEnrollments: number;
+    pendingPayments: number;
+    approvedPayments: number;
+    rejectedPayments: number;
     totalRevenue: number;
   };
   recentEnrollments: Array<{
@@ -247,5 +252,100 @@ export const adminService = {
     }
 
     return response.json();
+  },
+
+  // Analytics
+  async getAllCoursesAnalytics(): Promise<{
+    success: boolean;
+    data: {
+      totalCourses: number;
+      courses: Array<{
+        courseId: string;
+        title: string;
+        category: string;
+        totalEnrolled: number;
+        totalViews: number;
+        totalCompleted: number;
+        avgCompletionRate: number;
+        avgWatchTimePerStudent: number;
+        totalWatchTimeSeconds: number;
+      }>;
+    };
+  }> {
+    return httpClient.get('/admin/analytics/courses');
+  },
+
+  async getTopLessons(limit?: number): Promise<{
+    success: boolean;
+    data: {
+      total: number;
+      topLessons: Array<{
+        lessonId: string;
+        title: string;
+        courseId: string;
+        courseTitle: string;
+        category: string;
+        durationSeconds: number;
+        totalViews: number;
+        avgWatchTimeSeconds: number;
+        completionRate: number;
+      }>;
+    };
+  }> {
+    const query = limit ? `?limit=${limit}` : '';
+    return httpClient.get(`/admin/analytics/top-lessons${query}`);
+  },
+
+  async getCourseAnalytics(courseId: string): Promise<{
+    success: boolean;
+    data: {
+      courseId: string;
+      courseTitle: string;
+      totalEnrolled: number;
+      totalViews: number;
+      avgCompletionRate: number;
+      lessons: Array<{
+        lessonId: string;
+        title: string;
+        durationSeconds: number;
+        totalViews: number;
+        uniqueViewers: number;
+        totalWatchTimeSeconds: number;
+        avgWatchTimeSeconds: number;
+        completedCount: number;
+        completionRate: number;
+        avgWatchPercentage: number;
+      }>;
+    };
+  }> {
+    return httpClient.get(`/admin/analytics/courses/${courseId}`);
+  },
+
+  async getStudentEngagementReport(courseId: string): Promise<{
+    success: boolean;
+    data: {
+      courseId: string;
+      courseTitle: string;
+      summary: {
+        totalEnrolled: number;
+        activeStudents: number;
+        completedStudents: number;
+        avgWatchTimePerStudent: number;
+        overallCompletionRate: number;
+        totalWatchTimeSeconds: number;
+      };
+      students: Array<{
+        userId: string;
+        name: string;
+        email: string;
+        totalWatchTimeSeconds: number;
+        completedLessons: number;
+        totalLessons: number;
+        progressPercentage: number;
+        enrolledAt: string;
+      }>;
+    };
+  }> {
+    return httpClient.get(`/admin/analytics/courses/${courseId}/students`);
   },
 };

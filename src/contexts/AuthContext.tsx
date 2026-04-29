@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService, User, LoginCredentials, RegisterCredentials, ForgotPasswordData, ResetPasswordData } from '@/lib/api/authService';
+import { profileService } from '@/lib/api/profileService';
 
 interface AuthContextType {
   user: User | null;
@@ -13,6 +14,7 @@ interface AuthContextType {
   resetPassword: (data: ResetPasswordData) => Promise<{ success: boolean; message: string; error?: string }>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  updateInterests: (topics: string[]) => Promise<{ success: boolean; message: string; error?: string }>;
   isAuthenticated: boolean;
 }
 
@@ -122,6 +124,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateInterests = async (topics: string[]) => {
+    try {
+      const response = await profileService.updateInterests({ interestedTopics: topics });
+      if (response.success) {
+        // Refresh the full user profile after updating interests
+        const profile = await authService.getProfile();
+        if (profile.success) {
+          setUser(profile.data);
+          authService.saveUser(profile.data);
+        }
+        return { success: true, message: response.message || 'Interests updated successfully' };
+      }
+      return { success: false, message: 'Failed to update interests' };
+    } catch (error) {
+      return { success: false, message: error instanceof Error ? error.message : 'Failed to update interests', error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -133,6 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         resetPassword,
         logout,
         refreshUser,
+        updateInterests,
         isAuthenticated: !!user,
       }}
     >

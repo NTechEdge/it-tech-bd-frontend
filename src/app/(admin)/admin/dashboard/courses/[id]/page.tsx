@@ -269,7 +269,7 @@ export default function CourseFormPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price (৳) *
+                  Price (TK) *
                 </label>
                 <input
                   type="number"

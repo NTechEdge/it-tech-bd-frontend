@@ -32,7 +32,11 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const result = await register({ name, email, password });
+      const result = await register({
+        name,
+        email,
+        password
+      });
 
       if (result.success) {
         // Redirect will happen in the effect when user is set
@@ -52,7 +56,8 @@ export default function RegisterPage() {
       if (user.role === 'admin') {
         router.push('/admin/dashboard');
       } else if (user.role === 'student') {
-        router.push('/student/dashboard');
+        // Redirect to interests page for students
+        router.push('/interests');
       } else {
         router.push('/dashboard');
       }
@@ -61,7 +66,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+      <div className="max-w-md w-full space-y-8 border border-gray-200 rounded-lg p-8 bg-white shadow-lg">
         {/* Logo */}
         <div className="text-center">
           <div className="flex items-center justify-center gap-3 mb-4">

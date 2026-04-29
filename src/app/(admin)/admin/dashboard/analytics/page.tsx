@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { httpClient } from '@/lib/utils/httpClient';
+import { adminService, DashboardStats } from '@/lib/api/adminService';
 
 interface CourseAnalytics {
   courseId: string;
@@ -18,8 +18,10 @@ interface CourseAnalytics {
 interface TopLesson {
   lessonId: string;
   title: string;
+  courseId: string;
   courseTitle: string;
   category: string;
+  durationSeconds: number;
   totalViews: number;
   avgWatchTimeSeconds: number;
   completionRate: number;
@@ -45,6 +47,7 @@ function formatTime(seconds: number) {
 export default function AdminAnalyticsPage() {
   const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
   const [topLessons, setTopLessons] = useState<TopLessonsData | null>(null);
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -55,13 +58,36 @@ export default function AdminAnalyticsPage() {
   const loadAnalytics = async () => {
     try {
       setLoading(true);
-      const [overviewRes, lessonsRes] = await Promise.all([
-        httpClient.get<{ success: boolean; data: AnalyticsOverview }>('/admin/analytics/courses'),
-        httpClient.get<{ success: boolean; data: TopLessonsData }>('/admin/analytics/top-lessons'),
+      setError('');
+
+      const [overviewRes, lessonsRes, dashboardRes] = await Promise.all([
+        adminService.getAllCoursesAnalytics(),
+        adminService.getTopLessons(10),
+        adminService.getDashboardStats(),
       ]);
-      if (overviewRes.success) setOverview(overviewRes.data);
-      if (lessonsRes.success) setTopLessons(lessonsRes.data);
+
+      console.log('Analytics API Responses:', { overviewRes, lessonsRes, dashboardRes });
+
+      if (overviewRes.success) {
+        console.log('Overview data:', overviewRes.data);
+        setOverview(overviewRes.data);
+      } else {
+        setError('Failed to load courses analytics');
+      }
+
+      if (lessonsRes.success) {
+        console.log('Top lessons data:', lessonsRes.data);
+        setTopLessons(lessonsRes.data);
+      } else {
+        setError('Failed to load top lessons');
+      }
+
+      if (dashboardRes.success) {
+        console.log('Dashboard stats:', dashboardRes.data);
+        setDashboardStats(dashboardRes.data);
+      }
     } catch (err) {
+      console.error('Analytics load error:', err);
       setError(err instanceof Error ? err.message : 'Failed to load analytics');
     } finally {
       setLoading(false);
@@ -89,18 +115,39 @@ export default function AdminAnalyticsPage() {
       ? Math.round(overview.courses.reduce((a, c) => a + c.avgCompletionRate, 0) / overview.courses.length)
       : 0;
   const totalWatchTime = overview?.courses.reduce((a, c) => a + c.totalWatchTimeSeconds, 0) || 0;
+  const totalEnrollments = dashboardStats?.stats?.totalEnrollments || 0;
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Analytics</h2>
-        <p className="text-sm text-gray-500">Platform-wide video and engagement analytics</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Analytics</h2>
+          <p className="text-sm text-gray-500">Platform-wide video and engagement analytics</p>
+        </div>
+        <button
+          onClick={loadAnalytics}
+          disabled={loading}
+          className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        >
+          <svg
+            width="16"
+            height="16"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+            className={loading ? 'animate-spin' : ''}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Refresh
+        </button>
       </div>
 
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Total Enrollments', value: totalEnrolled, color: 'text-blue-600', bg: 'bg-blue-50' },
+          { label: 'Total Enrollments', value: totalEnrollments, color: 'text-blue-600', bg: 'bg-blue-50' },
           { label: 'Total Video Views', value: totalViews, color: 'text-purple-600', bg: 'bg-purple-50' },
           { label: 'Avg Completion Rate', value: `${avgCompletion}%`, color: 'text-green-600', bg: 'bg-green-50' },
           { label: 'Total Watch Time', value: formatTime(totalWatchTime), color: 'text-orange-600', bg: 'bg-orange-50' },
@@ -111,6 +158,47 @@ export default function AdminAnalyticsPage() {
           </div>
         ))}
       </div>
+
+      {/* Stats Breakdown */}
+      {dashboardStats && (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Platform Stats Breakdown</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-3xl font-bold text-blue-600">{dashboardStats.stats.totalStudents}</p>
+              <p className="text-sm text-gray-600 mt-1">Total Students</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-3xl font-bold text-purple-600">{dashboardStats.stats.totalCourses}</p>
+              <p className="text-sm text-gray-600 mt-1">Total Courses</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-3xl font-bold text-green-600">{dashboardStats.stats.activeCourses}</p>
+              <p className="text-sm text-gray-600 mt-1">Active Courses</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-3xl font-bold text-red-600">{dashboardStats.stats.inactiveCourses}</p>
+              <p className="text-sm text-gray-600 mt-1">Inactive Courses</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-3xl font-bold text-orange-600">{dashboardStats.stats.totalEnrollments}</p>
+              <p className="text-sm text-gray-600 mt-1">Total Enrollments</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-3xl font-bold text-yellow-600">{dashboardStats.stats.pendingPayments}</p>
+              <p className="text-sm text-gray-600 mt-1">Pending Payments</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-3xl font-bold text-green-600">{dashboardStats.stats.approvedPayments}</p>
+              <p className="text-sm text-gray-600 mt-1">Approved Payments</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-3xl font-bold text-red-600">{dashboardStats.stats.rejectedPayments}</p>
+              <p className="text-sm text-gray-600 mt-1">Rejected Payments</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Course analytics table */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">

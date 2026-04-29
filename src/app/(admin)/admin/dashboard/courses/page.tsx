@@ -198,7 +198,7 @@ export default function AdminCoursesPage() {
                       }`}>{course.level}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {course.price === 0 ? 'Free' : `৳${course.price.toLocaleString()}`}
+                      {course.price === 0 ? 'Free' : `TK${course.price.toLocaleString()}`}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {course.sections.length} section{course.sections.length !== 1 ? 's' : ''}
@@ -240,7 +240,7 @@ export default function AdminCoursesPage() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between text-xs text-gray-600">
-                  <span>{course.price === 0 ? 'Free' : `৳${course.price.toLocaleString()}`}</span>
+                  <span>{course.price === 0 ? 'Free' : `TK${course.price.toLocaleString()}`}</span>
                   <span>{course.sections.length} section{course.sections.length !== 1 ? 's' : ''}</span>
                   <button onClick={() => handleToggleActive(course)} className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
                     course.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'

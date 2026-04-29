@@ -8,6 +8,7 @@ export interface User {
   isVerified?: boolean;
   createdAt?: string;
   enrolledCourses?: string[];
+  interestedTopics?: string[];
 }
 
 export interface LoginCredentials {
@@ -19,6 +20,7 @@ export interface RegisterCredentials {
   name: string;
   email: string;
   password: string;
+  interestedTopics?: string[];
 }
 
 export interface ForgotPasswordData {

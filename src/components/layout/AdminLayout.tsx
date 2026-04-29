@@ -91,9 +91,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const sidebarContent = (
     <>
       {/* Logo */}
-      <div className="h-16 flex items-center px-6 border-b border-gray-700 shrink-0">
+      <div className="h-16 flex items-center px-6 shrink-0">
         <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
