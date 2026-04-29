@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useEnrollment } from "@/hooks/useEnrollment";
 
 export interface Lesson {
   id: string;
@@ -20,10 +21,19 @@ export interface CourseContentProps {
   chapters: Chapter[];
   selectedLessonId: string;
   onLessonClick: (lesson: Lesson) => void;
+  courseId: string;
 }
 
-export default function CourseContent({ chapters, selectedLessonId, onLessonClick }: CourseContentProps) {
+export default function CourseContent({
+  chapters,
+  selectedLessonId,
+  onLessonClick,
+  courseId,
+}: CourseContentProps) {
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set(chapters.map(c => c.id)));
+  const { hasAccess } = useEnrollment();
+
+  const canAccess = hasAccess(courseId);
 
   const toggleChapter = (chapterId: string) => {
     setExpandedChapters(prev => {
@@ -45,7 +55,7 @@ export default function CourseContent({ chapters, selectedLessonId, onLessonClic
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200 bg-linear-to-r from-gray-50 to-white">
+      <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-bold text-gray-900 text-lg">Course Content</h3>
@@ -117,7 +127,7 @@ export default function CourseContent({ chapters, selectedLessonId, onLessonClic
                           onClick={() => onLessonClick(lesson)}
                           className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
                             isSelected
-                              ? 'bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-200'
+                              ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-200'
                               : 'hover:bg-white hover:shadow-md bg-white/50'
                           }`}
                         >
@@ -147,19 +157,39 @@ export default function CourseContent({ chapters, selectedLessonId, onLessonClic
                             {formatTime(lesson.startTime)}
                           </span>
 
-                          <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
-                            isSelected ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-orange-100'
-                          }`}>
-                            <svg
-                              width="14"
-                              height="14"
-                              fill={isSelected ? "white" : "currentColor"}
-                              viewBox="0 0 24 24"
-                              className={isSelected ? '' : 'text-gray-500 group-hover:text-orange-600'}
-                            >
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </div>
+                          {/* Lock icon for non-enrolled users */}
+                          {!canAccess && (
+                            <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
+                              isSelected ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-red-100'
+                            }`}>
+                              <svg
+                                width="14"
+                                height="14"
+                                fill={isSelected ? "white" : "currentColor"}
+                                viewBox="0 0 24 24"
+                                className={isSelected ? '' : 'text-gray-500 group-hover:text-red-600'}
+                              >
+                                <path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2h1V6a5 5 0 0110 0v2h1zm-6-5a3 3 0 00-3 3v2h6V6a3 3 0 00-3-3z" />
+                              </svg>
+                            </div>
+                          )}
+
+                          {/* Play icon for enrolled users */}
+                          {canAccess && (
+                            <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
+                              isSelected ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-orange-100'
+                            }`}>
+                              <svg
+                                width="14"
+                                height="14"
+                                fill={isSelected ? "white" : "currentColor"}
+                                viewBox="0 0 24 24"
+                                className={isSelected ? '' : 'text-gray-500 group-hover:text-orange-600'}
+                              >
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
+                            </div>
+                          )}
                         </button>
                       );
                     })}

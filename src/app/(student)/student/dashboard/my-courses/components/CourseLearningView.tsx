@@ -143,6 +143,7 @@ export default function CourseLearningView({ courseId: initialCourseId = default
                 videoId={currentCourse.videoId}
                 startTime={currentStartTime}
                 title={currentCourse.title}
+                courseId={selectedCourseId}
               />
               <CourseInfo course={currentCourse} />
 
@@ -174,6 +175,7 @@ export default function CourseLearningView({ courseId: initialCourseId = default
                   chapters={currentCourse.chapters}
                   selectedLessonId={selectedLessonId}
                   onLessonClick={handleLessonClick}
+                  courseId={selectedCourseId}
                 />
               </div>
             </div>

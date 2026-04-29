@@ -1,23 +1,39 @@
 "use client";
 
 import { useRef, useCallback, useEffect } from "react";
+import { useEnrollment } from "@/hooks/useEnrollment";
+import LockedVideoPlaceholder from "@/components/course/LockedVideoPlaceholder";
 
 export interface VideoPlayerProps {
   videoId: string;
   startTime?: number;
   title: string;
+  courseId: string;
   onTimeUpdate?: (currentTime: number) => void;
+  onEnrollClick?: () => void;
 }
 
-export default function VideoPlayer({ videoId, startTime = 0, title, onTimeUpdate }: VideoPlayerProps) {
+export default function VideoPlayer({
+  videoId,
+  startTime = 0,
+  title,
+  courseId,
+  onTimeUpdate,
+  onEnrollClick,
+}: VideoPlayerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { hasAccess, isAuthenticated } = useEnrollment();
+
+  const canAccess = hasAccess(courseId);
 
   const getYouTubeUrl = useCallback((time: number) => {
     return `https://www.youtube.com/embed/${videoId}?start=${time}&autoplay=1&rel=0&modestbranding=1&controls=1&disablekb=0&fs=1`;
   }, [videoId]);
 
   useEffect(() => {
+    if (!canAccess) return;
+
     // Prevent right-click context menu
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
@@ -89,7 +105,17 @@ export default function VideoPlayer({ videoId, startTime = 0, title, onTimeUpdat
         clearInterval(intervalId);
       };
     }
-  }, []);
+  }, [canAccess]);
+
+  if (!canAccess) {
+    return (
+      <LockedVideoPlaceholder
+        courseTitle={title}
+        onEnrollClick={onEnrollClick || (() => {})}
+        isAuthenticated={isAuthenticated}
+      />
+    );
+  }
 
   return (
     <div

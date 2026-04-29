@@ -7,6 +7,7 @@ export interface User {
   role: 'student' | 'admin';
   isVerified?: boolean;
   createdAt?: string;
+  enrolledCourses?: string[];
 }
 
 export interface LoginCredentials {
