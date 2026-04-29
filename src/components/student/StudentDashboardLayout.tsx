@@ -65,7 +65,7 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <aside className="w-20 bg-linear-to-b from-gray-900 to-gray-800 flex flex-col items-center py-6 shrink-0">
+      <aside className="w-20 bg-[#292727] flex flex-col items-center py-6 shrink-0 border-r border-gray-700">
         {/* Logo */}
         <Link href="/student/dashboard" className="w-12 h-12 rounded-xl bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-8 shadow-lg shadow-orange-500/30">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
@@ -84,7 +84,7 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
                 className={`flex flex-col items-center gap-1 w-full py-3 px-2 rounded-xl transition-all duration-200 group ${
                   isActive
                     ? "text-orange-400 bg-white/10 shadow-lg"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    : "text-gray-400 hover:text-white hover:bg-white/10"
                 }`}
                 title={item.label}
               >
@@ -98,7 +98,7 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
         {/* Logout */}
         <button
           onClick={logout}
-          className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-400 py-3 px-2 transition-colors"
+          className="flex flex-col items-center gap-1 text-gray-400 hover:text-red-400 py-3 px-2 transition-colors"
           title="Logout"
         >
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -3,7 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import MainLayout from '@/components/layout/MainLayout';
+import AdminLayout from '@/components/layout/AdminLayout';
 
 export default function AdminDashboardLayout({
   children,
@@ -16,8 +16,8 @@ export default function AdminDashboardLayout({
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
-    } else if (!loading && user && user.role !== 'admin' && user.role !== 'super_admin') {
-      router.push('/');
+    } else if (!loading && user && user.role !== 'admin') {
+      router.push('/unauthorized');
     }
   }, [user, loading, router]);
 
@@ -49,5 +49,5 @@ export default function AdminDashboardLayout({
     );
   }
 
-  return <MainLayout variant="admin">{children}</MainLayout>;
+  return <AdminLayout>{children}</AdminLayout>;
 }

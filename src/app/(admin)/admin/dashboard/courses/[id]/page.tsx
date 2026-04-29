@@ -42,17 +42,13 @@ export default function CourseFormPage() {
     try {
       setLoading(true);
 
-      // Load admins (since there are no teachers, admin is the instructor)
-      const studentsResponse = await adminService.getStudents({ limit: 100 });
-      if (studentsResponse.success) {
-        // Filter for admin users - we need to get them differently since getStudents only gets students
-        // For now, we'll use the current admin user as the instructor
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user._id) {
-          setAdmins([{ _id: user._id, name: user.name }]);
-          if (!isEditing) {
-            setFormData((prev) => ({ ...prev, instructorId: user._id }));
-          }
+      // Load admin instructors
+      const instructorsResponse = await adminService.getInstructors();
+      if (instructorsResponse.success) {
+        setAdmins(instructorsResponse.data.admins);
+        // Auto-select first admin if creating new course
+        if (!isEditing && instructorsResponse.data.admins.length > 0) {
+          setFormData((prev) => ({ ...prev, instructorId: instructorsResponse.data.admins[0]._id }));
         }
       }
 
@@ -249,7 +245,7 @@ export default function CourseFormPage() {
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                   placeholder="Complete Web Development"
                 />
               </div>
@@ -263,7 +259,7 @@ export default function CourseFormPage() {
                   required
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                   placeholder="Web Development"
                 />
               </div>
@@ -279,7 +275,7 @@ export default function CourseFormPage() {
                   step="0.01"
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                   placeholder="0"
                 />
               </div>
@@ -292,7 +288,7 @@ export default function CourseFormPage() {
                   required
                   value={formData.level}
                   onChange={(e) => setFormData({ ...formData, level: e.target.value as any })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
                 >
                   <option value="Beginner">Beginner</option>
                   <option value="Intermediate">Intermediate</option>
@@ -311,7 +307,7 @@ export default function CourseFormPage() {
                 maxLength={200}
                 value={formData.shortDesc}
                 onChange={(e) => setFormData({ ...formData, shortDesc: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                 placeholder="Learn web development from scratch"
               />
             </div>
@@ -325,7 +321,7 @@ export default function CourseFormPage() {
                 value={formData.fullDesc}
                 onChange={(e) => setFormData({ ...formData, fullDesc: e.target.value })}
                 rows={6}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                 placeholder="Complete course covering HTML, CSS, JavaScript..."
               />
             </div>
@@ -338,16 +334,16 @@ export default function CourseFormPage() {
                 required
                 value={formData.instructorId}
                 onChange={(e) => setFormData({ ...formData, instructorId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
               >
                 <option value="">Select an instructor</option>
                 {admins.map((admin) => (
                   <option key={admin._id} value={admin._id}>
-                    {admin.name}
+                    {admin.name} (You)
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-gray-500 mt-1">Admin user assigned as course instructor</p>
+              <p className="text-xs text-gray-500 mt-1">The logged-in admin user will be assigned as the course instructor</p>
             </div>
 
             <div className="flex items-center justify-between">
@@ -361,7 +357,7 @@ export default function CourseFormPage() {
                 type="button"
                 onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  formData.isActive ? 'bg-indigo-600' : 'bg-gray-200'
+                  formData.isActive ? 'bg-orange-500' : 'bg-gray-200'
                 }`}
               >
                 <span
@@ -395,7 +391,7 @@ export default function CourseFormPage() {
                 accept="image/*"
                 onChange={handleThumbnailUpload}
                 disabled={uploading}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
               />
               {uploading && <p className="text-sm text-gray-600 mt-1">Uploading...</p>}
             </div>
@@ -409,7 +405,7 @@ export default function CourseFormPage() {
             <button
               type="button"
               onClick={addSection}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm"
+              className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm"
             >
               + Add Section
             </button>
@@ -427,7 +423,7 @@ export default function CourseFormPage() {
                       value={section.title}
                       onChange={(e) => updateSection(sectionIndex, e.target.value)}
                       placeholder={`Section ${sectionIndex + 1} Title`}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 mr-4"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400 mr-4"
                       required
                     />
                     <button
@@ -448,7 +444,7 @@ export default function CourseFormPage() {
                             value={lesson.title}
                             onChange={(e) => updateLesson(sectionIndex, lessonIndex, 'title', e.target.value)}
                             placeholder="Lesson title"
-                            className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                             required
                           />
                           <input
@@ -463,7 +459,7 @@ export default function CourseFormPage() {
                               }
                             }}
                             placeholder="YouTube URL"
-                            className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                             required
                           />
                           <div className="flex gap-2">
@@ -472,7 +468,7 @@ export default function CourseFormPage() {
                               value={lesson.durationSeconds}
                               onChange={(e) => updateLesson(sectionIndex, lessonIndex, 'durationSeconds', parseInt(e.target.value) || 0)}
                               placeholder="Duration (seconds)"
-                              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
                             />
                             <button
                               type="button"
@@ -490,7 +486,7 @@ export default function CourseFormPage() {
                   <button
                     type="button"
                     onClick={() => addLesson(sectionIndex)}
-                    className="mt-3 px-4 py-2 border border-dashed border-gray-300 text-gray-600 rounded-lg hover:border-indigo-500 hover:text-indigo-600 transition-colors text-sm w-full"
+                    className="mt-3 px-4 py-2 border border-dashed border-gray-300 text-gray-600 rounded-lg hover:border-orange-500 hover:text-orange-600 transition-colors text-sm w-full"
                   >
                     + Add Lesson
                   </button>
@@ -512,7 +508,7 @@ export default function CourseFormPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+            className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
           >
             {saving ? 'Saving...' : isEditing ? 'Update Course' : 'Create Course'}
           </button>

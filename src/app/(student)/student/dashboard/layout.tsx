@@ -3,7 +3,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import MainLayout from "@/components/layout/MainLayout";
+import StudentLayout from "@/components/layout/StudentLayout";
 
 export default function DashboardLayout({
   children,
@@ -16,9 +16,8 @@ export default function DashboardLayout({
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
-    } else if (!loading && user && user.role !== 'student' && user.role !== 'admin') {
-      // Redirect if not a student or admin
-      router.push("/");
+    } else if (!loading && user && user.role !== 'student') {
+      router.push("/unauthorized");
     }
   }, [user, loading, router]);
 
@@ -37,5 +36,5 @@ export default function DashboardLayout({
     return null;
   }
 
-  return <MainLayout variant="student">{children}</MainLayout>;
+  return <StudentLayout>{children}</StudentLayout>;
 }

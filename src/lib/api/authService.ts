@@ -69,6 +69,7 @@ export const authService = {
   saveToken(token: string): void {
     if (typeof window !== 'undefined') {
       localStorage.setItem('token', token);
+      document.cookie = `token=${token}; path=/; max-age=604800; sameSite=lax`;
     }
   },
 
@@ -82,12 +83,14 @@ export const authService = {
   removeToken(): void {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
+      document.cookie = 'token=; path=/; max-age=0';
     }
   },
 
   saveUser(user: User): void {
     if (typeof window !== 'undefined') {
       localStorage.setItem('user', JSON.stringify(user));
+      document.cookie = `user=${encodeURIComponent(JSON.stringify(user))}; path=/; max-age=604800; sameSite=lax`;
     }
   },
 
@@ -102,6 +105,7 @@ export const authService = {
   removeUser(): void {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('user');
+      document.cookie = 'user=; path=/; max-age=0';
     }
   },
 

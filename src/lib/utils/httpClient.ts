@@ -49,6 +49,16 @@ class HttpClient {
     } catch (error) {
       // Re-throw with more context
       if (error instanceof Error) {
+        // Check for common network errors
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          console.error('Network Error - Unable to connect to the API server:', {
+            endpoint: `${this.baseUrl}${endpoint}`,
+            method: fetchOptions.method || 'GET',
+            hint: 'Please ensure the backend server is running on port 5000',
+          });
+          throw new Error('Unable to connect to the server. Please ensure the backend server is running.');
+        }
+
         console.error('API Request Error:', {
           endpoint: `${this.baseUrl}${endpoint}`,
           method: fetchOptions.method || 'GET',

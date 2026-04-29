@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import MainLayout from "@/components/layout/MainLayout";
+import PublicLayout from "@/components/layout/PublicLayout";
 
 export default function MyCoursesPage() {
   const dispatch = useAppDispatch();
@@ -28,7 +29,7 @@ export default function MyCoursesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600">Loading your courses...</p>
@@ -39,7 +40,7 @@ export default function MyCoursesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-red-500">
@@ -54,7 +55,7 @@ export default function MyCoursesPage() {
   }
 
   return (
-    <MainLayout variant="student">
+    <PublicLayout>
       <div className="min-h-screen">
         {/* Header */}
         <section className="bg-linear-to-r from-orange-500 to-orange-600 text-white py-12">
@@ -94,7 +95,7 @@ export default function MyCoursesPage() {
             </p>
             <Link
               href="/courses"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
             >
               Browse Courses
             </Link>
@@ -107,7 +108,7 @@ export default function MyCoursesPage() {
                 className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
               >
                 {/* Course Thumbnail */}
-                <div className="relative aspect-video bg-gradient-to-br from-orange-400 to-orange-600 overflow-hidden">
+                <div className="relative aspect-video bg-linear-to-br from-orange-400 to-orange-600 overflow-hidden">
                   {course.product.thumbnail ? (
                     <Image
                       src={course.product.thumbnail}
@@ -116,7 +117,7 @@ export default function MyCoursesPage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600">
+                    <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-orange-500 to-orange-600">
                       <svg width="48" height="48" fill="white" viewBox="0 0 24 24">
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                       </svg>
@@ -174,7 +175,7 @@ export default function MyCoursesPage() {
                     </div>
                     <Link
                       href={`/student/dashboard/course/${course.product._id}`}
-                      className="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all"
+                      className="px-4 py-2 bg-linear-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all"
                     >
                       Continue Learning
                     </Link>
@@ -189,7 +190,7 @@ export default function MyCoursesPage() {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all"
+                          className="bg-linear-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all"
                           style={{ width: `${course.progress.progressPercentage}%` }}
                         ></div>
                       </div>
@@ -202,6 +203,6 @@ export default function MyCoursesPage() {
         )}
       </main>
     </div>
-    </MainLayout>
+    </PublicLayout>
   );
 }

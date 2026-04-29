@@ -2,35 +2,29 @@ import { httpClient } from '@/lib/utils/httpClient';
 
 export interface Product {
   _id: string;
-  name: string;
-  slug: string;
-  description: string;
+  title: string;
+  category: string;
+  thumbnailUrl: string;
+  shortDesc: string;
+  fullDesc: string;
   price: number;
-  compareAtPrice?: number;
-  thumbnail: string;
-  images: Array<{ url: string; publicId: string; alt?: string }>;
-  category: {
-    _id: string;
-    name: string;
-    slug: string;
-  };
-  instructor?: {
-    _id: string;
-    name: string;
-  };
-  level?: 'beginner' | 'intermediate' | 'advanced';
-  duration?: number;
-  language?: string;
-  rating: {
-    average: number;
-    count: number;
-  };
-  enrolledCount?: number;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  instructorId: string;
+  instructorName: string;
+  instructorTitle?: string;
+  instructorBio?: string;
+  instructorImage?: string;
+  sections: Array<{
+    title: string;
+    lessons: Array<{
+      title: string;
+      youtubeUrl: string;
+      youtubeId: string;
+      durationSeconds: number;
+    }>;
+  }>;
   isActive: boolean;
-  isFeatured?: boolean;
-  tags: string[];
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface ProductsResponse {
@@ -60,6 +54,7 @@ export const productsService = {
     sort?: string;
     minPrice?: number;
     maxPrice?: number;
+    level?: string;
   }): Promise<ProductsResponse> {
     const queryParams = new URLSearchParams();
     if (params?.page) queryParams.append('page', params.page.toString());
@@ -69,28 +64,29 @@ export const productsService = {
     if (params?.sort) queryParams.append('sort', params.sort);
     if (params?.minPrice) queryParams.append('minPrice', params.minPrice.toString());
     if (params?.maxPrice) queryParams.append('maxPrice', params.maxPrice.toString());
+    if (params?.level) queryParams.append('level', params.level);
 
     const queryString = queryParams.toString();
-    return httpClient.get<ProductsResponse>(`/products${queryString ? `?${queryString}` : ''}`);
+    return httpClient.get<ProductsResponse>(`/courses${queryString ? `?${queryString}` : ''}`);
   },
 
   async getFeaturedProducts(): Promise<{ success: boolean; message: string; data: Product[] }> {
-    return httpClient.get<{ success: boolean; message: string; data: Product[] }>('/products/featured');
+    return httpClient.get<{ success: boolean; message: string; data: Product[] }>('/courses');
   },
 
   async getProductById(id: string): Promise<ProductResponse> {
-    return httpClient.get<ProductResponse>(`/products/${id}`);
+    return httpClient.get<ProductResponse>(`/courses/${id}`);
   },
 
   async getProductBySlug(slug: string): Promise<ProductResponse> {
-    return httpClient.get<ProductResponse>(`/products/slug/${slug}`);
+    return httpClient.get<ProductResponse>(`/courses/slug/${slug}`);
   },
 
   async searchProducts(query: string): Promise<{ success: boolean; message: string; data: Product[] }> {
-    return httpClient.get<{ success: boolean; message: string; data: Product[] }>(`/products/search?q=${encodeURIComponent(query)}`);
+    return httpClient.get<{ success: boolean; message: string; data: Product[] }>(`/courses?search=${encodeURIComponent(query)}`);
   },
 
-  async getRelatedProducts(productId: string): Promise<{ success: boolean; message: string; data: Product[] }> {
-    return httpClient.get<{ success: boolean; message: string; data: Product[] }>(`/products/${productId}/related`);
+  async getRelatedProducts(_productId: string): Promise<{ success: boolean; message: string; data: Product[] }> {
+    return httpClient.get<{ success: boolean; message: string; data: Product[] }>(`/courses`);
   },
 };

@@ -18,7 +18,7 @@ export default function StudentDashboardPage() {
     return (
       <div className="p-8">
         <div className="text-red-600 mb-4">Please log in to access this page.</div>
-        <Link href="/login" className="text-indigo-600 hover:text-indigo-500">
+        <Link href="/login" className="text-orange-600 hover:text-orange-500">
           Go to login
         </Link>
       </div>

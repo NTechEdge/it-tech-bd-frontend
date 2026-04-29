@@ -87,7 +87,7 @@ export default function AdminCoursesPage() {
 
         <button
           onClick={() => router.push('/admin/dashboard/courses/new')}
-          className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
         >
           + Add Course
         </button>
@@ -104,7 +104,7 @@ export default function AdminCoursesPage() {
               setCurrentPage(1);
             }}
             placeholder="Search courses..."
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
           />
 
           <select
@@ -113,7 +113,7 @@ export default function AdminCoursesPage() {
               setCategoryFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -129,7 +129,7 @@ export default function AdminCoursesPage() {
               setLevelFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
           >
             <option value="">All Levels</option>
             <option value="Beginner">Beginner</option>
@@ -255,7 +255,7 @@ export default function AdminCoursesPage() {
                       <div className="flex gap-3">
                         <button
                           onClick={() => router.push(`/admin/dashboard/courses/${course._id}`)}
-                          className="text-indigo-600 hover:text-indigo-900 font-medium"
+                          className="text-orange-600 hover:text-orange-900 font-medium"
                         >
                           Edit
                         </button>

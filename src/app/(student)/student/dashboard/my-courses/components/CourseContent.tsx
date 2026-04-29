@@ -55,7 +55,7 @@ export default function CourseContent({
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+      <div className="px-6 py-4 border-b border-gray-200 bg-linear-to-r from-gray-50 to-white">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-bold text-gray-900 text-lg">Course Content</h3>
@@ -127,7 +127,7 @@ export default function CourseContent({
                           onClick={() => onLessonClick(lesson)}
                           className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
                             isSelected
-                              ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-200'
+                              ? 'bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-200'
                               : 'hover:bg-white hover:shadow-md bg-white/50'
                           }`}
                         >

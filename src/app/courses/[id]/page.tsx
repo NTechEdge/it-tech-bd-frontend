@@ -85,7 +85,7 @@ export default function CoursePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -125,7 +125,7 @@ export default function CoursePage() {
                   </button>
                   <button
                     onClick={handleRegister}
-                    className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-lg transition-all shadow-md hover:shadow-lg"
+                    className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-lg transition-all shadow-md hover:shadow-lg"
                   >
                     Get Started
                   </button>
@@ -133,7 +133,7 @@ export default function CoursePage() {
               ) : !canAccess ? (
                 <button
                   onClick={handleEnrollClick}
-                  className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-lg transition-all shadow-md hover:shadow-lg"
+                  className="px-6 py-2 text-sm font-medium text-white bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-lg transition-all shadow-md hover:shadow-lg"
                 >
                   Enroll Now
                 </button>

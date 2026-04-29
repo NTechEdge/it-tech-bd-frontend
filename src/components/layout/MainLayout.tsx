@@ -140,12 +140,13 @@ export default function MainLayout({ children, variant = 'public' }: MainLayoutP
 
   useEffect(() => {
     if (isAuthenticated && user) {
+      const nameParts = user.name?.split(' ') || ['User'];
       dispatch(setCredentials({
         user: {
-          _id: user.id,
+          _id: user.id || user._id || '',
           email: user.email,
-          firstName: user.name.split(' ')[0] || user.name,
-          lastName: user.name.split(' ').slice(1).join(' ') || '',
+          firstName: nameParts[0],
+          lastName: nameParts.slice(1).join(' ') || '',
           name: user.name,
           role: user.role,
         },

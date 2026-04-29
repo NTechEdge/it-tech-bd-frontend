@@ -150,6 +150,11 @@ export const adminService = {
     return httpClient.get(`/admin/students${query ? `?${query}` : ''}`);
   },
 
+  // Instructors (Admin users)
+  async getInstructors(): Promise<{ success: boolean; data: { admins: Array<{ _id: string; name: string; email: string }> } }> {
+    return httpClient.get('/admin/instructors');
+  },
+
   // Payments
   async getPayments(params?: {
     status?: 'pending' | 'approved' | 'rejected';

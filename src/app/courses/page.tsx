@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "next/navigation";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { fetchProducts } from "@/lib/redux/slices/productsSlice";
-import { fetchMyCourses, selectPurchasedCourseIds } from "@/lib/redux/slices/myCoursesSlice";
+import { fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
 import Link from "next/link";
 import Image from "next/image";
-import MainLayout from "@/components/layout/MainLayout";
+import PublicLayout from "@/components/layout/PublicLayout";
 
 export default function CoursesPage() {
   const dispatch = useAppDispatch();
@@ -24,13 +24,13 @@ export default function CoursesPage() {
   useEffect(() => {
     dispatch(fetchProducts({ page: 1, limit: 50 }));
     if (isAuthenticated) {
-      dispatch(fetchMyCourses());
+      dispatch(fetchMyCourses({ page: 1, limit: 50 }));
     }
   }, [dispatch, isAuthenticated]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600">Loading courses...</p>
@@ -41,7 +41,7 @@ export default function CoursesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-red-500">
@@ -56,10 +56,10 @@ export default function CoursesPage() {
   }
 
   return (
-    <MainLayout variant="public">
+    <PublicLayout>
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-16">
+        <section className="bg-linear-to-r from-orange-500 to-orange-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-bold mb-4">
             {isAuthenticated && purchasedCourseIds.length > 0
@@ -133,20 +133,20 @@ export default function CoursesPage() {
             {availableProducts.map((product) => (
               <Link
                 key={product._id}
-                href={`/courses/${product.slug || product._id}`}
+                href={`/courses/${product._id}`}
                 className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
               >
                 {/* Course Thumbnail */}
-                <div className="relative aspect-video bg-gradient-to-br from-orange-400 to-orange-600 overflow-hidden">
-                  {product.thumbnail ? (
+                <div className="relative aspect-video bg-linear-to-br from-orange-400 to-orange-600 overflow-hidden">
+                  {product.thumbnailUrl ? (
                     <Image
-                      src={product.thumbnail}
-                      alt={product.name}
+                      src={product.thumbnailUrl}
+                      alt={product.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600">
+                    <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-orange-500 to-orange-600">
                       <svg width="48" height="48" fill="white" viewBox="0 0 24 24">
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                       </svg>
@@ -165,42 +165,28 @@ export default function CoursesPage() {
                 {/* Course Content */}
                 <div className="p-5">
                   <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
-                    {product.name}
+                    {product.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {product.description}
+                    {product.shortDesc}
                   </p>
 
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                    <div className="flex items-center gap-1">
-                      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-orange-500">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <span className="font-semibold text-gray-900">{product.rating.average.toFixed(1)}</span>
-                      <span>({product.rating.count})</span>
-                    </div>
-                    {product.duration && (
-                      <div>
-                        {Math.floor(product.duration / 60)}h {product.duration % 60}m
-                      </div>
-                    )}
+                  {/* Instructor */}
+                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-orange-500">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                    <span className="text-xs">{product.instructorName}</span>
                   </div>
 
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                     <div className="text-sm">
-                      {product.category && (
-                        <p className="font-semibold text-gray-900">{product.category.name}</p>
-                      )}
+                      <p className="font-semibold text-gray-900">{product.category}</p>
                     </div>
                     <div className="text-right">
-                      {product.compareAtPrice && product.compareAtPrice > product.price ? (
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm text-gray-500 line-through">${product.compareAtPrice}</p>
-                          <p className="text-xl font-bold text-orange-600">${product.price}</p>
-                        </div>
-                      ) : (
-                        <p className="text-2xl font-bold text-gray-900">${product.price}</p>
-                      )}
+                      <p className="text-2xl font-bold text-gray-900">
+                        {product.price === 0 ? 'Free' : `$${product.price}`}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -212,7 +198,7 @@ export default function CoursesPage() {
 
       {/* CTA Section */}
       {!isAuthenticated && (
-        <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-16">
+        <section className="bg-linear-to-r from-gray-900 to-gray-800 text-white py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
             <p className="text-xl text-gray-300 mb-8">
@@ -221,7 +207,7 @@ export default function CoursesPage() {
             <div className="flex items-center justify-center gap-4">
               <Link
                 href="/register"
-                className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="px-8 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 Get Started for Free
               </Link>
@@ -236,6 +222,6 @@ export default function CoursesPage() {
         </section>
       )}
     </div>
-    </MainLayout>
+    </PublicLayout>
   );
 }

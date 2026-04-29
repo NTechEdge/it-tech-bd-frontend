@@ -101,7 +101,7 @@ export default function CourseDetailPage() {
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
               <div className="absolute bottom-4 left-4 right-4">
                 {currentCourse.badgeColor && (
                   <span
@@ -192,7 +192,7 @@ export default function CourseDetailPage() {
                   {!canAccess && (
                     <button
                       onClick={handleEnrollClick}
-                      className="mt-2 px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md hover:shadow-lg"
+                      className="mt-2 px-6 py-2 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md hover:shadow-lg"
                     >
                       Enroll Now
                     </button>

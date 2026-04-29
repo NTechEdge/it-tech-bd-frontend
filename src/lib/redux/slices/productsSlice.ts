@@ -5,35 +5,29 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1
 
 interface Product {
   _id: string;
-  name: string;
-  slug: string;
-  description: string;
+  title: string;
+  category: string;
+  thumbnailUrl: string;
+  shortDesc: string;
+  fullDesc: string;
   price: number;
-  compareAtPrice?: number;
-  thumbnail: string;
-  images: Array<{ url: string; publicId: string; alt?: string }>;
-  category: {
-    _id: string;
-    name: string;
-    slug: string;
-  };
-  instructor?: {
-    _id: string;
-    name: string;
-  };
-  level?: 'beginner' | 'intermediate' | 'advanced';
-  duration?: number;
-  language?: string;
-  rating: {
-    average: number;
-    count: number;
-  };
-  enrolledCount?: number;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  instructorId: string;
+  instructorName: string;
+  instructorTitle?: string;
+  instructorBio?: string;
+  instructorImage?: string;
+  sections: Array<{
+    title: string;
+    lessons: Array<{
+      title: string;
+      youtubeUrl: string;
+      youtubeId: string;
+      durationSeconds: number;
+    }>;
+  }>;
   isActive: boolean;
-  isFeatured?: boolean;
-  tags: string[];
   createdAt: string;
-  updatedAt: string;
 }
 
 interface ProductsState {
@@ -54,7 +48,6 @@ interface ProductsState {
     minPrice?: number;
     maxPrice?: number;
     level?: string;
-    language?: string;
     sort?: string;
   };
 }
@@ -77,15 +70,16 @@ const initialState: ProductsState = {
 // Async thunks
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
-  async (params: { page?: number; limit?: number; category?: string; search?: string; sort?: string } = {}) => {
+  async (params: { page?: number; limit?: number; category?: string; search?: string; sort?: string; level?: string } = {}) => {
     const queryParams = new URLSearchParams();
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.category) queryParams.append('category', params.category);
     if (params.search) queryParams.append('search', params.search);
     if (params.sort) queryParams.append('sort', params.sort);
+    if (params.level) queryParams.append('level', params.level);
 
-    const response = await axios.get(`${API_URL}/products?${queryParams.toString()}`);
+    const response = await axios.get(`${API_URL}/courses?${queryParams.toString()}`);
     return response.data;
   }
 );
@@ -93,7 +87,7 @@ export const fetchProducts = createAsyncThunk(
 export const fetchFeaturedProducts = createAsyncThunk(
   'products/fetchFeaturedProducts',
   async () => {
-    const response = await axios.get(`${API_URL}/products/featured`);
+    const response = await axios.get(`${API_URL}/courses`);
     return response.data;
   }
 );
@@ -101,7 +95,7 @@ export const fetchFeaturedProducts = createAsyncThunk(
 export const fetchProductById = createAsyncThunk(
   'products/fetchProductById',
   async (id: string) => {
-    const response = await axios.get(`${API_URL}/products/${id}`);
+    const response = await axios.get(`${API_URL}/courses/${id}`);
     return response.data;
   }
 );
@@ -109,7 +103,7 @@ export const fetchProductById = createAsyncThunk(
 export const fetchProductBySlug = createAsyncThunk(
   'products/fetchProductBySlug',
   async (slug: string) => {
-    const response = await axios.get(`${API_URL}/products/slug/${slug}`);
+    const response = await axios.get(`${API_URL}/courses/slug/${slug}`);
     return response.data;
   }
 );
@@ -117,7 +111,7 @@ export const fetchProductBySlug = createAsyncThunk(
 export const searchProducts = createAsyncThunk(
   'products/searchProducts',
   async (query: string) => {
-    const response = await axios.get(`${API_URL}/products/search?q=${encodeURIComponent(query)}`);
+    const response = await axios.get(`${API_URL}/courses?search=${encodeURIComponent(query)}`);
     return response.data;
   }
 );
