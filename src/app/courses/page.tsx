@@ -11,20 +11,19 @@ import PublicLayout from "@/components/layout/PublicLayout";
 export default function CoursesPage() {
   const dispatch = useAppDispatch();
   const { products, loading, error } = useAppSelector((state) => state.products);
-  const { purchasedCourses } = useAppSelector((state) => state.myCourses);
+  const { enrolledCourses } = useAppSelector((state) => state.myCourses);
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const purchasedCourseIds = purchasedCourses.map(course => course.product._id);
+  const enrolledCourseIds = enrolledCourses
+    .filter((ec) => ec.enrollment.paymentStatus === 'approved')
+    .map((ec) => ec.course._id);
 
-  // Filter products: for logged-in users, exclude purchased courses
-  const availableProducts = isAuthenticated
-    ? products.filter(product => !purchasedCourseIds.includes(product._id))
-    : products;
+  const availableProducts = products;
 
   useEffect(() => {
     dispatch(fetchProducts({ page: 1, limit: 50 }));
     if (isAuthenticated) {
-      dispatch(fetchMyCourses({ page: 1, limit: 50 }));
+      dispatch(fetchMyCourses());
     }
   }, [dispatch, isAuthenticated]);
 
@@ -62,9 +61,7 @@ export default function CoursesPage() {
         <section className="bg-linear-to-r from-orange-500 to-orange-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-bold mb-4">
-            {isAuthenticated && purchasedCourseIds.length > 0
-              ? "More Courses to Explore"
-              : "Explore Our Courses"}
+            Explore Our Courses
           </h1>
           <p className="text-xl text-orange-100 max-w-2xl mx-auto mb-8">
             Master in-demand skills with our comprehensive courses. Learn at your own pace,
@@ -92,7 +89,7 @@ export default function CoursesPage() {
           </div>
 
           {/* My Courses Link for Logged In Users */}
-          {isAuthenticated && purchasedCourseIds.length > 0 && (
+          {isAuthenticated && enrolledCourseIds.length > 0 && (
             <div className="mt-8">
               <Link
                 href="/my-courses"
@@ -101,7 +98,7 @@ export default function CoursesPage() {
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
-                View My Courses ({purchasedCourseIds.length})
+                View My Courses ({enrolledCourseIds.length})
               </Link>
             </div>
           )}
@@ -118,15 +115,9 @@ export default function CoursesPage() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              {isAuthenticated && purchasedCourseIds.length > 0
-                ? "You've enrolled in all available courses!"
-                : "No courses available"}
+              No courses available
             </h3>
-            <p className="text-gray-600 mb-6">
-              {isAuthenticated && purchasedCourseIds.length > 0
-                ? "Check back later for new courses."
-                : "Please check back later."}
-            </p>
+            <p className="text-gray-600 mb-6">Please check back later.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

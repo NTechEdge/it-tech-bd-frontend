@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 interface Product {
   _id: string;
@@ -139,9 +139,12 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload.data || action.payload;
-        if (action.payload.pagination) {
-          state.pagination = action.payload.pagination;
+        // Backend returns { data: { courses: [], pagination: {} } }
+        const payload = action.payload.data;
+        state.products = payload?.courses || action.payload.data || [];
+        const pagination = payload?.pagination || action.payload.pagination;
+        if (pagination) {
+          state.pagination = pagination;
         }
       })
       .addCase(fetchProducts.rejected, (state, action) => {
@@ -155,7 +158,8 @@ const productsSlice = createSlice({
       })
       .addCase(fetchFeaturedProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.featuredProducts = action.payload.data || action.payload;
+        const payload = action.payload.data;
+        state.featuredProducts = payload?.courses || action.payload.data || [];
       })
       .addCase(fetchFeaturedProducts.rejected, (state, action) => {
         state.loading = false;
@@ -168,6 +172,7 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProductById.fulfilled, (state, action) => {
         state.loading = false;
+        // Backend returns { data: <course object> } directly
         state.currentProduct = action.payload.data || action.payload;
       })
       .addCase(fetchProductById.rejected, (state, action) => {
@@ -194,7 +199,8 @@ const productsSlice = createSlice({
       })
       .addCase(searchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload.data || action.payload;
+        const payload = action.payload.data;
+        state.products = payload?.courses || action.payload.data || [];
       })
       .addCase(searchProducts.rejected, (state, action) => {
         state.loading = false;

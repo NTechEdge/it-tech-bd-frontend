@@ -1,19 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useAppSelector } from '@/lib/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
+import { fetchProducts } from '@/lib/redux/slices/productsSlice';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import PublicLayout from '@/components/layout/PublicLayout';
 
 export default function HomePage() {
+  const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
   const { products } = useAppSelector((state) => state.products);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    dispatch(fetchProducts({ page: 1, limit: 6 }));
+  }, [dispatch]);
 
   if (!mounted) {
     return (

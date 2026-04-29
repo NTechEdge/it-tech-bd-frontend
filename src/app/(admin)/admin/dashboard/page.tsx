@@ -53,7 +53,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -116,70 +116,46 @@ export default function AdminDashboardPage() {
 
       {/* Recent Enrollments */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b">
+        <div className="px-4 sm:px-6 py-4 border-b">
           <h3 className="text-lg font-semibold text-gray-900">Recent Enrollments</h3>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Desktop table */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Student
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Course
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {stats.recentEnrollments.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                    No enrollments yet
-                  </td>
+                  <td colSpan={5} className="px-6 py-4 text-center text-gray-500">No enrollments yet</td>
                 </tr>
               ) : (
                 stats.recentEnrollments.map((enrollment) => (
                   <tr key={enrollment._id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {enrollment.userId.name}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {enrollment.userId.email}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">{enrollment.userId.name}</div>
+                      <div className="text-sm text-gray-500">{enrollment.userId.email}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {enrollment.courseId.title}
-                      </div>
+                      <div className="text-sm text-gray-900">{enrollment.courseId.title}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        ৳{enrollment.amount.toLocaleString()}
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">৳{enrollment.amount.toLocaleString()}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          enrollment.paymentStatus === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : enrollment.paymentStatus === 'rejected'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {enrollment.paymentStatus}
-                      </span>
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        enrollment.paymentStatus === 'approved' ? 'bg-green-100 text-green-800'
+                        : enrollment.paymentStatus === 'rejected' ? 'bg-red-100 text-red-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                      }`}>{enrollment.paymentStatus}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(enrollment.purchasedAt).toLocaleDateString()}
@@ -189,6 +165,32 @@ export default function AdminDashboardPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="sm:hidden divide-y divide-gray-100">
+          {stats.recentEnrollments.length === 0 ? (
+            <p className="px-4 py-6 text-center text-gray-500 text-sm">No enrollments yet</p>
+          ) : (
+            stats.recentEnrollments.map((enrollment) => (
+              <div key={enrollment._id} className="px-4 py-4 space-y-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-900">{enrollment.userId.name}</p>
+                  <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
+                    enrollment.paymentStatus === 'approved' ? 'bg-green-100 text-green-800'
+                    : enrollment.paymentStatus === 'rejected' ? 'bg-red-100 text-red-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                  }`}>{enrollment.paymentStatus}</span>
+                </div>
+                <p className="text-xs text-gray-500">{enrollment.userId.email}</p>
+                <p className="text-xs text-gray-700">{enrollment.courseId.title}</p>
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span>৳{enrollment.amount.toLocaleString()}</span>
+                  <span>{new Date(enrollment.purchasedAt).toLocaleDateString()}</span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
