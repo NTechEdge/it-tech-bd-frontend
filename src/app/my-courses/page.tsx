@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { useAuth } from "@/contexts/AuthContext";
+import { MyCoursesLoadingState } from "@/components/ui/loading-states";
 
 export default function MyCoursesPage() {
   const dispatch = useAppDispatch();
@@ -32,11 +33,7 @@ export default function MyCoursesPage() {
   if (!isAuthenticated) return null;
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
+    return <MyCoursesLoadingState />;
   }
 
   if (error) {

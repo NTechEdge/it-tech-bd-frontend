@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { fetchMyCourses } from '@/lib/redux/slices/myCoursesSlice';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { DashboardCardLoadingState, StatsCardLoadingState } from '@/components/ui/loading-states';
 
 export default function StudentDashboardPage() {
   const { user } = useAuth();
@@ -72,9 +73,7 @@ export default function StudentDashboardPage() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
+          <DashboardCardLoadingState message="Loading your courses..." />
         ) : approvedCourses.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 mb-4">

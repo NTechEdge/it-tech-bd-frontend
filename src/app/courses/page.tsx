@@ -7,6 +7,7 @@ import { fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
 import Link from "next/link";
 import Image from "next/image";
 import PublicLayout from "@/components/layout/PublicLayout";
+import { CourseLoadingState } from "@/components/ui/loading-states";
 
 export default function CoursesPage() {
   const dispatch = useAppDispatch();
@@ -28,14 +29,7 @@ export default function CoursesPage() {
   }, [dispatch, isAuthenticated]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#0099ff]-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading courses...</p>
-        </div>
-      </div>
-    );
+    return <CourseLoadingState />;
   }
 
   if (error) {

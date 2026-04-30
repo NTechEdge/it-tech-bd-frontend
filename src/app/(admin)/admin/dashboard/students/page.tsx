@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { adminService, Student } from '@/lib/api/adminService';
+import { TableLoadingState, MobileListLoadingState } from '@/components/ui/loading-states';
 
 export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -95,7 +96,7 @@ export default function AdminStudentsPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {loading ? (
-                <tr><td colSpan={4} className="px-6 py-4 text-center text-gray-500">Loading...</td></tr>
+                <TableLoadingState colSpan={4} message="Loading students..." />
               ) : students.length === 0 ? (
                 <tr><td colSpan={4} className="px-6 py-4 text-center text-gray-500">No students found</td></tr>
               ) : (
@@ -125,7 +126,7 @@ export default function AdminStudentsPage() {
         {/* Mobile card list */}
         <div className="sm:hidden divide-y divide-gray-100">
           {loading ? (
-            <p className="px-4 py-6 text-center text-gray-500 text-sm">Loading...</p>
+            <MobileListLoadingState />
           ) : students.length === 0 ? (
             <p className="px-4 py-6 text-center text-gray-500 text-sm">No students found</p>
           ) : (
