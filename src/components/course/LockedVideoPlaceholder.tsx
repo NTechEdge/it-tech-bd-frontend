@@ -24,16 +24,16 @@ export default function LockedVideoPlaceholder({
       </div>
 
       {/* Animated Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-purple-500/10 animate-pulse"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0099ff]/10 via-transparent to-purple-500/10 animate-pulse"></div>
 
       {/* Lock Icon with Glow */}
       <div className="relative z-10 text-center">
         <div className="relative inline-block mb-6">
           {/* Glow Effect */}
-          <div className="absolute inset-0 bg-orange-500 blur-3xl opacity-20 animate-pulse"></div>
+          <div className="absolute inset-0 bg-[#0099ff] blur-3xl opacity-20 animate-pulse"></div>
 
           {/* Lock Container */}
-          <div className="relative w-32 h-32 mx-auto bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/50">
+          <div className="relative w-32 h-32 mx-auto bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/50">
             <svg
               width="56"
               height="56"
@@ -46,7 +46,7 @@ export default function LockedVideoPlaceholder({
           </div>
 
           {/* Ring Animation */}
-          <div className="absolute inset-0 border-4 border-orange-400/30 rounded-full animate-ping"></div>
+          <div className="absolute inset-0 border-4 border-[#0099ff]/30 rounded-full animate-ping"></div>
         </div>
 
         <h3 className="text-2xl font-bold text-white mb-3">
@@ -62,7 +62,7 @@ export default function LockedVideoPlaceholder({
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <button
             onClick={onEnrollClick}
-            className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/50 hover:-translate-y-0.5"
+            className="px-8 py-3 bg-gradient-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/50 hover:-translate-y-0.5"
           >
             {isAuthenticated ? "Enroll Now" : "Sign In to Enroll"}
           </button>

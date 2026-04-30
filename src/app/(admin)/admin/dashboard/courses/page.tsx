@@ -86,7 +86,7 @@ export default function AdminCoursesPage() {
         </div>
 
         <button
-          onClick={() => router.push('/admin/dashboard/courses/new')}          className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+          onClick={() => router.push('/admin/dashboard/courses/new')}          className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-colors"
         >
           + Add Course
         </button>
@@ -103,7 +103,7 @@ export default function AdminCoursesPage() {
               setCurrentPage(1);
             }}
             placeholder="Search courses..."
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]-500 bg-white text-gray-900 placeholder-gray-400"
           />
 
           <select
@@ -112,7 +112,7 @@ export default function AdminCoursesPage() {
               setCategoryFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]-500 bg-white text-gray-900"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -128,7 +128,7 @@ export default function AdminCoursesPage() {
               setLevelFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]-500 bg-white text-gray-900"
           >
             <option value="">All Levels</option>
             <option value="Beginner">Beginner</option>
@@ -210,7 +210,7 @@ export default function AdminCoursesPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <div className="flex gap-3">
-                        <button onClick={() => router.push(`/admin/dashboard/courses/${course._id}`)} className="text-orange-600 hover:text-orange-900 font-medium">Edit</button>
+                        <button onClick={() => router.push(`/admin/dashboard/courses/${course._id}`)} className="text-[#0099ff]-600 hover:text-[#0099ff]-900 font-medium">Edit</button>
                         <button onClick={() => handleDelete(course._id, course.title)} disabled={deletingId === course._id} className="text-red-600 hover:text-red-900 font-medium disabled:opacity-50">
                           {deletingId === course._id ? '...' : 'Delete'}
                         </button>
@@ -247,7 +247,7 @@ export default function AdminCoursesPage() {
                   }`}>{course.isActive ? 'Active' : 'Inactive'}</button>
                 </div>
                 <div className="flex gap-4 pt-1">
-                  <button onClick={() => router.push(`/admin/dashboard/courses/${course._id}`)} className="text-sm text-orange-600 font-medium">Edit</button>
+                  <button onClick={() => router.push(`/admin/dashboard/courses/${course._id}`)} className="text-sm text-[#0099ff]-600 font-medium">Edit</button>
                   <button onClick={() => handleDelete(course._id, course.title)} disabled={deletingId === course._id} className="text-sm text-red-600 font-medium disabled:opacity-50">
                     {deletingId === course._id ? '...' : 'Delete'}
                   </button>

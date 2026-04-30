@@ -81,7 +81,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-gray-700 shrink-0">
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -101,11 +101,11 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive
-                      ? "bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30"
+                      ? "bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white shadow-lg shadow-blue-500/30"
                       : "text-gray-300 hover:bg-white/10 hover:text-white"
                   }`}
                 >
-                  <span className={`${isActive ? "text-white" : "text-gray-500 group-hover:text-orange-600"} transition-colors`}>
+                  <span className={`${isActive ? "text-white" : "text-gray-500 group-hover:text-[#0099ff]"} transition-colors`}>
                     {item.icon}
                   </span>
                   <span className="font-medium flex-1">{item.label}</span>
@@ -120,7 +120,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <div className="p-4  shrink-0">
         {isAuthenticated && user ? (
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800">
-            <div className="w-10 h-10 rounded-full bg-linear-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold shrink-0">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
               {user.name?.[0] || "U"}
             </div>
             <div className="flex-1 min-w-0">
@@ -138,7 +138,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
             </Link>
             <Link
               href="/register"
-              className="w-full flex items-center gap-3 px-4 py-3 text-white bg-linear-to-r from-orange-500 to-orange-600 rounded-xl transition-all duration-200 font-medium"
+              className="w-full flex items-center gap-3 px-4 py-3 text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-xl transition-all duration-200 font-medium"
             >
               Sign Up
             </Link>
@@ -208,7 +208,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                   <input
                     type="text"
                     placeholder="Search..."
-                    className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-1.5 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-xs sm:text-sm bg-white text-gray-900 placeholder:text-gray-400"
+                    className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-1.5 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:border-transparent text-xs sm:text-sm bg-white text-gray-900 placeholder:text-gray-400"
                   />
                   <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5 absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -255,7 +255,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                     </Link>
                     <Link
                       href="/register"
-                      className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-linear-to-r from-orange-500 to-orange-600 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
+                      className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-md"
                     >
                       Sign Up
                     </Link>
@@ -278,7 +278,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               {/* Company Info */}
               <div className="sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="white" className="sm:w-5 sm:h-5">
                       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -292,9 +292,9 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               <div>
                 <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3 sm:mb-4">Quick Links</h3>
                 <ul className="space-y-1.5 sm:space-y-2">
-                  <li><Link href="/courses" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Courses</Link></li>
-                  <li><Link href="/about" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">About Us</Link></li>
-                  <li><Link href="/contact" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Contact</Link></li>
+                  <li><Link href="/courses" className="text-xs sm:text-sm text-gray-600 hover:text-[#0099ff]-">Courses</Link></li>
+                  <li><Link href="/about" className="text-xs sm:text-sm text-gray-600 hover:text-[#0099ff]-">About Us</Link></li>
+                  <li><Link href="/contact" className="text-xs sm:text-sm text-gray-600 hover:text-[#0099ff]-">Contact</Link></li>
                 </ul>
               </div>
 
@@ -302,9 +302,9 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               <div>
                 <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3 sm:mb-4">Support</h3>
                 <ul className="space-y-1.5 sm:space-y-2">
-                  <li><Link href="/help" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Help Center</Link></li>
-                  <li><Link href="/terms" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Terms of Service</Link></li>
-                  <li><Link href="/privacy" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Privacy Policy</Link></li>
+                  <li><Link href="/help" className="text-xs sm:text-sm text-gray-600 hover:text-[#0099ff]-">Help Center</Link></li>
+                  <li><Link href="/terms" className="text-xs sm:text-sm text-gray-600 hover:text-[#0099ff]-">Terms of Service</Link></li>
+                  <li><Link href="/privacy" className="text-xs sm:text-sm text-gray-600 hover:text-[#0099ff]-">Privacy Policy</Link></li>
                 </ul>
               </div>
 

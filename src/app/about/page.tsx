@@ -5,7 +5,7 @@ export default function AboutPage() {
     <PublicLayout>
       <div className="min-h-screen">
         {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-14 sm:py-20">
+      <section className="bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-14 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">About IT-TECH-BD</h1>
           <p className="text-xl text-gray-300 max-w-3xl">
@@ -39,7 +39,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-linear-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-xl flex items-center justify-center mx-auto mb-4">
                 <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
@@ -98,7 +98,7 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="relative">
-              <div className="aspect-square bg-linear-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center">
+              <div className="aspect-square bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-2xl flex items-center justify-center">
                 <svg width="200" height="200" viewBox="0 0 24 24" fill="white">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                 </svg>
@@ -109,15 +109,15 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-linear-to-r from-orange-500 to-orange-600">
+      <section className="py-20 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Join Our Learning Community</h2>
-          <p className="text-xl text-orange-100 mb-8">
+          <p className="text-xl text-[#0099ff]-100 mb-8">
             Start your journey today and become part of our growing community of learners.
           </p>
           <a
             href="/courses"
-            className="inline-block px-8 py-4 bg-white text-orange-600 font-semibold rounded-xl hover:bg-gray-100 transition-all shadow-lg text-lg"
+            className="inline-block px-8 py-4 bg-white text-[#0099ff]-600 font-semibold rounded-xl hover:bg-gray-100 transition-all shadow-lg text-lg"
           >
             Explore Courses
           </a>

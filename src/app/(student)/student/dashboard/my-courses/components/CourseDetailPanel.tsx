@@ -60,7 +60,7 @@ export default function CourseDetailPanel() {
             <span className="text-white/70 text-xs">00:00</span>
             <div className="flex-1 h-1 bg-white/30 rounded-full">
               <div
-                className="h-full bg-[#E8630A] rounded-full"
+                className="h-full bg-[#0099ff] rounded-full"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -89,7 +89,7 @@ export default function CourseDetailPanel() {
       {/* Instructor + enroll */}
       <div className="px-6 py-4 bg-white border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#E8630A] flex items-center justify-center text-white font-bold text-sm">
+          <div className="w-10 h-10 rounded-full bg-[#0099ff] flex items-center justify-center text-white font-bold text-sm">
             র
           </div>
           <div>
@@ -97,7 +97,7 @@ export default function CourseDetailPanel() {
             <p className="text-xs text-gray-500">Senior Web Developer</p>
           </div>
         </div>
-        <button className="bg-[#E8630A] hover:bg-[#d05a09] text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors">
+        <button className="bg-[#0099ff] hover:bg-[#d05a09] text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors">
           Enroll — $1200
         </button>
       </div>
@@ -114,19 +114,19 @@ export default function CourseDetailPanel() {
               key={lesson.id}
               className={`flex items-center gap-3 p-3 rounded-lg border transition-colors cursor-pointer ${
                 lesson.active
-                  ? "bg-orange-50 border-orange-200"
+                  ? "bg-blue-50 border-blue-200"
                   : "bg-white border-gray-200 hover:bg-gray-50"
               }`}
             >
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                lesson.active ? "bg-[#E8630A]" : "bg-gray-100"
+                lesson.active ? "bg-[#0099ff]" : "bg-gray-100"
               }`}>
                 <svg width="14" height="14" fill={lesson.active ? "white" : "#9CA3AF"} viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <p className={`text-sm font-medium ${lesson.active ? "text-[#E8630A]" : "text-gray-800"}`}>
+                <p className={`text-sm font-medium ${lesson.active ? "text-[#0099ff]" : "text-gray-800"}`}>
                   {lesson.title}
                 </p>
                 <p className="text-xs text-gray-500">{lesson.duration}</p>

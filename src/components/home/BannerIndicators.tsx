@@ -17,7 +17,7 @@ export default function BannerIndicators({ totalCount, currentIndex, onIndicator
           onClick={() => onIndicatorClick?.(index)}
           className={`transition-all duration-300 rounded-full ${
             currentIndex === index
-              ? 'w-6 h-2 bg-linear-to-r from-orange-500 to-orange-600'
+              ? 'w-6 h-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff]'
               : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
           }`}
           aria-label={`Go to slide ${index + 1}`}

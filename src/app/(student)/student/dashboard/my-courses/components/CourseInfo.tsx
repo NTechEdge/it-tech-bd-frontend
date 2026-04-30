@@ -49,7 +49,7 @@ export default function CourseInfo({ course }: CourseInfoProps) {
       {/* Instructor Bar */}
       <div className="bg-white px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-orange-200">
+          <div className="w-11 h-11 rounded-xl bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-200">
             {course.instructor.avatar}
           </div>
           <div>
@@ -57,7 +57,7 @@ export default function CourseInfo({ course }: CourseInfoProps) {
             <p className="text-xs text-gray-500">{course.instructor.title}</p>
           </div>
         </div>
-        <button className="group relative bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-orange-200 hover:shadow-xl hover:shadow-orange-300 overflow-hidden">
+        <button className="group relative bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] hover:shadow-xl hover:shadow-blue-500/40 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-blue-200 overflow-hidden">
           <span className="relative z-10">Enroll Now — {course.price} TK</span>
           <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
         </button>

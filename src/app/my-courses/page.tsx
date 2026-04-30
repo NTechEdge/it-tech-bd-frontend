@@ -53,7 +53,7 @@ export default function MyCoursesPage() {
   return (
     <PublicLayout>
       <div className="min-h-screen">
-        <section className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-10 sm:py-12">
+        <section className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white py-10 sm:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
@@ -107,7 +107,7 @@ export default function MyCoursesPage() {
               </p>
               <Link
                 href="/courses"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-lg"
               >
                 Browse Courses
               </Link>
@@ -132,7 +132,7 @@ export default function MyCoursesPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                        <div className="w-full h-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
                           <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z" />
                           </svg>
@@ -154,7 +154,7 @@ export default function MyCoursesPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-1.5">
                           <div
-                            className="bg-gradient-to-r from-orange-500 to-orange-600 h-1.5 rounded-full transition-all"
+                            className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full transition-all"
                             style={{ width: `${progressPct}%` }}
                           />
                         </div>
@@ -166,7 +166,7 @@ export default function MyCoursesPage() {
                         </div>
                         <Link
                           href="/student/dashboard/my-courses"
-                          className="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all"
+                          className="px-4 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white text-sm font-semibold rounded-lg hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all"
                         >
                           {progressPct > 0 ? 'Continue' : 'Start'}
                         </Link>

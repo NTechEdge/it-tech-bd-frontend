@@ -31,7 +31,7 @@ export default function CoursesPage() {
     return (
       <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-[#0099ff]-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600">Loading courses...</p>
         </div>
       </div>
@@ -58,12 +58,12 @@ export default function CoursesPage() {
     <PublicLayout>
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="bg-linear-to-r from-orange-500 to-orange-600 text-white py-16">
+        <section className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
             Explore Our Courses
           </h1>
-          <p className="text-lg sm:text-xl text-orange-100 max-w-2xl mx-auto mb-8">
+          <p className="text-lg sm:text-xl text-[#0099ff]-100 max-w-2xl mx-auto mb-8">
             Master in-demand skills with our comprehensive courses. Learn at your own pace,
             anytime, anywhere.
           </p>
@@ -93,7 +93,7 @@ export default function CoursesPage() {
             <div className="mt-8">
               <Link
                 href="/student/dashboard/my-courses"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-600 font-semibold rounded-xl hover:bg-gray-100 transition-all shadow-lg"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#0099ff] font-semibold rounded-xl hover:bg-gray-100 transition-all shadow-lg"
               >
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -128,7 +128,7 @@ export default function CoursesPage() {
                 className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
               >
                 {/* Course Thumbnail */}
-                <div className="relative aspect-video bg-linear-to-br from-orange-400 to-orange-600 overflow-hidden">
+                <div className="relative aspect-video bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] overflow-hidden">
                   {product.thumbnailUrl ? (
                     <Image
                       src={product.thumbnailUrl}
@@ -137,7 +137,7 @@ export default function CoursesPage() {
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-orange-500 to-orange-600">
+                    <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff]">
                       <svg width="48" height="48" fill="white" viewBox="0 0 24 24">
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                       </svg>
@@ -155,7 +155,7 @@ export default function CoursesPage() {
 
                 {/* Course Content */}
                 <div className="p-5">
-                  <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
+                  <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#0099ff]-600 transition-colors">
                     {product.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">
@@ -164,7 +164,7 @@ export default function CoursesPage() {
 
                   {/* Instructor */}
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-orange-500">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-[#0099ff]-500">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
                     <span className="text-xs">{product.instructorName}</span>
@@ -198,7 +198,7 @@ export default function CoursesPage() {
             <div className="flex items-center justify-center gap-4">
               <Link
                 href="/register"
-                className="px-8 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 Get Started for Free
               </Link>

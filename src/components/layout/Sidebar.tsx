@@ -31,7 +31,7 @@ export default function Sidebar({ navItems, user, onLogout, logoLink = "/" }: Si
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-gray-200">
         <Link href={logoLink} className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg shadow-blue-500/30">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -44,19 +44,19 @@ export default function Sidebar({ navItems, user, onLogout, logoLink = "/" }: Si
       <nav className="flex-1 overflow-y-auto py-6 px-4">
         <ul className="space-y-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+            const isActive = pathname === item.href;
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive
-                      ? "bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30"
+                      ? "bg-gradient-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white shadow-lg shadow-blue-500/30"
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <span className={`${
-                    isActive ? "text-white" : "text-gray-500 group-hover:text-orange-600"
+                    isActive ? "text-white" : "text-gray-500 group-hover:text-[#0099ff]"
                   } transition-colors`}>
                     {item.icon}
                   </span>
@@ -65,7 +65,7 @@ export default function Sidebar({ navItems, user, onLogout, logoLink = "/" }: Si
                     <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
                       isActive
                         ? "bg-white/20 text-white"
-                        : "bg-orange-100 text-orange-600"
+                        : "bg-blue-100 text-blue-600"
                     }`}>
                       {item.badge}
                     </span>
@@ -81,7 +81,7 @@ export default function Sidebar({ navItems, user, onLogout, logoLink = "/" }: Si
       {user && (
         <div className="p-4 border-t border-gray-200">
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 mb-3">
-            <div className="w-10 h-10 rounded-full bg-linear-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
               {user.avatar || user.name?.[0] || "U"}
             </div>
             <div className="flex-1 min-w-0">

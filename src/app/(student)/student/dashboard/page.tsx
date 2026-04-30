@@ -102,7 +102,7 @@ export default function StudentDashboardPage() {
                     {ec.course.thumbnailUrl ? (
                       <img src={ec.course.thumbnailUrl} alt={ec.course.title} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                      <div className="w-full h-full bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
                         <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                       </div>
                     )}

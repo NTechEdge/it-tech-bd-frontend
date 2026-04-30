@@ -88,12 +88,12 @@ export default function InterestsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#e6f0ff] via-white to-[#e6f7ff] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg shadow-blue-500/30">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -125,7 +125,7 @@ export default function InterestsPage() {
                 onClick={() => toggleTopic(topic)}
                 className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
                   selectedTopics.includes(topic)
-                    ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30 scale-105'
+                    ? 'bg-[#0099ff]-500 text-white shadow-md shadow-blue-500/30 scale-105'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -137,8 +137,8 @@ export default function InterestsPage() {
 
         {/* Selection Summary */}
         {selectedTopics.length > 0 && (
-          <div className="bg-orange-50 rounded-xl border border-orange-200 p-4 mb-6">
-            <p className="text-sm font-medium text-orange-900">
+          <div className="bg-[#0099ff]-50 rounded-xl border border-[#0099ff]-200 p-4 mb-6">
+            <p className="text-sm font-medium text-[#0099ff]-900">
               {selectedTopics.length} interest{selectedTopics.length !== 1 ? 's' : ''} selected
             </p>
           </div>
@@ -158,7 +158,7 @@ export default function InterestsPage() {
             type="button"
             onClick={handleContinue}
             disabled={loading || selectedTopics.length === 0}
-            className="flex-1 px-6 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all font-medium shadow-lg shadow-orange-500/30 disabled:opacity-50 disabled:shadow-none"
+            className="flex-1 px-6 py-3.5 bg-gradient-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all font-medium shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:shadow-none"
           >
             {loading ? 'Saving...' : 'Continue'}
           </button>

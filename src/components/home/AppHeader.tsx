@@ -21,7 +21,7 @@ export default function AppHeader({ isShowTitle = false, title = '', showNotific
           {/* Left side - Title and Logo */}
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 rounded-lg bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -38,7 +38,7 @@ export default function AppHeader({ isShowTitle = false, title = '', showNotific
               <input
                 type="text"
                 placeholder="Search courses..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm bg-gray-50 text-gray-900"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:border-transparent text-sm bg-gray-50 text-gray-900"
               />
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -64,7 +64,7 @@ export default function AppHeader({ isShowTitle = false, title = '', showNotific
             {isAuthenticated ? (
               <Link
                 href={user?.role === "admin" ? "/admin/dashboard" : "/student/dashboard"}
-                className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-orange-500 to-orange-600 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
+                className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-xl hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-md"
               >
                 Dashboard
               </Link>
@@ -78,7 +78,7 @@ export default function AppHeader({ isShowTitle = false, title = '', showNotific
                 </Link>
                 <Link
                   href="/register"
-                  className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-orange-500 to-orange-600 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
+                  className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-xl hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-md"
                 >
                   Sign Up
                 </Link>

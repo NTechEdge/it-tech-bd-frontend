@@ -146,7 +146,7 @@ export default function CoursePage() {
                       if (!isAuthenticated) router.push(`/login?redirect=/courses/${courseId}`);
                       else setShowEnrollModal(true);
                     }}
-                    className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
+                    className="px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-lg"
                   >
                     {isAuthenticated ? `Enroll Now — ৳${course.price.toLocaleString()}` : 'Login to Enroll'}
                   </button>
@@ -159,7 +159,7 @@ export default function CoursePage() {
                   {course.thumbnailUrl ? (
                     <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                    <div className="w-full h-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
                       <svg width="64" height="64" fill="white" viewBox="0 0 24 24">
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                       </svg>
@@ -224,7 +224,7 @@ export default function CoursePage() {
                             <div key={lIdx} className="flex items-center justify-between px-4 py-3">
                               <div className="flex items-center gap-3">
                                 {hasAccess ? (
-                                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-orange-500 shrink-0">
+                                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-[#0099ff] shrink-0">
                                     <path d="M8 5v14l11-7z" />
                                   </svg>
                                 ) : (
@@ -271,7 +271,7 @@ export default function CoursePage() {
                       if (!isAuthenticated) router.push(`/login?redirect=/courses/${courseId}`);
                       else setShowEnrollModal(true);
                     }}
-                    className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
+                    className="w-full py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-md"
                   >
                     {isAuthenticated ? 'Enroll Now' : 'Login to Enroll'}
                   </button>
@@ -279,25 +279,25 @@ export default function CoursePage() {
 
                 <div className="space-y-3 pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-orange-500 shrink-0">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-[#0099ff] shrink-0">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                     <span>{getTotalLessons()} lessons</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-orange-500 shrink-0">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-[#0099ff] shrink-0">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>{getTotalDuration()} total length</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-orange-500 shrink-0">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-[#0099ff] shrink-0">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                     <span>{course.level}</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" className="text-orange-500 shrink-0">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" className="text-[#0099ff] shrink-0">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
                     <span>{course.instructorName}</span>

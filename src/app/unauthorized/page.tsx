@@ -45,7 +45,7 @@ export default function UnauthorizedPage() {
           {user?.role === "student" && (
             <Link
               href="/student/dashboard"
-              className="px-6 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="px-6 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               Go to Student Dashboard
             </Link>
@@ -54,7 +54,7 @@ export default function UnauthorizedPage() {
           {user?.role === "admin" && (
             <Link
               href="/admin/dashboard"
-              className="px-6 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="px-6 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               Go to Admin Dashboard
             </Link>
@@ -75,7 +75,7 @@ export default function UnauthorizedPage() {
             </p>
             <Link
               href="/login"
-              className="text-orange-600 hover:text-orange-500 font-medium"
+              className="text-[#0099ff] hover:text-[#003399] font-medium"
             >
               Sign in here
             </Link>

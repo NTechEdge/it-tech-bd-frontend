@@ -42,7 +42,7 @@ export default function CourseListPanel({ courses, selectedCourseId, onCourseSel
     if (title.toLowerCase().includes("javascript") || title.toLowerCase().includes("js")) return "bg-yellow-100";
     if (title.toLowerCase().includes("python")) return "bg-green-100";
     if (title.toLowerCase().includes("docker")) return "bg-cyan-100";
-    if (title.toLowerCase().includes("aws")) return "bg-orange-100";
+    if (title.toLowerCase().includes("aws")) return "bg-blue-100";
     return "bg-gray-100";
   };
 
@@ -102,7 +102,7 @@ export default function CourseListPanel({ courses, selectedCourseId, onCourseSel
               onClick={() => onCourseSelect(course.id)}
               className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
                 isSelected
-                  ? "border-orange-500 bg-orange-50 shadow-md"
+                  ? "border-[#0099ff] bg-blue-50 shadow-md"
                   : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
               }`}
             >
@@ -134,7 +134,7 @@ export default function CourseListPanel({ courses, selectedCourseId, onCourseSel
                     </div>
                     <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-linear-to-r from-orange-500 to-orange-600 rounded-full transition-all duration-300"
+                        className="h-full bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-full transition-all duration-300"
                         style={{ width: `${(completedLessons / totalLessons) * 100}%` }}
                       />
                     </div>

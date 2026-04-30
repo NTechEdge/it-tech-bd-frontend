@@ -81,7 +81,7 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
               disabled={!canScrollLeft}
               className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all ${
                 canScrollLeft
-                  ? 'bg-white border border-gray-200 hover:border-orange-500 hover:text-orange-600 shadow-sm'
+                  ? 'bg-white border border-gray-200 hover:border-[#0099ff]-500 hover:text-[#0099ff]-600 shadow-sm'
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }`}
               aria-label="Scroll left"
@@ -95,7 +95,7 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
               disabled={!canScrollRight}
               className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all ${
                 canScrollRight
-                  ? 'bg-white border border-gray-200 hover:border-orange-500 hover:text-orange-600 shadow-sm'
+                  ? 'bg-white border border-gray-200 hover:border-[#0099ff]-500 hover:text-[#0099ff]-600 shadow-sm'
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }`}
               aria-label="Scroll right"
@@ -117,8 +117,8 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition-all ${
                     selectedCategory === category
-                      ? 'bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-md'
-                      : 'bg-white text-gray-700 border border-gray-200 hover:border-orange-500 hover:text-orange-600'
+                      ? 'bg-linear-to-r from-[#003399]-500 to-[#00d4ff]600 text-white shadow-md'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:border-[#0099ff]-500 hover:text-[#0099ff]-600'
                   }`}
                 >
                   {category}
@@ -128,7 +128,7 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
           )}
           <Link
             href="/courses"
-            className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-orange-500 hover:text-orange-600 transition-colors font-medium text-xs sm:text-sm shrink-0 ml-auto"
+            className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-[#0099ff]-500 hover:text-[#0099ff]-600 transition-colors font-medium text-xs sm:text-sm shrink-0 ml-auto"
           >
             View All
             <svg width="14" height="14" className="sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -168,7 +168,7 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
 
             {/* Content */}
             <div className="p-3 sm:p-4">
-              <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors" style={{ minHeight: '2.5rem' }}>
+              <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-[#0099ff]-600 transition-colors" style={{ minHeight: '2.5rem' }}>
                 {course.title}
               </h3>
 
@@ -176,7 +176,7 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
               <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 h-5 sm:h-6">
                 {course.instructorName ? (
                   <>
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-linear-to-br from-orange-400 to-orange-600 flex items-center justify-center shrink-0">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-linear-to-br from-[#003399]-400 to-[#00d4ff]600 flex items-center justify-center shrink-0">
                       <span className="text-white text-[10px] sm:text-xs font-semibold">{course.instructorName[0]}</span>
                     </div>
                     <span className="text-[10px] sm:text-xs text-gray-600 truncate">{course.instructorName}</span>
@@ -238,7 +238,7 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
       <div className="mt-4 sm:mt-6 text-center sm:hidden">
         <Link
           href="/courses"
-          className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg hover:border-orange-500 hover:text-orange-600 transition-colors font-medium text-xs sm:text-sm"
+          className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg hover:border-[#0099ff]-500 hover:text-[#0099ff]-600 transition-colors font-medium text-xs sm:text-sm"
         >
           View All Courses
           <svg width="14" height="14" className="sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

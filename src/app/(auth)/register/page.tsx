@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import PasswordInput from '@/components/auth/PasswordInput';
+import IconInput from '@/components/auth/IconInput';
+import { EmailIcon, NameIcon } from '@/components/auth/AuthIcons';
 
 export default function RegisterPage() {
   const { register, user } = useAuth();
@@ -70,7 +73,7 @@ export default function RegisterPage() {
         {/* Logo */}
         <div className="text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+            <div className="w-12 h-12 rounded-xl bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg shadow-blue-500/30">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -80,7 +83,7 @@ export default function RegisterPage() {
           <h2 className="text-3xl font-extrabold text-gray-900">Create your account</h2>
           <p className="mt-2 text-sm text-gray-600">
             Or{' '}
-            <Link href="/login" className="font-medium text-orange-600 hover:text-orange-500">
+            <Link href="/login" className="font-medium text-[#0099ff] hover:text-[#003399]">
               sign in to existing account
             </Link>
           </p>
@@ -98,15 +101,15 @@ export default function RegisterPage() {
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Full Name
               </label>
-              <input
+              <IconInput
                 id="name"
                 name="name"
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent sm:text-sm"
                 placeholder="John Doe"
+                icon={<NameIcon />}
               />
             </div>
 
@@ -114,7 +117,7 @@ export default function RegisterPage() {
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email address
               </label>
-              <input
+              <IconInput
                 id="email"
                 name="email"
                 type="email"
@@ -122,8 +125,8 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent sm:text-sm"
                 placeholder="john@example.com"
+                icon={<EmailIcon />}
               />
             </div>
 
@@ -131,14 +134,12 @@ export default function RegisterPage() {
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent sm:text-sm"
+                required
                 placeholder="Password (min 6 characters)"
               />
             </div>
@@ -147,14 +148,12 @@ export default function RegisterPage() {
               <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
                 Confirm Password
               </label>
-              <input
+              <PasswordInput
                 id="confirm-password"
                 name="confirm-password"
-                type="password"
-                required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent sm:text-sm"
+                required
                 placeholder="Confirm password"
               />
             </div>
@@ -163,7 +162,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2.5 px-4 rounded-lg text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 transition-colors"
+            className="w-full flex justify-center py-2.5 px-4 rounded-lg text-sm font-semibold text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] hover:shadow-lg hover:shadow-blue-500/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0099ff] disabled:opacity-50 transition-all shadow-md shadow-blue-500/30"
           >
             {loading ? 'Creating account...' : 'Create account'}
           </button>

@@ -85,7 +85,7 @@ export default function CourseContent({
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
                     completedLessons === chapter.lessons.length
                       ? 'bg-green-100 text-green-600'
-                      : 'bg-orange-100 text-orange-600'
+                      : 'bg-blue-100 text-blue-600'
                   }`}>
                     {completedLessons === chapter.lessons.length ? (
                       <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -127,7 +127,7 @@ export default function CourseContent({
                           onClick={() => onLessonClick(lesson)}
                           className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
                             isSelected
-                              ? 'bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-200'
+                              ? 'bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white shadow-lg shadow-blue-200'
                               : 'hover:bg-white hover:shadow-md bg-white/50'
                           }`}
                         >
@@ -177,14 +177,14 @@ export default function CourseContent({
                           {/* Play icon for enrolled users */}
                           {canAccess && (
                             <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
-                              isSelected ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-orange-100'
+                              isSelected ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-blue-100'
                             }`}>
                               <svg
                                 width="14"
                                 height="14"
                                 fill={isSelected ? "white" : "currentColor"}
                                 viewBox="0 0 24 24"
-                                className={isSelected ? '' : 'text-gray-500 group-hover:text-orange-600'}
+                                className={isSelected ? '' : 'text-gray-500 group-hover:text-[#0099ff]'}
                               >
                                 <path d="M8 5v14l11-7z" />
                               </svg>

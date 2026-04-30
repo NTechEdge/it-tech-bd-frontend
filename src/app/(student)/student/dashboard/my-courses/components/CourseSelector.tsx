@@ -45,13 +45,13 @@ export default function CourseSelector({ selectedCourseId, onCourseSelect }: Cou
               onClick={() => onCourseSelect(course.id)}
               className={`group relative text-left p-5 rounded-xl border-2 transition-all duration-200 ${
                 isSelected
-                  ? "border-orange-500 bg-orange-50 shadow-lg shadow-orange-200"
-                  : "border-gray-200 bg-white hover:border-orange-300 hover:shadow-md"
+                  ? "border-[#0099ff] bg-blue-50 shadow-lg shadow-blue-200"
+                  : "border-gray-200 bg-white hover:border-[#0099ff] hover:shadow-md"
               }`}
             >
               {/* Selection Indicator */}
               {isSelected && (
-                <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center">
+                <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[#0099ff] flex items-center justify-center">
                   <svg width="14" height="14" fill="white" viewBox="0 0 24 24">
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
                   </svg>
@@ -66,7 +66,7 @@ export default function CourseSelector({ selectedCourseId, onCourseSelect }: Cou
               </div>
 
               {/* Course Title */}
-              <h3 className={`font-bold mb-2 pr-8 ${isSelected ? 'text-orange-700' : 'text-gray-900 group-hover:text-orange-600'}`}>
+              <h3 className={`font-bold mb-2 pr-8 ${isSelected ? 'text-[#0099ff]-700' : 'text-gray-900 group-hover:text-[#0099ff]-600'}`}>
                 {course.title}
               </h3>
 
@@ -100,14 +100,14 @@ export default function CourseSelector({ selectedCourseId, onCourseSelect }: Cou
 
               {/* Instructor Info */}
               <div className="mt-4 pt-4 border-t border-gray-200 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-linear-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-xs font-bold">
+                <div className="w-8 h-8 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white text-xs font-bold">
                   {course.instructor.avatar}
                 </div>
                 <div className="text-left">
                   <p className="text-xs font-medium text-gray-900">{course.instructor.name}</p>
                   <p className="text-xs text-gray-500">{course.instructor.title}</p>
                 </div>
-                <div className="ml-auto font-semibold text-orange-600">
+                <div className="ml-auto font-semibold text-[#0099ff]-600">
                   ৳{course.price}
                 </div>
               </div>

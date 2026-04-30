@@ -67,7 +67,7 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
       {/* Sidebar */}
       <aside className="w-20 bg-[#292727] flex flex-col items-center py-6 shrink-0 border-r border-gray-700">
         {/* Logo */}
-        <Link href="/student/dashboard" className="w-12 h-12 rounded-xl bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-8 shadow-lg shadow-orange-500/30">
+        <Link href="/student/dashboard" className="w-12 h-12 rounded-xl bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center mb-8 shadow-lg shadow-blue-500/30">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -83,7 +83,7 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
                 href={item.href}
                 className={`flex flex-col items-center gap-1 w-full py-3 px-2 rounded-xl transition-all duration-200 group ${
                   isActive
-                    ? "text-orange-400 bg-white/10 shadow-lg"
+                    ? "text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] shadow-lg shadow-blue-500/30"
                     : "text-gray-400 hover:text-white hover:bg-white/10"
                 }`}
                 title={item.label}
@@ -123,7 +123,7 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
               <input
                 type="text"
                 placeholder="Search courses..."
-                className="w-64 pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
+                className="w-64 pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:border-transparent text-sm"
               />
               <svg
                 width="18"
@@ -148,7 +148,7 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
 
             {/* Profile */}
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              <div className="w-10 h-10 rounded-full bg-linear-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold">
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold">
                 {user?.name?.[0] || "S"}
               </div>
               <div className="hidden lg:block">

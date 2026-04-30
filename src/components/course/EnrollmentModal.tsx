@@ -66,13 +66,13 @@ export default function EnrollmentModal({ course, onClose, onSuccess }: Props) {
         <p className="text-sm text-gray-500 mb-6">{course.title}</p>
 
         {/* Payment Info */}
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6">
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-700">Course Fee</span>
             <span className="text-lg font-bold text-gray-900">৳{course.price.toLocaleString()}</span>
           </div>
           <div className="text-sm text-gray-600 space-y-1">
-            <p className="font-medium text-orange-700">Payment Instructions:</p>
+            <p className="font-medium text-blue-700">Payment Instructions:</p>
             <p>1. Send ৳{course.price.toLocaleString()} to our bKash number</p>
             <p className="font-mono font-bold text-gray-900">01XXXXXXXXXX</p>
             <p>2. Copy the Transaction ID (TrxID)</p>
@@ -90,7 +90,7 @@ export default function EnrollmentModal({ course, onClose, onSuccess }: Props) {
               value={trxId}
               onChange={(e) => setTrxId(e.target.value)}
               placeholder="e.g. 8N7A6B5C4D"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
               required
             />
           </div>
@@ -116,7 +116,7 @@ export default function EnrollmentModal({ course, onClose, onSuccess }: Props) {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50"
+              className="flex-1 py-3 bg-gradient-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50"
             >
               {loading ? "Submitting..." : "Submit Enrollment"}
             </button>
