@@ -228,7 +228,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                       href={user?.role === "admin" ? "/admin/dashboard" : "/student/dashboard"}
                       className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors group"
                     >
-                      <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
+                      <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
                       <span className="hidden sm:inline text-xs sm:text-sm font-medium text-gray-700">Dashboard</span>
@@ -239,7 +239,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                       onClick={handleLogout}
                       className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-red-50 transition-colors group"
                     >
-                      <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600 group-hover:text-red-600">
+                      <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5 text-gray-600 group-hover:text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                       </svg>
                       <span className="hidden sm:inline text-xs sm:text-sm font-medium text-gray-700 group-hover:text-red-600">Logout</span>

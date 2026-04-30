@@ -31,7 +31,7 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
     : courses.filter(c => c.category === selectedCategory);
 
   // Get unique categories
-  const categories = ['All', ...Array.from(new Set(courses.map((c) => c.category).filter(Boolean)))];
+  const categories = ['All', ...Array.from(new Set(courses.map((c) => c.category).filter(Boolean))) as string[]];
 
   const checkScrollButtons = () => {
     const container = scrollContainerRef.current;
