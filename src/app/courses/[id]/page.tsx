@@ -128,7 +128,7 @@ export default function CoursePage() {
 
                 {hasAccess ? (
                   <button
-                    onClick={() => router.push('/student/dashboard/my-courses')}
+                    onClick={() => router.push(`/student/dashboard/my-courses/${courseId}`)}
                     className="px-6 py-3 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600 transition-all"
                   >
                     Go to My Courses
@@ -256,7 +256,7 @@ export default function CoursePage() {
 
                 {hasAccess ? (
                   <button
-                    onClick={() => router.push('/student/dashboard/my-courses')}
+                    onClick={() => router.push(`/student/dashboard/my-courses/${courseId}`)}
                     className="w-full py-3 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600 transition-all"
                   >
                     Continue Learning

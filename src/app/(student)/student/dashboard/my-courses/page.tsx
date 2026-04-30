@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
-import CourseVideoView from "./components/CourseVideoView";
 
 export default function MyCoursesPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { enrolledCourses, loading, error } = useAppSelector((state) => state.myCourses);
-  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
 
   // Only approved enrollments
   const approvedCourses = enrolledCourses.filter(
@@ -24,12 +22,6 @@ export default function MyCoursesPage() {
   useEffect(() => {
     dispatch(fetchMyCourses());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (approvedCourses.length > 0 && !selectedCourseId) {
-      setSelectedCourseId(approvedCourses[0].course._id);
-    }
-  }, [approvedCourses, selectedCourseId]);
 
   if (loading) {
     return (
@@ -45,21 +37,6 @@ export default function MyCoursesPage() {
         <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">{error}</div>
       </div>
     );
-  }
-
-  // If a course is selected, show the video learning view
-  if (selectedCourseId) {
-    const selectedEnrolled = approvedCourses.find((ec) => ec.course._id === selectedCourseId);
-    if (selectedEnrolled) {
-      return (
-        <CourseVideoView
-          enrolledCourse={selectedEnrolled}
-          allCourses={approvedCourses}
-          onCourseChange={setSelectedCourseId}
-          onBack={() => setSelectedCourseId(null)}
-        />
-      );
-    }
   }
 
   // Course list view
@@ -109,7 +86,7 @@ export default function MyCoursesPage() {
           </p>
           <button
             onClick={() => router.push('/courses')}
-            className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all"
+            className="px-6 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all"
           >
             Browse Courses
           </button>
@@ -125,7 +102,7 @@ export default function MyCoursesPage() {
               <div
                 key={ec.enrollment.id}
                 className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                onClick={() => setSelectedCourseId(ec.course._id)}
+                onClick={() => router.push(`/student/dashboard/my-courses/${ec.course._id}`)}
               >
                 <div className="relative aspect-video overflow-hidden">
                   {ec.course.thumbnailUrl ? (
@@ -135,7 +112,7 @@ export default function MyCoursesPage() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                    <div className="w-full h-full bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center">
                       <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                       </svg>
@@ -163,13 +140,13 @@ export default function MyCoursesPage() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
                       <div
-                        className="bg-gradient-to-r from-orange-500 to-orange-600 h-1.5 rounded-full transition-all"
+                        className="bg-linear-to-r from-orange-500 to-orange-600 h-1.5 rounded-full transition-all"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
                   </div>
 
-                  <button className="w-full py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">
+                  <button className="w-full py-2 bg-linear-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">
                     {progressPct > 0 ? 'Continue Learning' : 'Start Learning'}
                   </button>
                 </div>

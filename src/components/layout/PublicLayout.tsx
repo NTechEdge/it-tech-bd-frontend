@@ -186,15 +186,15 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
         <header className="bg-white shadow-md sticky top-0 z-40">
-          <div className="px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center h-16 gap-3">
+          <div className="px-3 sm:px-4 lg:px-8">
+            <div className="flex items-center h-14 sm:h-16 gap-2 sm:gap-3">
               {/* Hamburger — only on mobile/tablet */}
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors shrink-0"
+                className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors shrink-0"
                 aria-label="Open sidebar"
               >
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg width="20" height="20" className="sm:w-5.5 sm:h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -202,15 +202,15 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               {/* Left spacer for balance on large screens */}
               <div className="hidden lg:block flex-1"></div>
 
-              {/* Search Bar - centered on large screens */}
-              <div className="flex-1 lg:flex-none lg:w-96 max-w-xl">
+              {/* Search Bar - responsive sizing */}
+              <div className="flex-1 min-w-0 lg:flex-none lg:w-96">
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Search courses..."
-                    className="w-200 pl-10 pr-4 py-2 border placeholder:text-gray-400 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm bg-white text-gray-900 "
+                    placeholder="Search..."
+                    className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-1.5 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-xs sm:text-sm bg-white text-gray-900 placeholder:text-gray-400"
                   />
-                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5 absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
@@ -226,36 +226,36 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                     {/* Dashboard */}
                     <Link
                       href={user?.role === "admin" ? "/admin/dashboard" : "/student/dashboard"}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors group"
+                      className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors group"
                     >
-                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
+                      <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
-                      <span className="hidden sm:inline text-sm font-medium text-gray-700">Dashboard</span>
+                      <span className="hidden sm:inline text-xs sm:text-sm font-medium text-gray-700">Dashboard</span>
                     </Link>
 
                     {/* Logout */}
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors group"
+                      className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-red-50 transition-colors group"
                     >
-                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600 group-hover:text-red-600">
+                      <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600 group-hover:text-red-600">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                       </svg>
-                      <span className="hidden sm:inline text-sm font-medium text-gray-700 group-hover:text-red-600">Logout</span>
+                      <span className="hidden sm:inline text-xs sm:text-sm font-medium text-gray-700 group-hover:text-red-600">Logout</span>
                     </button>
                   </>
                 ) : (
                   <>
                     <Link
                       href="/login"
-                      className="px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+                      className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
-                      className="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-orange-500 to-orange-600 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
+                      className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-linear-to-r from-orange-500 to-orange-600 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
                     >
                       Sign Up
                     </Link>
@@ -267,58 +267,58 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 p-3 sm:p-4 lg:p-6 xl:p-8 overflow-y-auto">
           {children}
         </main>
 
         {/* Footer */}
         <footer className="bg-white border-t border-gray-200 mt-auto">
-          <div className="px-4 sm:px-6 lg:px-8 py-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {/* Company Info */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+              <div className="sm:col-span-2 lg:col-span-1">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shrink-0">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white" className="sm:w-5 sm:h-5">
                       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
-                  <span className="text-lg font-bold text-gray-900">IT-TECH-BD</span>
+                  <span className="text-base sm:text-lg font-bold text-gray-900">IT-TECH-BD</span>
                 </div>
-                <p className="text-sm text-gray-600">Empowering learners with quality IT courses and training programs.</p>
+                <p className="text-xs sm:text-sm text-gray-600">Empowering learners with quality IT courses and training programs.</p>
               </div>
 
               {/* Quick Links */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-4">Quick Links</h3>
-                <ul className="space-y-2">
-                  <li><Link href="/courses" className="text-sm text-gray-600 hover:text-orange-600">Courses</Link></li>
-                  <li><Link href="/about" className="text-sm text-gray-600 hover:text-orange-600">About Us</Link></li>
-                  <li><Link href="/contact" className="text-sm text-gray-600 hover:text-orange-600">Contact</Link></li>
+                <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3 sm:mb-4">Quick Links</h3>
+                <ul className="space-y-1.5 sm:space-y-2">
+                  <li><Link href="/courses" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Courses</Link></li>
+                  <li><Link href="/about" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">About Us</Link></li>
+                  <li><Link href="/contact" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Contact</Link></li>
                 </ul>
               </div>
 
               {/* Support */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-4">Support</h3>
-                <ul className="space-y-2">
-                  <li><Link href="/help" className="text-sm text-gray-600 hover:text-orange-600">Help Center</Link></li>
-                  <li><Link href="/terms" className="text-sm text-gray-600 hover:text-orange-600">Terms of Service</Link></li>
-                  <li><Link href="/privacy" className="text-sm text-gray-600 hover:text-orange-600">Privacy Policy</Link></li>
+                <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3 sm:mb-4">Support</h3>
+                <ul className="space-y-1.5 sm:space-y-2">
+                  <li><Link href="/help" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Help Center</Link></li>
+                  <li><Link href="/terms" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Terms of Service</Link></li>
+                  <li><Link href="/privacy" className="text-xs sm:text-sm text-gray-600 hover:text-orange-600">Privacy Policy</Link></li>
                 </ul>
               </div>
 
               {/* Contact */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-4">Contact Us</h3>
-                <ul className="space-y-2 text-sm text-gray-600">
+                <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3 sm:mb-4">Contact Us</h3>
+                <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-gray-600">
                   <li>Email: support@it-tech-bd.com</li>
                   <li>Phone: +880 1234-567890</li>
                   <li>Dhaka, Bangladesh</li>
                 </ul>
               </div>
             </div>
-            <div className="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-gray-600">
+            <div className="border-t border-gray-200 mt-6 sm:mt-8 pt-4 sm:pt-8 text-center text-[10px] sm:text-xs text-gray-600">
               <p>&copy; 2026 IT-TECH-BD. All rights reserved.</p>
             </div>
           </div>

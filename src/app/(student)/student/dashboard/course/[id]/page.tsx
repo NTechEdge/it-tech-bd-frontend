@@ -3,15 +3,15 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-// This route is now handled by the my-courses page with inline video view.
-// Redirect to my-courses so the student can select the course there.
+// This route now redirects to the proper course detail page under my-courses.
 export default function CourseDetailRedirect() {
   const router = useRouter();
   const params = useParams();
 
   useEffect(() => {
-    router.replace("/student/dashboard/my-courses");
-  }, [router]);
+    const courseId = params.id as string;
+    router.replace(`/student/dashboard/my-courses/${courseId}`);
+  }, [router, params]);
 
   return (
     <div className="flex items-center justify-center h-64">

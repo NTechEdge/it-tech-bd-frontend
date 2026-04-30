@@ -75,7 +75,7 @@ export default function HomePage() {
   return (
     <PublicLayout>
       {/* Main Content - matches Flutter home screen */}
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Promotional Banners */}
         <div>
           <PromotionalBanner banners={mockBanners} />

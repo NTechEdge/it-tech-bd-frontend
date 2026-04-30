@@ -117,7 +117,7 @@ export default function StudentDashboardPage() {
                     </div>
                   </div>
                   <Link
-                    href="/student/dashboard/my-courses"
+                    href={`/student/dashboard/my-courses/${ec.course._id}`}
                     className="shrink-0 px-3 py-1.5 text-xs font-semibold text-orange-600 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors"
                   >
                     {pct > 0 ? 'Continue' : 'Start'}
