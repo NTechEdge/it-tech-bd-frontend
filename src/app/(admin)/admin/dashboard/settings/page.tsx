@@ -100,7 +100,7 @@ export default function AdminSettingsPage() {
               id="siteName"
               value={settings.siteName}
               onChange={(e) => updateSettings({ siteName: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900"
             />
           </div>
 
@@ -113,7 +113,7 @@ export default function AdminSettingsPage() {
               value={settings.siteDescription}
               onChange={(e) => updateSettings({ siteDescription: e.target.value })}
               rows={3}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900"
             />
           </div>
 
@@ -130,7 +130,7 @@ export default function AdminSettingsPage() {
               type="button"
               onClick={() => updateSettings({ maintenanceMode: !settings.maintenanceMode })}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.maintenanceMode ? 'bg-orange-500' : 'bg-gray-200'
+                settings.maintenanceMode ? 'bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff]' : 'bg-gray-200'
               }`}
             >
               <span
@@ -156,7 +156,7 @@ export default function AdminSettingsPage() {
               id="contactEmail"
               value={settings.contactEmail}
               onChange={(e) => updateSettings({ contactEmail: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900"
             />
           </div>
 
@@ -169,7 +169,7 @@ export default function AdminSettingsPage() {
               id="contactPhone"
               value={settings.contactPhone}
               onChange={(e) => updateSettings({ contactPhone: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900"
             />
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function AdminSettingsPage() {
                 })
               }
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.features?.enableRegistration ? 'bg-orange-500' : 'bg-gray-200'
+                settings.features?.enableRegistration ? 'bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff]' : 'bg-gray-200'
               }`}
             >
               <span
@@ -224,7 +224,7 @@ export default function AdminSettingsPage() {
                 })
               }
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.features?.enableCourseReview ? 'bg-orange-500' : 'bg-gray-200'
+                settings.features?.enableCourseReview ? 'bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff]' : 'bg-gray-200'
               }`}
             >
               <span
@@ -252,7 +252,7 @@ export default function AdminSettingsPage() {
                 })
               }
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.features?.enableCertificates ? 'bg-orange-500' : 'bg-gray-200'
+                settings.features?.enableCertificates ? 'bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff]' : 'bg-gray-200'
               }`}
             >
               <span
@@ -280,7 +280,7 @@ export default function AdminSettingsPage() {
               onChange={(e) =>
                 updateSettings({ socialLinks: { ...settings.socialLinks, facebook: e.target.value } })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900 placeholder-gray-400"
               placeholder="https://facebook.com/yourpage"
             />
           </div>
@@ -296,7 +296,7 @@ export default function AdminSettingsPage() {
               onChange={(e) =>
                 updateSettings({ socialLinks: { ...settings.socialLinks, twitter: e.target.value } })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900 placeholder-gray-400"
               placeholder="https://twitter.com/yourhandle"
             />
           </div>
@@ -312,7 +312,7 @@ export default function AdminSettingsPage() {
               onChange={(e) =>
                 updateSettings({ socialLinks: { ...settings.socialLinks, youtube: e.target.value } })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900 placeholder-gray-400"
               placeholder="https://youtube.com/@yourchannel"
             />
           </div>
@@ -324,7 +324,7 @@ export default function AdminSettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
+          className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-colors disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save Settings'}
         </button>

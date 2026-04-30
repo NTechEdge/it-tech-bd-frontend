@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { adminService, PaymentEnrollment } from '@/lib/api/adminService';
+import { AdminTableLoadingState, AdminMobileListLoadingState } from '@/components/ui/loading-states';
 
 export default function AdminPaymentsPage() {
   const [payments, setPayments] = useState<PaymentEnrollment[]>([]);
@@ -86,7 +87,7 @@ export default function AdminPaymentsPage() {
               }}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 statusFilter === status
-                  ? 'bg-orange-500 text-white'
+                  ? 'bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white'
                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -120,7 +121,7 @@ export default function AdminPaymentsPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {loading ? (
-                <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">Loading...</td></tr>
+                <AdminTableLoadingState colSpan={7} message="Loading payments..." />
               ) : payments.length === 0 ? (
                 <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">No payments found</td></tr>
               ) : (
@@ -188,7 +189,7 @@ export default function AdminPaymentsPage() {
         {/* Mobile/Tablet card list */}
         <div className="lg:hidden divide-y divide-gray-100">
           {loading ? (
-            <p className="px-4 py-6 text-center text-gray-500 text-sm">Loading...</p>
+            <AdminMobileListLoadingState />
           ) : payments.length === 0 ? (
             <p className="px-4 py-6 text-center text-gray-500 text-sm">No payments found</p>
           ) : (

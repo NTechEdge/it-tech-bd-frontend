@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { adminService, DashboardStats } from '@/lib/api/adminService';
+import { AdminDashboardLoadingState } from '@/components/ui/loading-states';
 
 interface CourseAnalytics {
   courseId: string;
@@ -95,11 +96,7 @@ export default function AdminAnalyticsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
+    return <AdminDashboardLoadingState />;
   }
 
   if (error) {
@@ -127,7 +124,7 @@ export default function AdminAnalyticsPage() {
         <button
           onClick={loadAnalytics}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
         >
           <svg
             width="16"
@@ -150,7 +147,7 @@ export default function AdminAnalyticsPage() {
           { label: 'Total Enrollments', value: totalEnrollments, color: 'text-blue-600', bg: 'bg-blue-50' },
           { label: 'Total Video Views', value: totalViews, color: 'text-purple-600', bg: 'bg-purple-50' },
           { label: 'Avg Completion Rate', value: `${avgCompletion}%`, color: 'text-green-600', bg: 'bg-green-50' },
-          { label: 'Total Watch Time', value: formatTime(totalWatchTime), color: 'text-orange-600', bg: 'bg-orange-50' },
+          { label: 'Total Watch Time', value: formatTime(totalWatchTime), color: 'text-[#0099ff]', bg: 'bg-blue-50' },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
             <p className="text-sm text-gray-500 mb-1">{stat.label}</p>
@@ -181,7 +178,7 @@ export default function AdminAnalyticsPage() {
               <p className="text-sm text-gray-600 mt-1">Inactive Courses</p>
             </div>
             <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <p className="text-3xl font-bold text-orange-600">{dashboardStats.stats.totalEnrollments}</p>
+              <p className="text-3xl font-bold text-[#0099ff]">{dashboardStats.stats.totalEnrollments}</p>
               <p className="text-sm text-gray-600 mt-1">Total Enrollments</p>
             </div>
             <div className="text-center p-4 bg-gray-50 rounded-lg">
@@ -290,7 +287,7 @@ export default function AdminAnalyticsPage() {
                       <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
                         idx === 0 ? 'bg-yellow-100 text-yellow-700' :
                         idx === 1 ? 'bg-gray-100 text-gray-600' :
-                        idx === 2 ? 'bg-orange-100 text-orange-700' :
+                        idx === 2 ? 'bg-blue-100 text-blue-700' :
                         'bg-gray-50 text-gray-500'
                       }`}>
                         {idx + 1}
@@ -312,7 +309,7 @@ export default function AdminAnalyticsPage() {
                       <div className="flex items-center gap-2">
                         <div className="w-16 bg-gray-200 rounded-full h-1.5">
                           <div
-                            className="bg-orange-500 h-1.5 rounded-full"
+                            className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full"
                             style={{ width: `${lesson.completionRate}%` }}
                           />
                         </div>

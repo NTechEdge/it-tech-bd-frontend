@@ -92,7 +92,7 @@ export default function CourseLearningView({ courseId: initialCourseId = default
             <select
               value={selectedCourseId}
               onChange={(e) => handleCourseChange(e.target.value)}
-              className="appearance-none bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-900 text-sm font-medium rounded-lg px-4 py-2 pr-10 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="appearance-none bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-900 text-sm font-medium rounded-lg px-4 py-2 pr-10 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:border-transparent"
             >
               {allCourses.map((course) => (
                 <option key={course.id} value={course.id}>
@@ -150,7 +150,7 @@ export default function CourseLearningView({ courseId: initialCourseId = default
               {/* Current Lesson Info */}
               <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                 <h3 className="font-bold text-gray-900 mb-2">Now Playing</h3>
-                <p className="text-lg font-semibold text-orange-600 mb-2">{currentLesson().title}</p>
+                <p className="text-lg font-semibold text-[#0099ff] mb-2">{currentLesson().title}</p>
                 <div className="flex items-center gap-4 text-sm text-gray-600">
                   <span className="flex items-center gap-1">
                     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

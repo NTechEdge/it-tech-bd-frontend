@@ -9,7 +9,7 @@ export default function CertificatesPage() {
         </div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Certificates</h2>
         <p className="text-gray-600 mb-6">Your earned certificates will appear here after completing courses.</p>
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 rounded-full text-sm font-medium">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>

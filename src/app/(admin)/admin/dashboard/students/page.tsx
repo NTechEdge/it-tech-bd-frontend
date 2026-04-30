@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { adminService, Student } from '@/lib/api/adminService';
-import { TableLoadingState, MobileListLoadingState } from '@/components/ui/loading-states';
+import { AdminTableLoadingState, AdminMobileListLoadingState } from '@/components/ui/loading-states';
 
 export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -65,11 +65,11 @@ export default function AdminStudentsPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search by name or email..."
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-gray-900 placeholder-gray-400"
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900 placeholder-gray-400"
         />
         <button
           type="submit"
-          className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+          className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-colors"
         >
           Search
         </button>
@@ -96,7 +96,7 @@ export default function AdminStudentsPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {loading ? (
-                <TableLoadingState colSpan={4} message="Loading students..." />
+                <AdminTableLoadingState colSpan={4} message="Loading students..." />
               ) : students.length === 0 ? (
                 <tr><td colSpan={4} className="px-6 py-4 text-center text-gray-500">No students found</td></tr>
               ) : (
@@ -126,7 +126,7 @@ export default function AdminStudentsPage() {
         {/* Mobile card list */}
         <div className="sm:hidden divide-y divide-gray-100">
           {loading ? (
-            <MobileListLoadingState />
+            <AdminMobileListLoadingState />
           ) : students.length === 0 ? (
             <p className="px-4 py-6 text-center text-gray-500 text-sm">No students found</p>
           ) : (

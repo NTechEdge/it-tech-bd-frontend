@@ -69,7 +69,7 @@ export default function CoursePage() {
     return (
       <PublicLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-[#0099ff] border-t-transparent rounded-full animate-spin"></div>
         </div>
       </PublicLayout>
     );
@@ -84,7 +84,7 @@ export default function CoursePage() {
             <p className="text-gray-600 mb-4">The course you&apos;re looking for doesn&apos;t exist.</p>
             <button
               onClick={() => router.push('/courses')}
-              className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+              className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-colors"
             >
               Browse Courses
             </button>
@@ -107,19 +107,19 @@ export default function CoursePage() {
                     Courses
                   </button>
                   <span>/</span>
-                  <span className="text-orange-400">{course.category}</span>
+                  <span className="text-blue-400">{course.category}</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-bold mb-4">{course.title}</h1>
                 <p className="text-gray-300 mb-6">{course.shortDesc}</p>
 
                 <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400 mb-6">
                   <span className="flex items-center gap-1">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-orange-400">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-blue-400">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
                     {course.instructorName}
                   </span>
-                  <span className="px-2 py-0.5 bg-orange-500/20 text-orange-400 rounded text-xs font-medium">
+                  <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs font-medium">
                     {course.level}
                   </span>
                   <span>{getTotalLessons()} lessons</span>

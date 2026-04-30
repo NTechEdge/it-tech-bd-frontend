@@ -187,7 +187,7 @@ export const dockerAwsCourseData: Course = {
   totalDuration: "5h 20m",
   price: 1800,
   level: "Beginner to Intermediate",
-  badgeColor: "bg-orange-100 text-orange-700",
+  badgeColor: "bg-blue-100 text-blue-700",
 };
 
 export const dockerAwsCourseChapters: Chapter[] = [

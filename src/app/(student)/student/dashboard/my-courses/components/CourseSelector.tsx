@@ -114,7 +114,7 @@ export default function CourseSelector({ selectedCourseId, onCourseSelect }: Cou
 
               {/* Hover Gradient Effect */}
               {!isSelected && (
-                <div className="absolute inset-0 rounded-xl bg-linear-to-r from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
+                <div className="absolute inset-0 rounded-xl bg-linear-to-r from-[#0099ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
               )}
             </button>
           );

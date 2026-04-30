@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { adminService, DashboardStats } from '@/lib/api/adminService';
+import { AdminDashboardLoadingState, AdminStatsLoadingState, AdminEnrollmentsLoadingState } from '@/components/ui/loading-states';
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -33,11 +34,7 @@ export default function AdminDashboardPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-600">Loading dashboard...</div>
-      </div>
-    );
+    return <AdminDashboardLoadingState />;
   }
 
   if (error) {
@@ -137,7 +134,7 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Active Courses</h3>
-          <p className="text-4xl font-bold text-orange-500">
+          <p className="text-4xl font-bold text-[#0099ff]">
             {stats.stats.activeCourses}
           </p>
           <p className="text-sm text-gray-600 mt-2">

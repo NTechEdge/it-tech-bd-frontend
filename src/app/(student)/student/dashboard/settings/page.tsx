@@ -232,14 +232,14 @@ export default function StudentSettingsPage() {
 
       {/* Profile Completion Banner */}
       {profileStatus && !profileStatus.isProfileComplete && (
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <svg className="w-6 h-6 text-orange-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <div className="flex-1">
-              <p className="font-semibold text-orange-900">Complete Your Profile</p>
-              <p className="text-sm text-orange-700 mt-1">
+              <p className="font-semibold text-blue-900">Complete Your Profile</p>
+              <p className="text-sm text-blue-700 mt-1">
                 Please add your address information (division, district, city) to complete your profile.
               </p>
             </div>
@@ -264,11 +264,11 @@ export default function StudentSettingsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-6 py-4 font-medium text-sm border-b-2 transition-colors flex items-center gap-2 ${
                   activeTab === tab.id
-                    ? 'border-orange-500 text-orange-600'
+                    ? 'border-[#0099ff] text-[#0099ff]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <span className={`${activeTab === tab.id ? 'text-orange-600' : 'text-gray-500'}`}>
+                <span className={`${activeTab === tab.id ? 'text-[#0099ff]' : 'text-gray-500'}`}>
                   {tab.icon}
                 </span>
                 {tab.label}
@@ -292,7 +292,7 @@ export default function StudentSettingsPage() {
                         type="text"
                         value={personalDetails.name}
                         onChange={(e) => setPersonalDetails({ ...personalDetails, name: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                         required
                       />
                     </div>
@@ -302,7 +302,7 @@ export default function StudentSettingsPage() {
                         type="email"
                         value={personalDetails.email}
                         onChange={(e) => setPersonalDetails({ ...personalDetails, email: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                         required
                       />
                     </div>
@@ -312,7 +312,7 @@ export default function StudentSettingsPage() {
                         type="tel"
                         value={personalDetails.phone}
                         onChange={(e) => setPersonalDetails({ ...personalDetails, phone: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                         placeholder="+880 1XXX-XXXXXX"
                       />
                     </div>
@@ -320,7 +320,7 @@ export default function StudentSettingsPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50"
+                    className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 disabled:opacity-50"
                   >
                     {loading ? 'Saving...' : 'Save Changes'}
                   </button>
@@ -338,7 +338,7 @@ export default function StudentSettingsPage() {
                         type="text"
                         value={address.division || ''}
                         onChange={(e) => setAddress({ ...address, division: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                         placeholder="e.g., Dhaka"
                       />
                     </div>
@@ -348,7 +348,7 @@ export default function StudentSettingsPage() {
                         type="text"
                         value={address.district || ''}
                         onChange={(e) => setAddress({ ...address, district: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                         placeholder="e.g., Dhaka"
                       />
                     </div>
@@ -358,7 +358,7 @@ export default function StudentSettingsPage() {
                         type="text"
                         value={address.city || ''}
                         onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                         placeholder="e.g., Gulshan"
                       />
                     </div>
@@ -370,7 +370,7 @@ export default function StudentSettingsPage() {
                         type="text"
                         value={address.streetAddress || ''}
                         onChange={(e) => setAddress({ ...address, streetAddress: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                         placeholder="House, Road, Area"
                       />
                     </div>
@@ -380,7 +380,7 @@ export default function StudentSettingsPage() {
                         type="text"
                         value={address.postalCode || ''}
                         onChange={(e) => setAddress({ ...address, postalCode: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                         placeholder="e.g., 1212"
                       />
                     </div>
@@ -388,7 +388,7 @@ export default function StudentSettingsPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50"
+                    className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 disabled:opacity-50"
                   >
                     {loading ? 'Saving...' : 'Save Address'}
                   </button>
@@ -420,7 +420,7 @@ export default function StudentSettingsPage() {
                     type="password"
                     value={passwordData.currentPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                     required
                   />
                 </div>
@@ -430,7 +430,7 @@ export default function StudentSettingsPage() {
                     type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                     required
                     minLength={6}
                   />
@@ -441,7 +441,7 @@ export default function StudentSettingsPage() {
                     type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                     required
                     minLength={6}
                   />
@@ -449,7 +449,7 @@ export default function StudentSettingsPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50"
+                  className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 disabled:opacity-50"
                 >
                   {loading ? 'Updating...' : 'Update Password'}
                 </button>
@@ -471,13 +471,13 @@ export default function StudentSettingsPage() {
                     value={interestInput}
                     onChange={(e) => setInterestInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addInterest())}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff]"
                     placeholder="Add an interest"
                   />
                   <button
                     type="button"
                     onClick={addInterest}
-                    className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+                    className="px-4 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40"
                   >
                     Add
                   </button>
@@ -489,13 +489,13 @@ export default function StudentSettingsPage() {
                     {interests.map((interest) => (
                       <span
                         key={interest}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full"
                       >
                         {interest}
                         <button
                           type="button"
                           onClick={() => removeInterest(interest)}
-                          className="hover:text-orange-900"
+                          className="hover:text-blue-900"
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -513,7 +513,7 @@ export default function StudentSettingsPage() {
                   type="button"
                   onClick={handleInterestsSubmit}
                   disabled={loading}
-                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50"
+                  className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 disabled:opacity-50"
                 >
                   {loading ? 'Saving...' : 'Save Interests'}
                 </button>

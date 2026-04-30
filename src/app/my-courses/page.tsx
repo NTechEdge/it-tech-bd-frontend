@@ -55,13 +55,13 @@ export default function MyCoursesPage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold mb-1">My Courses</h1>
-                <p className="text-orange-100">
+                <p className="text-blue-100">
                   {approvedCourses.length} active {approvedCourses.length === 1 ? 'course' : 'courses'}
                 </p>
               </div>
               <Link
                 href="/courses"
-                className="self-start sm:self-auto px-5 py-2.5 bg-white text-orange-600 font-semibold rounded-xl hover:bg-gray-100 transition-all shadow-lg flex items-center gap-2 text-sm"
+                className="self-start sm:self-auto px-5 py-2.5 bg-white text-[#0099ff] font-semibold rounded-xl hover:bg-gray-100 transition-all shadow-lg flex items-center gap-2 text-sm"
               >
                 Browse More Courses
               </Link>

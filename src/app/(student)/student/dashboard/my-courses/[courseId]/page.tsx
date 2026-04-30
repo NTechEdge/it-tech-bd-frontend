@@ -21,7 +21,7 @@ export default function CourseDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-[#0099ff] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -40,7 +40,7 @@ export default function CourseDetailPage() {
           <p className="text-gray-600 mb-4">You may not have access to this course.</p>
           <button
             onClick={() => router.push('/student/dashboard/my-courses')}
-            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+            className="px-4 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-colors"
           >
             Back to My Courses
           </button>

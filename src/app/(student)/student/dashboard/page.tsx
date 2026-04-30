@@ -53,10 +53,10 @@ export default function StudentDashboardPage() {
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <p className="text-sm text-gray-500 mb-2">Overall Progress</p>
-          <p className="text-3xl font-bold text-orange-500">{overallProgress}%</p>
+          <p className="text-3xl font-bold text-[#0099ff]">{overallProgress}%</p>
           <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
             <div
-              className="bg-gradient-to-r from-orange-500 to-orange-600 h-1.5 rounded-full transition-all"
+              className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full transition-all"
               style={{ width: `${overallProgress}%` }}
             />
           </div>
@@ -67,7 +67,7 @@ export default function StudentDashboardPage() {
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 className="font-bold text-gray-900">My Courses</h2>
-          <Link href="/student/dashboard/my-courses" className="text-sm text-orange-600 hover:text-orange-700 font-medium">
+          <Link href="/student/dashboard/my-courses" className="text-sm text-[#0099ff] hover:text-[#003399] font-medium">
             View all
           </Link>
         </div>
@@ -83,7 +83,7 @@ export default function StudentDashboardPage() {
             </p>
             <Link
               href="/courses"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all text-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-blue-500/40 transition-all text-sm"
             >
               Browse Courses
             </Link>
@@ -110,14 +110,14 @@ export default function StudentDashboardPage() {
                     <p className="font-medium text-gray-900 text-sm truncate">{ec.course.title}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="flex-1 bg-gray-200 rounded-full h-1.5">
-                        <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${pct}%` }} />
+                        <div className="bg-[#0099ff] h-1.5 rounded-full" style={{ width: `${pct}%` }} />
                       </div>
                       <span className="text-xs text-gray-500 shrink-0">{pct}%</span>
                     </div>
                   </div>
                   <Link
                     href={`/student/dashboard/my-courses/${ec.course._id}`}
-                    className="shrink-0 px-3 py-1.5 text-xs font-semibold text-orange-600 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors"
+                    className="shrink-0 px-3 py-1.5 text-xs font-semibold text-[#0099ff] border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
                   >
                     {pct > 0 ? 'Continue' : 'Start'}
                   </Link>
@@ -132,10 +132,10 @@ export default function StudentDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/courses"
-          className="flex items-center gap-4 bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:border-orange-300 hover:shadow-md transition-all group"
+          className="flex items-center gap-4 bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:border-[#0099ff] hover:shadow-md transition-all group"
         >
-          <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:bg-orange-500 transition-colors">
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-orange-500 group-hover:text-white transition-colors">
+          <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-[#0099ff] transition-colors">
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-[#0099ff] group-hover:text-white transition-colors">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
@@ -147,7 +147,7 @@ export default function StudentDashboardPage() {
 
         <Link
           href="/student/dashboard/my-courses"
-          className="flex items-center gap-4 bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:border-orange-300 hover:shadow-md transition-all group"
+          className="flex items-center gap-4 bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:border-[#0099ff] hover:shadow-md transition-all group"
         >
           <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-500 transition-colors">
             <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-green-500 group-hover:text-white transition-colors">

@@ -158,7 +158,7 @@ export default function InterestsPage() {
             type="button"
             onClick={handleContinue}
             disabled={loading || selectedTopics.length === 0}
-            className="flex-1 px-6 py-3.5 bg-gradient-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all font-medium shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:shadow-none"
+            className="flex-1 px-6 py-3.5 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-xl hover:shadow-xl hover:shadow-blue-500/40 transition-all font-medium shadow-lg disabled:opacity-50 disabled:shadow-none"
           >
             {loading ? 'Saving...' : 'Continue'}
           </button>

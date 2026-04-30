@@ -62,7 +62,7 @@ export default function LockedVideoPlaceholder({
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <button
             onClick={onEnrollClick}
-            className="px-8 py-3 bg-gradient-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/50 hover:-translate-y-0.5"
+            className="px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-blue-500/50 transition-all duration-200 shadow-lg hover:-translate-y-0.5"
           >
             {isAuthenticated ? "Enroll Now" : "Sign In to Enroll"}
           </button>

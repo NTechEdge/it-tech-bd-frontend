@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminService, Course } from '@/lib/api/adminService';
-import { TableLoadingState, MobileListLoadingState } from '@/components/ui/loading-states';
+import { AdminTableLoadingState, AdminMobileListLoadingState } from '@/components/ui/loading-states';
 
 export default function AdminCoursesPage() {
   const router = useRouter();
@@ -175,7 +175,7 @@ export default function AdminCoursesPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {loading ? (
-                <TableLoadingState colSpan={7} message="Loading courses..." />
+                <AdminTableLoadingState colSpan={7} message="Loading courses..." />
               ) : courses.length === 0 ? (
                 <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">No courses found</td></tr>
               ) : (
@@ -227,7 +227,7 @@ export default function AdminCoursesPage() {
         {/* Mobile card list */}
         <div className="md:hidden divide-y divide-gray-100">
           {loading ? (
-            <MobileListLoadingState />
+            <AdminMobileListLoadingState />
           ) : courses.length === 0 ? (
             <p className="px-4 py-6 text-center text-gray-500 text-sm">No courses found</p>
           ) : (

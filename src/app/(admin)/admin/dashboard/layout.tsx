@@ -25,7 +25,7 @@ export default function AdminDashboardLayout({
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0099ff] mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
@@ -40,7 +40,7 @@ export default function AdminDashboardLayout({
           <p className="text-gray-600 mb-4">You don't have permission to access this page.</p>
           <a
             href="/"
-            className="text-orange-600 hover:text-orange-500 font-medium"
+            className="text-[#0099ff] hover:text-[#003399] font-medium"
           >
             Go back to home
           </a>

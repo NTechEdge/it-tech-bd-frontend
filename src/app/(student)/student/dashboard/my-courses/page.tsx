@@ -26,7 +26,7 @@ export default function MyCoursesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-[#0099ff] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -86,7 +86,7 @@ export default function MyCoursesPage() {
           </p>
           <button
             onClick={() => router.push('/courses')}
-            className="px-6 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all"
+            className="px-6 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-blue-500/40 transition-all"
           >
             Browse Courses
           </button>
@@ -112,7 +112,7 @@ export default function MyCoursesPage() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                    <div className="w-full h-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
                       <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                       </svg>
@@ -127,7 +127,7 @@ export default function MyCoursesPage() {
                 </div>
 
                 <div className="p-4">
-                  <h3 className="font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-orange-600 transition-colors">
+                  <h3 className="font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-[#0099ff] transition-colors">
                     {ec.course.title}
                   </h3>
                   <p className="text-xs text-gray-500 mb-3">{ec.course.instructorName}</p>
@@ -140,13 +140,13 @@ export default function MyCoursesPage() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
                       <div
-                        className="bg-linear-to-r from-orange-500 to-orange-600 h-1.5 rounded-full transition-all"
+                        className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full transition-all"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
                   </div>
 
-                  <button className="w-full py-2 bg-linear-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">
+                  <button className="w-full py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white text-sm font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-all">
                     {progressPct > 0 ? 'Continue Learning' : 'Start Learning'}
                   </button>
                 </div>

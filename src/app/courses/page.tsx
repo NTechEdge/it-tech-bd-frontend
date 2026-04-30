@@ -192,7 +192,7 @@ export default function CoursesPage() {
             <div className="flex items-center justify-center gap-4">
               <Link
                 href="/register"
-                className="px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200 shadow-lg hover:-translate-y-0.5"
               >
                 Get Started for Free
               </Link>

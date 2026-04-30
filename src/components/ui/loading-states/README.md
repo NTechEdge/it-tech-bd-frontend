@@ -33,12 +33,39 @@ A collection of unique loading state components for different contexts in your a
 
 ### Table Loading States
 
-- **`TableLoadingState`** - For admin tables
+- **`TableLoadingState`** - For general tables
   - Bouncing dots animation
   - Props: `colSpan?: number` (default: 7), `message?: string` (default: "Loading...")
 
 - **`MobileListLoadingState`** - For mobile card lists
   - Small inline spinner for mobile views
+
+### Admin-Specific Loading States
+
+- **`AdminDashboardLoadingState`** - For admin dashboard pages
+  - Blue spinner with chart icon
+  - Messages: "Loading dashboard..." / "Fetching statistics and recent activity"
+
+- **`AdminStatsLoadingState`** - For admin stats cards
+  - Multiple skeleton cards with pulse animation
+
+- **`AdminTableLoadingState`** - For admin tables
+  - Compact spinner with customizable message
+  - Props: `colSpan?: number` (default: 7), `message?: string` (default: "Loading...")
+
+- **`AdminMobileListLoadingState`** - For admin mobile lists
+  - Small compact spinner for mobile views
+
+- **`AdminActionLoadingState`** - For admin actions (delete, update, etc.)
+  - Green spinner for action feedback
+  - Props: `action: string` (e.g., "Deleting", "Updating")
+
+- **`AdminEnrollmentsLoadingState`** - For enrollment tables
+  - Bouncing dots animation
+  - Message: "Loading enrollments..."
+
+- **`AdminPaymentsLoadingState`** - For payment loading
+  - Green-themed spinner with currency icon
 
 ### Context-Specific Loading States
 
@@ -66,11 +93,21 @@ A collection of unique loading state components for different contexts in your a
 Import from the index file:
 
 ```tsx
-import { CourseLoadingState, DashboardCardLoadingState, TableLoadingState } from '@/components/ui/loading-states';
+import {
+  CourseLoadingState,
+  DashboardCardLoadingState,
+  AdminTableLoadingState,
+  AdminDashboardLoadingState
+} from '@/components/ui/loading-states';
 
 // Full page loading
 if (loading) {
   return <CourseLoadingState />;
+}
+
+// Admin dashboard loading
+if (loading) {
+  return <AdminDashboardLoadingState />;
 }
 
 // Card loading
@@ -80,9 +117,9 @@ if (loading) {
   // content
 )}
 
-// Table loading
+// Admin table loading
 {loading ? (
-  <TableLoadingState colSpan={7} message="Loading courses..." />
+  <AdminTableLoadingState colSpan={7} message="Loading courses..." />
 ) : (
   // content
 )}

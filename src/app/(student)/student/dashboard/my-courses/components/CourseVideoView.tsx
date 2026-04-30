@@ -111,7 +111,7 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
             <span className="sm:hidden">{progressPct}%</span>
             <div className="w-12 sm:w-24 bg-gray-200 rounded-full h-1.5">
               <div
-                className="bg-orange-500 h-1.5 rounded-full transition-all"
+                className="bg-[#0099ff] h-1.5 rounded-full transition-all"
                 style={{ width: `${progressPct}%` }}
               />
             </div>
@@ -165,7 +165,7 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
                   className={`shrink-0 px-4 py-2 text-sm font-semibold rounded-lg transition-all w-full sm:w-auto ${
                     isLessonCompleted(selectedLessonId)
                       ? 'bg-green-100 text-green-700 cursor-default'
-                      : 'bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50'
+                      : 'bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white hover:shadow-lg hover:shadow-blue-500/40 disabled:opacity-50'
                   }`}
                 >
                   {isLessonCompleted(selectedLessonId) ? '✓ Completed' : updatingProgress ? 'Saving...' : 'Mark Complete'}
@@ -226,7 +226,7 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
                           onClick={() => setSelectedLessonId(lessonId)}
                           className={`w-full flex items-start gap-2 sm:gap-3 px-3 sm:px-4 py-3 text-left transition-colors ${
                             isSelected
-                              ? 'bg-orange-50 border-r-2 border-orange-500'
+                              ? 'bg-blue-50 border-r-2 border-[#0099ff]'
                               : 'hover:bg-gray-50'
                           }`}
                         >
@@ -234,7 +234,7 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
                             isCompleted
                               ? 'bg-green-500 border-green-500'
                               : isSelected
-                              ? 'border-orange-500'
+                              ? 'border-[#0099ff]'
                               : 'border-gray-300'
                           }`}>
                             {isCompleted && (
@@ -243,11 +243,11 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
                               </svg>
                             )}
                             {isSelected && !isCompleted && (
-                              <div className="w-2 h-2 bg-orange-500 rounded-full" />
+                              <div className="w-2 h-2 bg-[#0099ff] rounded-full" />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className={`text-xs font-medium line-clamp-2 ${isSelected ? 'text-orange-700' : 'text-gray-700'}`}>
+                            <p className={`text-xs font-medium line-clamp-2 ${isSelected ? 'text-blue-700' : 'text-gray-700'}`}>
                               {lesson.title}
                             </p>
                             {lesson.durationSeconds > 0 && (
