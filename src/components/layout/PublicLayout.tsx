@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Logo from "@/components/Logo";
 
 interface NavItem {
   href: string;
@@ -79,14 +80,9 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
   const sidebarContent = (
     <>
       {/* Logo */}
-      <div className="h-16 flex items-center px-6 border-b border-gray-700 shrink-0">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <span className="text-white font-bold text-xl">IT TECH BD</span>
+      <div className="h-16 flex items-center px-6  shrink-0">
+        <Link href="/" className="flex items-center mt-6">
+          <Logo width={200} height={50} className="" />
         </Link>
       </div>
 
@@ -278,12 +274,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               {/* Company Info */}
               <div className="sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shrink-0">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white" className="sm:w-5 sm:h-5">
-                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <span className="text-base sm:text-lg font-bold text-gray-900">IT-TECH-BD</span>
+                  <Logo width={150} height={40} className="rounded-lg" />
                 </div>
                 <p className="text-xs sm:text-sm text-gray-600">Empowering learners with quality IT courses and training programs.</p>
               </div>

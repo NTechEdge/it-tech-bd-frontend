@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import PasswordInput from '@/components/auth/PasswordInput';
 import IconInput from '@/components/auth/IconInput';
 import { EmailIcon } from '@/components/auth/AuthIcons';
+import Logo from '@/components/Logo';
 
 export default function LoginPage() {
   const { login, user } = useAuth();
@@ -56,13 +57,8 @@ export default function LoginPage() {
       <div className="max-w-md w-full space-y-8 border border-gray-200 rounded-lg p-8 bg-white shadow-lg">
         {/* Logo */}
         <div className="text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <span className="text-2xl font-bold text-gray-900">IT-TECH-BD</span>
+          <div className="flex items-center justify-center mb-4">
+            <Logo width={180} height={50} className="rounded-xl" />
           </div>
           <h2 className="text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
           <p className="mt-2 text-sm text-gray-600">

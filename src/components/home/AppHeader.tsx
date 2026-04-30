@@ -3,6 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import Logo from '@/components/Logo';
 
 interface AppHeaderProps {
   isShowTitle?: boolean;
@@ -20,14 +21,10 @@ export default function AppHeader({ isShowTitle = false, title = '', showNotific
         <div className="flex items-center justify-between h-16">
           {/* Left side - Title and Logo */}
           <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
+            <Link href="/" className="flex items-center mt-6">
+              <Logo width={200} height={50} className="" />
               {isShowTitle && title && (
-                <h1 className="text-xl font-bold text-gray-900">{title}</h1>
+                <h1 className="text-xl font-bold text-gray-900 ml-4">{title}</h1>
               )}
             </Link>
           </div>

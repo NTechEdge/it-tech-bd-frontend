@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Logo from "@/components/Logo";
 
 const navItems = [
   {
@@ -41,13 +42,10 @@ export default function StudentSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[72px] bg-black flex flex-col items-center py-4 gap-1 shrink-0">
+    <aside className="w-18 bg-black flex flex-col items-center py-4 gap-1 shrink-0">
       {/* Logo */}
-      <div className="w-10 h-10 rounded-full bg-[#E8630A] flex items-center justify-center mb-4">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-          <circle cx="12" cy="12" r="10" fill="white" opacity=".2" />
-          <path d="M12 6v6l4 2" stroke="white" strokeWidth="2" strokeLinecap="round" />
-        </svg>
+      <div className="w-10 h-10 mb-4 mt-6">
+        <Logo width={40} height={40} className="" />
       </div>
 
       {/* Nav items */}

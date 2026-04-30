@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import Logo from "@/components/Logo";
 
 interface NavItem {
   href: string;
@@ -30,13 +31,8 @@ export default function Sidebar({ navItems, user, onLogout, logoLink = "/" }: Si
     <aside className="w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0 left-0">
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-gray-200">
-        <Link href={logoLink} className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <span className="text-xl font-bold text-gray-900">IT-TECH-BD</span>
+        <Link href={logoLink} className="flex items-center mt-6">
+          <Logo width={200} height={50} className="" />
         </Link>
       </div>
 
@@ -51,7 +47,7 @@ export default function Sidebar({ navItems, user, onLogout, logoLink = "/" }: Si
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive
-                      ? "bg-gradient-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white shadow-lg shadow-blue-500/30"
+                      ? "bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white shadow-lg shadow-blue-500/30"
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
@@ -81,7 +77,7 @@ export default function Sidebar({ navItems, user, onLogout, logoLink = "/" }: Si
       {user && (
         <div className="p-4 border-t border-gray-200">
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 mb-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
               {user.avatar || user.name?.[0] || "U"}
             </div>
             <div className="flex-1 min-w-0">
