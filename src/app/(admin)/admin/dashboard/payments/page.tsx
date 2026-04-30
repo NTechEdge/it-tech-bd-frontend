@@ -154,11 +154,25 @@ export default function AdminPaymentsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {payment.paymentStatus === 'pending' && (
                         <div className="flex gap-2">
-                          <button onClick={() => handleApprove(payment._id)} disabled={processingId === payment._id} className="text-green-600 hover:text-green-900 font-medium disabled:opacity-50">
-                            {processingId === payment._id ? '...' : 'Approve'}
+                          <button
+                            onClick={() => handleApprove(payment._id)}
+                            disabled={processingId === payment._id}
+                            className="inline-flex items-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 hover:shadow-lg hover:shadow-green-500/40 transition-all duration-200 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>{processingId === payment._id ? '...' : 'Approve'}</span>
                           </button>
-                          <button onClick={() => handleReject(payment._id)} disabled={processingId === payment._id} className="text-red-600 hover:text-red-900 font-medium disabled:opacity-50">
-                            {processingId === payment._id ? '...' : 'Reject'}
+                          <button
+                            onClick={() => handleReject(payment._id)}
+                            disabled={processingId === payment._id}
+                            className="inline-flex items-center gap-1.5 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 hover:shadow-lg hover:shadow-red-500/40 transition-all duration-200 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span>{processingId === payment._id ? '...' : 'Reject'}</span>
                           </button>
                         </div>
                       )}
@@ -214,12 +228,26 @@ export default function AdminPaymentsPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-400">{new Date(payment.purchasedAt).toLocaleDateString()}</span>
                   {payment.paymentStatus === 'pending' && (
-                    <div className="flex gap-3">
-                      <button onClick={() => handleApprove(payment._id)} disabled={processingId === payment._id} className="text-sm text-green-600 font-semibold disabled:opacity-50">
-                        {processingId === payment._id ? '...' : 'Approve'}
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleApprove(payment._id)}
+                        disabled={processingId === payment._id}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 hover:shadow-lg hover:shadow-green-500/40 transition-all duration-200 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>{processingId === payment._id ? '...' : 'Approve'}</span>
                       </button>
-                      <button onClick={() => handleReject(payment._id)} disabled={processingId === payment._id} className="text-sm text-red-600 font-semibold disabled:opacity-50">
-                        {processingId === payment._id ? '...' : 'Reject'}
+                      <button
+                        onClick={() => handleReject(payment._id)}
+                        disabled={processingId === payment._id}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 hover:shadow-lg hover:shadow-red-500/40 transition-all duration-200 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span>{processingId === payment._id ? '...' : 'Reject'}</span>
                       </button>
                     </div>
                   )}
