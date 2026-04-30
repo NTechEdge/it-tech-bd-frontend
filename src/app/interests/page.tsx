@@ -88,12 +88,12 @@ export default function InterestsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#e6f0ff] via-white to-[#e6f7ff] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-[#e6f0ff] via-white to-[#e6f7ff] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <div className="w-14 h-14 rounded-xl bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center shadow-lg shadow-blue-500/30">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -125,7 +125,7 @@ export default function InterestsPage() {
                 onClick={() => toggleTopic(topic)}
                 className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
                   selectedTopics.includes(topic)
-                    ? 'bg-[#0099ff]-500 text-white shadow-md shadow-blue-500/30 scale-105'
+                    ? 'bg-[#0099ff] text-white shadow-md shadow-blue-500/30 hover:bg-[#0099ff] hover:text-white hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >

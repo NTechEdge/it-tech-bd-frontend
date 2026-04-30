@@ -71,7 +71,7 @@ export default function TrendingCoursesSlider({ courses }: TrendingCoursesSlider
             disabled={!canScrollLeft}
             className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all ${
               canScrollLeft
-                ? 'bg-white border border-gray-200 hover:border-[#0099ff]-500 hover:text-[#0099ff]-600 shadow-sm'
+                ? 'bg-white border border-gray-200 hover:border-[#0099ff] hover:text-[#0099ff] shadow-sm'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
             aria-label="Scroll left"
@@ -85,7 +85,7 @@ export default function TrendingCoursesSlider({ courses }: TrendingCoursesSlider
             disabled={!canScrollRight}
             className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all ${
               canScrollRight
-                ? 'bg-white border border-gray-200 hover:border-[#0099ff]-500 hover:text-[#0099ff]-600 shadow-sm'
+                ? 'bg-white border border-gray-200 hover:border-[#0099ff] hover:text-[#0099ff] shadow-sm'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
             aria-label="Scroll right"
@@ -110,7 +110,7 @@ export default function TrendingCoursesSlider({ courses }: TrendingCoursesSlider
             className="shrink-0 w-[65vw] sm:w-72 snap-start bg-white rounded-xl sm:rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
           >
             {/* Thumbnail */}
-            <div className="relative aspect-video bg-linear-to-br from-[#003399]-400 to-[#00d4ff]600 overflow-hidden">
+            <div className="relative aspect-video bg-linear-to-br from-[#003399] to-[#00d4ff] overflow-hidden">
               {course.thumbnailUrl && (
                 <div
                   className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
@@ -125,7 +125,7 @@ export default function TrendingCoursesSlider({ courses }: TrendingCoursesSlider
 
             {/* Content */}
             <div className="p-3 sm:p-4">
-              <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-[#0099ff]-600 transition-colors" style={{ minHeight: '2.5rem' }}>
+              <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-[#0099ff] transition-colors" style={{ minHeight: '2.5rem' }}>
                 {course.title}
               </h3>
 
@@ -179,7 +179,7 @@ export default function TrendingCoursesSlider({ courses }: TrendingCoursesSlider
               {/* Price and Level */}
               <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-gray-100">
                 {course.level && (
-                  <span className="text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#0099ff]-50 text-[#0099ff]-600 rounded-md sm:rounded-lg">
+                  <span className="text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#0099ff] text-white rounded-md sm:rounded-lg">
                     {course.level}
                   </span>
                 )}

@@ -155,7 +155,7 @@ export default function CoursesPage() {
 
                 {/* Course Content */}
                 <div className="p-5">
-                  <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#0099ff]-600 transition-colors">
+                  <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#0099ff] transition-colors">
                     {product.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">
@@ -164,7 +164,7 @@ export default function CoursesPage() {
 
                   {/* Instructor */}
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-[#0099ff]-500">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-[#0099ff]">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
                     <span className="text-xs">{product.instructorName}</span>
