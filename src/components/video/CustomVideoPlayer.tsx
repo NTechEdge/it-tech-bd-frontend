@@ -191,9 +191,31 @@ export default function CustomVideoPlayer({
       events: {
         onReady: (event: { target: any }) => {
           setIsReady(true);
-          setDuration(event.target.getDuration() || 0);
-          setCurrentTime(startTime);
           playerRef.current = event.target;
+
+          // Try to get duration immediately
+          const initialDuration = event.target.getDuration();
+          if (initialDuration && initialDuration > 0) {
+            setDuration(initialDuration);
+          }
+
+          setCurrentTime(startTime);
+
+          // Poll for duration since YouTube might not have it immediately
+          let attempts = 0;
+          const durationInterval = setInterval(() => {
+            if (playerRef.current && typeof playerRef.current.getDuration === 'function') {
+              const dur = playerRef.current.getDuration();
+              if (dur && dur > 0) {
+                setDuration(dur);
+                clearInterval(durationInterval);
+              }
+            }
+            attempts++;
+            if (attempts > 10) {
+              clearInterval(durationInterval);
+            }
+          }, 500);
 
           // Get available quality levels
           setTimeout(() => {
@@ -209,10 +231,17 @@ export default function CustomVideoPlayer({
             }
           }, 1500);
         },
-        onStateChange: (event: { data: number }) => {
+        onStateChange: (event: { data: number; target?: any }) => {
           if (event.data === window.YT.PlayerState.PLAYING) {
             setIsPlaying(true);
             onStateChange?.('playing');
+            // Update duration when playing (more accurate)
+            if (event.target && typeof event.target.getDuration === 'function') {
+              const vidDuration = event.target.getDuration();
+              if (vidDuration && vidDuration > 0) {
+                setDuration(vidDuration);
+              }
+            }
             refreshQualities();
           } else if (event.data === window.YT.PlayerState.PAUSED) {
             setIsPlaying(false);
@@ -421,8 +450,13 @@ export default function CustomVideoPlayer({
 
   // Format time helper
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
+
+    if (hours > 0) {
+      return `${hours}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    }
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
@@ -593,10 +627,10 @@ export default function CustomVideoPlayer({
             </button>
 
             {/* Time Display */}
-            <div className="flex items-center gap-2 text-white text-sm font-semibold bg-black/50 px-3 py-1 rounded">
+            <div className="flex items-center gap-2 text-white text-sm font-bold bg-black/80 px-3 py-1.5 rounded shadow-md min-w-24">
               <span>{formatTime(currentTime)}</span>
-              <span className="text-white/70">/</span>
-              <span className="text-white/70">{formatTime(duration)}</span>
+              <span className="text-white/50">/</span>
+              <span className="text-white/90">{duration > 0 ? formatTime(duration) : '--:--'}</span>
             </div>
           </div>
 
