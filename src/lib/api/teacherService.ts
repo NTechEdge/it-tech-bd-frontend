@@ -171,7 +171,7 @@ export const teacherService = {
   },
 
   async deleteTeacher(id: string): Promise<{ success: boolean; message: string; data: { teacher: Teacher } }> {
-    return httpClient.delete(`/teachers/${id}`);
+    return httpClient.delete(`/teachers/${id}/permanent`);
   },
 
   async regenerateCredentials(id: string): Promise<CreateTeacherResponse> {

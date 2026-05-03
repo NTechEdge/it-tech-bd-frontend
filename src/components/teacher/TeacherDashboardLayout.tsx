@@ -1,11 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
+import Logo from "@/components/Logo";
 
-const navItems = [
+interface NavItem {
+  href: string;
+  label: string;
+  icon: ReactNode;
+}
+
+const navItems: NavItem[] = [
   {
     href: "/teacher/dashboard",
     label: "Dashboard",
@@ -45,101 +52,180 @@ const navItems = [
   },
 ];
 
-interface TeacherDashboardLayoutProps {
-  children: ReactNode;
-}
-
-export default function TeacherDashboardLayout({ children }: TeacherDashboardLayoutProps) {
+export default function TeacherDashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <aside className="w-20 bg-[#292727] flex flex-col items-center py-6 shrink-0 border-r border-gray-700">
-        {/* Logo */}
-        <Link href="/teacher/dashboard" className="w-12 h-12 rounded-xl bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center mb-8 shadow-lg shadow-blue-500/30">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) setSidebarOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const sidebarContent = (
+    <>
+      {/* Logo */}
+      <div className="h-16 flex items-center px-6 shrink-0">
+        <Link href="/teacher/dashboard" className="flex items-center mt-6">
+          <Logo width={200} height={50} />
         </Link>
+      </div>
 
-        {/* Nav items */}
-        <nav className="flex flex-col items-center gap-2 flex-1 w-full px-3">
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto py-6 px-4">
+        <ul className="space-y-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+            const isActive = pathname === item.href || (item.href !== "/teacher/dashboard" && pathname.startsWith(item.href));
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-col items-center gap-1 w-full py-3 px-2 rounded-xl transition-all duration-200 group ${
-                  isActive
-                    ? "text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] shadow-lg shadow-blue-500/30"
-                    : "text-gray-400 hover:text-white hover:bg-white/10"
-                }`}
-                title={item.label}
-              >
-                {item.icon}
-                <span className="text-[10px] font-medium leading-tight text-center">{item.label}</span>
-              </Link>
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                    isActive
+                      ? "bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white shadow-lg shadow-blue-500/30"
+                      : "text-gray-300 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  <span className={`${isActive ? "text-white" : "text-gray-500 group-hover:text-[#0099ff]"} transition-colors`}>
+                    {item.icon}
+                  </span>
+                  <span className="font-medium flex-1">{item.label}</span>
+                </Link>
+              </li>
             );
           })}
-        </nav>
+        </ul>
+      </nav>
 
-        {/* Logout */}
+      {/* User Profile Section */}
+      <div className="p-4 border-t border-gray-700 shrink-0">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800 mb-3">
+          {user?.image ? (
+            <img
+              src={user.image}
+              alt={user.name || "User"}
+              className="w-10 h-10 rounded-full object-cover shrink-0"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
+              {user?.name?.[0] || "T"}
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-white truncate">{user?.name || "Teacher"}</p>
+            <p className="text-xs text-gray-400 truncate">{user?.email || "teacher@example.com"}</p>
+          </div>
+        </div>
         <button
-          onClick={logout}
-          className="flex flex-col items-center gap-1 text-gray-400 hover:text-red-400 py-3 px-2 transition-colors"
-          title="Logout"
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-red-600/20 hover:text-red-400 rounded-xl transition-all duration-200 font-medium"
         >
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
-          <span className="text-[10px] font-medium">Logout</span>
+          Logout
         </button>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-64 bg-[#292727] text-white flex-col h-screen sticky top-0 left-0 shrink-0">
+        {sidebarContent}
       </aside>
+
+      {/* Mobile/Tablet Sidebar Drawer */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div
+            className="fixed inset-0 bg-black/50 transition-opacity"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+          <aside className="relative w-72 max-w-[85vw] bg-[#292727] text-white flex flex-col h-full shadow-2xl">
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors z-10"
+              aria-label="Close sidebar"
+            >
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            {sidebarContent}
+          </aside>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm sticky top-0 z-40">
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">Teacher Dashboard</h1>
-            <p className="text-sm text-gray-500">Welcome back, {user?.name || "Teacher"}!</p>
-          </div>
+        <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center gap-3">
+                {/* Hamburger — mobile/tablet only */}
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+                  aria-label="Open sidebar"
+                >
+                  <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900">Teacher Dashboard</h1>
+              </div>
 
-          <div className="flex items-center gap-4">
-            {/* Notifications */}
-            <button className="relative w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors">
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
+              <div className="flex items-center gap-2 sm:gap-4">
+                {/* Notifications */}
+                <button className="relative w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors">
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
 
-            {/* Profile */}
-            <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              {user?.image ? (
-                <img
-                  src={user.image}
-                  alt={user.name || "User"}
-                  className="w-10 h-10 rounded-full object-cover shrink-0"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
-                  {user?.name?.[0] || "T"}
+                {/* Profile */}
+                <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
+                  {user?.image ? (
+                    <img
+                      src={user.image}
+                      alt={user.name || "User"}
+                      className="w-9 h-9 rounded-full object-cover shrink-0"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0 text-sm">
+                      {user?.name?.[0] || "T"}
+                    </div>
+                  )}
+                  <div className="hidden lg:block">
+                    <p className="text-sm font-semibold text-gray-900">{user?.name || "Teacher"}</p>
+                    <p className="text-xs text-gray-500 capitalize">{user?.role || "teacher"}</p>
+                  </div>
                 </div>
-              )}
-              <div className="hidden lg:block">
-                <p className="text-sm font-semibold text-gray-900">{user?.name || "Teacher"}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role || "teacher"}</p>
               </div>
             </div>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           {children}
         </main>
       </div>
