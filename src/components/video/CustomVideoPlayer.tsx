@@ -179,7 +179,7 @@ export default function CustomVideoPlayer({
       videoId: videoId,
       start: startTime,
       playerVars: {
-        autoplay: 0,
+        autoplay: 1,
         controls: 0,
         disablekb: 1,
         fs: 0,
