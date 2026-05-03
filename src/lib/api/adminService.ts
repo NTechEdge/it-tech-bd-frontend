@@ -40,6 +40,20 @@ export interface Student {
   email: string;
   role: 'student';
   isVerified: boolean;
+  isBanned: boolean;
+  banReason?: string;
+  bannedBy?: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  bannedAt?: string;
+  banExpiresAt?: string;
+  address?: {
+    division?: string;
+    district?: string;
+    city?: string;
+  };
   createdAt: string;
 }
 
@@ -347,5 +361,128 @@ export const adminService = {
     };
   }> {
     return httpClient.get(`/admin/analytics/courses/${courseId}/students`);
+  },
+
+  // Ban/Unban Students
+  async banStudent(id: string, data: {
+    banReason: string;
+    durationHours?: number;
+  }): Promise<{
+    success: boolean;
+    message: string;
+    data: {
+      userId: string;
+      isBanned: boolean;
+      banReason: string;
+      bannedAt: string;
+      banExpiresAt?: string;
+      isTemporary: boolean;
+    };
+  }> {
+    return httpClient.patch(`/admin/students/${id}/ban`, data);
+  },
+
+  async unbanStudent(id: string): Promise<{
+    success: boolean;
+    message: string;
+    data: {
+      userId: string;
+      isBanned: boolean;
+    };
+  }> {
+    return httpClient.patch(`/admin/students/${id}/unban`);
+  },
+
+  async getBannedStudents(params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }): Promise<{
+    success: boolean;
+    data: {
+      students: Student[];
+      pagination: Pagination;
+    };
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.search) queryParams.append('search', params.search);
+
+    const query = queryParams.toString();
+    return httpClient.get(`/admin/students/banned${query ? `?${query}` : ''}`);
+  },
+
+  // Location Analytics
+  async getLocationStats(): Promise<{
+    success: boolean;
+    data: {
+      totalStudents: number;
+      studentsWithAddress: number;
+      studentsWithoutAddress: number;
+      byDivision: Array<{ division: string; count: number }>;
+      byDistrict: Array<{ division: string; district: string; count: number }>;
+      byCity: Array<{ division: string; district: string; city: string; count: number }>;
+    };
+  }> {
+    return httpClient.get('/admin/location/stats');
+  },
+
+  async getEnrollmentByLocation(): Promise<{
+    success: boolean;
+    data: {
+      byDivision: Array<{ division: string; totalEnrollments: number; totalRevenue: number }>;
+      byDistrict: Array<{ division: string; district: string; totalEnrollments: number; totalRevenue: number }>;
+      byCity: Array<{ division: string; district: string; city: string; totalEnrollments: number; totalRevenue: number }>;
+    };
+  }> {
+    return httpClient.get('/admin/location/enrollments');
+  },
+
+  async getStudentsByLocation(params?: {
+    division?: string;
+    district?: string;
+    city?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<{
+    success: boolean;
+    data: {
+      students: Student[];
+      pagination: Pagination;
+      filters: {
+        division?: string;
+        district?: string;
+        city?: string;
+      };
+    };
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.division) queryParams.append('division', params.division);
+    if (params?.district) queryParams.append('district', params.district);
+    if (params?.city) queryParams.append('city', params.city);
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+
+    const query = queryParams.toString();
+    return httpClient.get(`/admin/location/students${query ? `?${query}` : ''}`);
+  },
+
+  async getLocationReport(): Promise<{
+    success: boolean;
+    data: {
+      topDivisions: {
+        byStudents: Array<{ division: string; studentCount: number }>;
+        byRevenue: Array<{ division: string; totalRevenue: number; enrollmentCount: number }>;
+      };
+      recentStudents: Student[];
+      profileCompletion: {
+        totalStudents: number;
+        studentsWithCompleteProfile: number;
+        completionRate: string;
+      };
+    };
+  }> {
+    return httpClient.get('/admin/location/report');
   },
 };

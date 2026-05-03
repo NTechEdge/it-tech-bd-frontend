@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { adminService, Course, CreateCourseData, CourseSection, CourseLesson } from '@/lib/api/adminService';
+import { teacherService, TeacherForDropdown } from '@/lib/api/teacherService';
 
 interface FormData extends CreateCourseData {
   thumbnailFile?: File;
@@ -29,6 +30,7 @@ export default function CourseFormPage() {
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [admins, setAdmins] = useState<Array<{ _id: string; name: string }>>([]);
+  const [teachers, setTeachers] = useState<TeacherForDropdown[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -46,9 +48,19 @@ export default function CourseFormPage() {
       const instructorsResponse = await adminService.getInstructors();
       if (instructorsResponse.success) {
         setAdmins(instructorsResponse.data.admins);
-        // Auto-select first admin if creating new course
-        if (!isEditing && instructorsResponse.data.admins.length > 0) {
+        // Auto-select first admin if creating new course and no teachers yet
+        if (!isEditing && instructorsResponse.data.admins.length > 0 && !formData.instructorId) {
           setFormData((prev) => ({ ...prev, instructorId: instructorsResponse.data.admins[0]._id }));
+        }
+      }
+
+      // Load available teachers
+      const teachersResponse = await teacherService.getAvailableTeachers();
+      if (teachersResponse.success) {
+        setTeachers(teachersResponse.data.teachers);
+        // Auto-select first teacher if creating new course and teachers exist
+        if (!isEditing && teachersResponse.data.teachers.length > 0) {
+          setFormData((prev) => ({ ...prev, instructorId: teachersResponse.data.teachers[0].id }));
         }
       }
 
@@ -365,13 +377,24 @@ export default function CourseFormPage() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900"
               >
                 <option value="">Select an instructor</option>
-                {admins.map((admin) => (
-                  <option key={admin._id} value={admin._id}>
-                    {admin.name} (You)
-                  </option>
-                ))}
+                {teachers.length > 0 && (
+                  <optgroup label="Teachers">
+                    {teachers.map((teacher) => (
+                      <option key={teacher.id} value={teacher.id}>
+                        {teacher.name} - {teacher.category}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+                <optgroup label="Admins">
+                  {admins.map((admin) => (
+                    <option key={admin._id} value={admin._id}>
+                      {admin.name} (Admin)
+                    </option>
+                  ))}
+                </optgroup>
               </select>
-              <p className="text-xs text-gray-500 mt-1">The logged-in admin user will be assigned as the course instructor</p>
+              <p className="text-xs text-gray-500 mt-1">Select a teacher or admin as the course instructor</p>
             </div>
 
             <div className="flex items-center justify-between">

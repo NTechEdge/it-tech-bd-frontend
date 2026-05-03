@@ -1,4 +1,5 @@
 import { httpClient } from '@/lib/utils/httpClient';
+import { config } from '@/lib/config/env';
 
 export interface User {
   id: string;
@@ -9,6 +10,16 @@ export interface User {
   createdAt?: string;
   enrolledCourses?: string[];
   interestedTopics?: string[];
+  image?: string;
+  address?: {
+    division?: string;
+    district?: string;
+    city?: string;
+    streetAddress?: string;
+    postalCode?: string;
+    phone?: string;
+  };
+  isProfileComplete?: boolean;
 }
 
 export interface LoginCredentials {
@@ -114,5 +125,49 @@ export const authService = {
   logout(): void {
     this.removeToken();
     this.removeUser();
+  },
+
+  async updateProfile(data: {
+    name?: string;
+    email?: string;
+    interestedTopics?: string[];
+    address?: {
+      division?: string;
+      district?: string;
+      city?: string;
+      streetAddress?: string;
+      postalCode?: string;
+      phone?: string;
+    };
+    currentPassword?: string;
+    newPassword?: string;
+  }): Promise<{ success: boolean; message: string; data: User }> {
+    return httpClient.patch('/auth/profile', data);
+  },
+
+  async updateProfileImage(file: File): Promise<{ success: boolean; message: string; data: { image: string; imagePublicId: string } }> {
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    const token = this.getToken();
+
+    const response = await fetch(`${config.apiUrl}/auth/profile/image`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: 'Upload failed' }));
+      throw new Error(error.message || `HTTP ${response.status}`);
+    }
+
+    return response.json();
+  },
+
+  async deleteProfileImage(): Promise<{ success: boolean; message: string }> {
+    return httpClient.delete('/auth/profile/image');
   },
 };

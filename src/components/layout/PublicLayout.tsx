@@ -116,9 +116,17 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <div className="p-4  shrink-0">
         {isAuthenticated && user ? (
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800">
-            <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
-              {user.name?.[0] || "U"}
-            </div>
+            {user.image ? (
+              <img
+                src={user.image}
+                alt={user.name || "User"}
+                className="w-10 h-10 rounded-full object-cover shrink-0"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
+                {user.name?.[0] || "U"}
+              </div>
+            )}
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-white truncate">{user.name || "User"}</p>
               <p className="text-xs text-gray-400 truncate">{user.email || "user@example.com"}</p>

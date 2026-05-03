@@ -19,7 +19,9 @@ export default function StudentSettingsPage() {
   const [activeTab, setActiveTab] = useState<TabType>('profile');
   const [profileStatus, setProfileStatus] = useState<ProfileStatus | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
 
   // Personal details form
   const [personalDetails, setPersonalDetails] = useState({
@@ -49,18 +51,6 @@ export default function StudentSettingsPage() {
   const [interests, setInterests] = useState<string[]>([]);
   const [interestInput, setInterestInput] = useState('');
 
-  useEffect(() => {
-    if (user) {
-      setPersonalDetails({
-        name: user.name || '',
-        email: user.email || '',
-        phone: ''
-      });
-      setInterests(user.interestedTopics || []);
-    }
-    loadProfileStatus();
-  }, [user]);
-
   const loadProfileStatus = async () => {
     try {
       const response = await profileService.getProfileStatus();
@@ -75,9 +65,74 @@ export default function StudentSettingsPage() {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      setPersonalDetails({
+        name: user.name || '',
+        email: user.email || '',
+        phone: ''
+      });
+      setInterests(user.interestedTopics || []);
+      setImagePreview(user.image || '');
+    }
+    loadProfileStatus();
+  }, [user]);
+
   const showMessage = (type: 'success' | 'error', text: string) => {
     setMessage({ type, text });
     setTimeout(() => setMessage(null), 5000);
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to server
+    setUploadingImage(true);
+    setMessage(null);
+
+    try {
+      const response = await authService.updateProfileImage(file);
+      if (response.success) {
+        showMessage('success', 'Profile image updated successfully');
+        await refreshUser();
+      } else {
+        showMessage('error', response.message || 'Failed to upload image');
+        setImagePreview(user?.image || '');
+      }
+    } catch (error) {
+      showMessage('error', error instanceof Error ? error.message : 'Failed to upload image');
+      setImagePreview(user?.image || '');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleDeleteImage = async () => {
+    setUploadingImage(true);
+    setMessage(null);
+
+    try {
+      const response = await authService.deleteProfileImage();
+      if (response.success) {
+        showMessage('success', 'Profile image removed successfully');
+        setImagePreview('');
+        await refreshUser();
+      } else {
+        showMessage('error', response.message || 'Failed to remove image');
+      }
+    } catch (error) {
+      showMessage('error', error instanceof Error ? error.message : 'Failed to remove image');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handlePersonalDetailsSubmit = async (e: React.FormEvent) => {
@@ -281,6 +336,58 @@ export default function StudentSettingsPage() {
           {/* Profile Tab */}
           {activeTab === 'profile' && (
             <div className="space-y-6">
+              {/* Profile Image */}
+              <div className="flex items-start gap-6 pb-6 border-b border-gray-200">
+                <div className="shrink-0">
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Profile"
+                      className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white text-3xl font-bold">
+                      {user?.name?.[0] || "S"}
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Profile Photo</h3>
+                  <p className="text-sm text-gray-500 mb-3">A clear photo helps others recognize you</p>
+                  <div className="flex flex-wrap gap-2">
+                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                      <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-700">
+                        {uploadingImage ? 'Uploading...' : 'Change Photo'}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        disabled={uploadingImage}
+                        className="hidden"
+                      />
+                    </label>
+                    {imagePreview && (
+                      <button
+                        type="button"
+                        onClick={handleDeleteImage}
+                        disabled={uploadingImage}
+                        className="inline-flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        <span className="text-sm font-medium">Remove</span>
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">JPG, PNG or GIF. Max size 2MB.</p>
+                </div>
+              </div>
+
               {/* Personal Details */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
