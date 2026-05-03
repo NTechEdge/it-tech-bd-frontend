@@ -51,16 +51,34 @@ export default function CourseFormPage() {
         // Auto-select first admin if creating new course and no teachers yet
         if (!isEditing && instructorsResponse.data.admins.length > 0 && !formData.instructorId) {
           setFormData((prev) => ({ ...prev, instructorId: instructorsResponse.data.admins[0]._id }));
+          console.log('Auto-selected admin instructor:', instructorsResponse.data.admins[0]._id);
         }
+      } else {
+        console.error('Failed to load admins:', instructorsResponse);
       }
 
       // Load available teachers
       const teachersResponse = await teacherService.getAvailableTeachers();
+      console.log('Teachers response:', teachersResponse);
       if (teachersResponse.success) {
         setTeachers(teachersResponse.data.teachers);
         // Auto-select first teacher if creating new course and teachers exist
         if (!isEditing && teachersResponse.data.teachers.length > 0) {
-          setFormData((prev) => ({ ...prev, instructorId: teachersResponse.data.teachers[0].id }));
+          const firstTeacherId = teachersResponse.data.teachers[0].id;
+          setFormData((prev) => ({ ...prev, instructorId: firstTeacherId }));
+          console.log('Auto-selected teacher:', firstTeacherId, 'for teacher:', teachersResponse.data.teachers[0].name);
+        }
+      } else {
+        console.error('Failed to load teachers:', teachersResponse);
+      }
+
+      // Log if no instructors available
+      if (!isEditing && !formData.instructorId) {
+        const adminCount = instructorsResponse.success ? instructorsResponse.data.admins.length : 0;
+        const teacherCount = teachersResponse.success ? teachersResponse.data.teachers.length : 0;
+        console.warn(`No instructors available. Admins: ${adminCount}, Teachers: ${teacherCount}`);
+        if (adminCount === 0 && teacherCount === 0) {
+          setError('No instructors available. Please create an admin user or teacher first before creating a course.');
         }
       }
 
@@ -84,6 +102,7 @@ export default function CourseFormPage() {
         }
       }
     } catch (err) {
+      console.error('Error loading course form data:', err);
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setLoading(false);
@@ -177,7 +196,7 @@ export default function CourseFormPage() {
       return;
     }
     if (!formData.instructorId?.trim()) {
-      setError('Please select an instructor');
+      setError('Please select an instructor. If no instructors are available, please create an admin user or teacher first.');
       return;
     }
 
@@ -216,7 +235,8 @@ export default function CourseFormPage() {
         isActive: formData.isActive,
       };
 
-      console.log('Submitting course data:', submitData);
+      console.log('Submitting course data with instructorId:', formData.instructorId);
+      console.log('Full submit data:', submitData);
 
       if (isEditing) {
         await adminService.updateCourse(courseId, submitData);
@@ -228,7 +248,24 @@ export default function CourseFormPage() {
       router.push('/admin/dashboard/courses');
     } catch (err) {
       console.error('Course submission error:', err);
-      const errorMessage = err instanceof Error ? err.message : `Failed to ${isEditing ? 'update' : 'create'} course`;
+
+      // Provide more helpful error messages
+      let errorMessage = `Failed to ${isEditing ? 'update' : 'create'} course`;
+
+      if (err instanceof Error) {
+        const errorLower = err.message.toLowerCase();
+
+        if (errorLower.includes('instructor')) {
+          errorMessage = 'Instructor error: The selected instructor may not be valid. Please try selecting a different instructor or contact support.';
+        } else if (errorLower.includes('validation') || errorLower.includes('required')) {
+          errorMessage = `Validation error: ${err.message}`;
+        } else if (errorLower.includes('network') || errorLower.includes('fetch')) {
+          errorMessage = 'Network error. Please check your connection and try again.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
+
       setError(errorMessage);
     } finally {
       setSaving(false);
@@ -374,7 +411,9 @@ export default function CourseFormPage() {
                 required
                 value={formData.instructorId}
                 onChange={(e) => setFormData({ ...formData, instructorId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900"
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900 ${
+                  admins.length === 0 && teachers.length === 0 ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                }`}
               >
                 <option value="">Select an instructor</option>
                 {teachers.length > 0 && (
@@ -386,15 +425,21 @@ export default function CourseFormPage() {
                     ))}
                   </optgroup>
                 )}
-                <optgroup label="Admins">
-                  {admins.map((admin) => (
-                    <option key={admin._id} value={admin._id}>
-                      {admin.name} (Admin)
-                    </option>
-                  ))}
-                </optgroup>
+                {admins.length > 0 && (
+                  <optgroup label="Admins">
+                    {admins.map((admin) => (
+                      <option key={admin._id} value={admin._id}>
+                        {admin.name} (Admin)
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
               </select>
-              <p className="text-xs text-gray-500 mt-1">Select a teacher or admin as the course instructor</p>
+              {admins.length === 0 && teachers.length === 0 ? (
+                <p className="text-xs text-red-600 mt-1">⚠️ No instructors available. Please create an admin user or teacher first.</p>
+              ) : (
+                <p className="text-xs text-gray-500 mt-1">Select a teacher or admin as the course instructor</p>
+              )}
             </div>
 
             <div className="flex items-center justify-between">
