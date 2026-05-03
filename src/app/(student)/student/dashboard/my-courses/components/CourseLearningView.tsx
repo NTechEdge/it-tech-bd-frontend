@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import VideoPlayer from "./VideoPlayer";
+import { CustomVideoPlayer } from "@/components/video";
 import CourseContent, { Lesson } from "./CourseContent";
 import CourseInfo from "./CourseInfo";
 import { allCourses, getCourseById, defaultCourseId } from "../lib/courseData";
@@ -139,11 +139,9 @@ export default function CourseLearningView({ courseId: initialCourseId = default
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Video Player Section */}
             <div className="lg:col-span-2 space-y-6">
-              <VideoPlayer
+              <CustomVideoPlayer
                 videoId={currentCourse.videoId}
                 startTime={currentStartTime}
-                title={currentCourse.title}
-                courseId={selectedCourseId}
               />
               <CourseInfo course={currentCourse} />
 

@@ -1,0 +1,692 @@
+"use client";
+
+import { useRef, useState, useEffect, useCallback } from "react";
+
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
+
+export interface CustomVideoPlayerProps {
+  videoId: string;
+  startTime?: number;
+  title?: string;
+  onTimeUpdate?: (currentTime: number) => void;
+  onStateChange?: (state: 'playing' | 'paused' | 'ended') => void;
+}
+
+export default function CustomVideoPlayer({
+  videoId,
+  startTime = 0,
+  title = "Video",
+  onTimeUpdate,
+  onStateChange,
+}: CustomVideoPlayerProps) {
+  const playerRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const iframeContainerRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const qualityMenuRef = useRef<HTMLDivElement>(null);
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastMouseMoveRef = useRef<number>(Date.now());
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(startTime);
+  const [duration, setDuration] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const [isAPILoaded, setIsAPILoaded] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const [showQualityMenu, setShowQualityMenu] = useState(false);
+  const [availableQualities, setAvailableQualities] = useState<string[]>([]);
+  const [currentQuality, setCurrentQuality] = useState<string>('auto');
+  const [isChangingQuality, setIsChangingQuality] = useState(false);
+
+  // Auto-hide controls timer
+  const resetHideTimer = useCallback(() => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
+
+    lastMouseMoveRef.current = Date.now();
+    setShowControls(true);
+
+    // Only hide if playing and no quality menu is open
+    if (isPlaying && !showQualityMenu) {
+      hideTimeoutRef.current = setTimeout(() => {
+        // Only hide if no recent mouse movement (within last 3 seconds)
+        if (Date.now() - lastMouseMoveRef.current >= 2500) {
+          setShowControls(false);
+        }
+      }, 3000);
+    }
+  }, [isPlaying, showQualityMenu]);
+
+  // Show controls when paused or quality menu is open
+  useEffect(() => {
+    if (!isPlaying || showQualityMenu) {
+      setShowControls(true);
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+    }
+  }, [isPlaying, showQualityMenu]);
+
+  // Handle mouse movement
+  const handleMouseMove = useCallback(() => {
+    lastMouseMoveRef.current = Date.now();
+    setShowControls(true);
+    resetHideTimer();
+  }, [resetHideTimer]);
+
+  const handleMouseLeave = useCallback(() => {
+    // Clear any existing timeout
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
+    // Hide controls immediately if playing
+    if (isPlaying) {
+      setShowControls(false);
+    }
+  }, [isPlaying]);
+
+  const handleMouseEnter = useCallback(() => {
+    lastMouseMoveRef.current = Date.now();
+    setShowControls(true);
+  }, []);
+
+  // Close quality menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (qualityMenuRef.current && !qualityMenuRef.current.contains(event.target as Node)) {
+        setShowQualityMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Update time tracking
+  const updateTime = useCallback(() => {
+    if (playerRef.current && isReady && isPlaying && typeof playerRef.current.getCurrentTime === 'function') {
+      const time = playerRef.current.getCurrentTime();
+      setCurrentTime(time);
+      onTimeUpdate?.(time);
+    }
+  }, [isReady, isPlaying, onTimeUpdate]);
+
+  // Load YouTube IFrame API
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.YT) {
+      setIsAPILoaded(true);
+      return;
+    }
+
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName("script")[0];
+    if (firstScriptTag && firstScriptTag.parentNode) {
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
+    window.onYouTubeIframeAPIReady = () => {
+      setIsAPILoaded(true);
+    };
+
+    return () => {
+      window.onYouTubeIframeAPIReady = () => {};
+    };
+  }, []);
+
+  // Refresh available qualities
+  const refreshQualities = useCallback(() => {
+    if (!playerRef.current || !isReady) return;
+
+    setTimeout(() => {
+      if (playerRef.current && typeof playerRef.current.getAvailableQualityLevels === 'function') {
+        const qualities = playerRef.current.getAvailableQualityLevels();
+        if (qualities && qualities.length > 0) {
+          // Reverse to show highest quality first
+          setAvailableQualities(qualities.reverse());
+        }
+      }
+    }, 500);
+  }, [isReady]);
+
+  // Initialize player
+  useEffect(() => {
+    if (!isAPILoaded || !iframeContainerRef.current) return;
+
+    // Only initialize if player doesn't exist or videoId changed
+    if (playerRef.current) {
+      const currentVideoId = playerRef.current.getVideoData?.()?.video_id;
+      if (currentVideoId === videoId) {
+        return; // Player already exists for this video
+      }
+      // Destroy old player if videoId changed
+      if (typeof playerRef.current.destroy === "function") {
+        playerRef.current.destroy();
+        playerRef.current = null;
+      }
+    }
+
+    setIsReady(false);
+    setAvailableQualities([]);
+
+    const player = new window.YT.Player(iframeContainerRef.current, {
+      videoId: videoId,
+      start: startTime,
+      playerVars: {
+        autoplay: 0,
+        controls: 0,
+        disablekb: 1,
+        fs: 0,
+        rel: 0,
+        modestbranding: 1,
+        playsinline: 1,
+        widget_referrer: window.location.href,
+      },
+      events: {
+        onReady: (event: { target: any }) => {
+          setIsReady(true);
+          setDuration(event.target.getDuration() || 0);
+          setCurrentTime(startTime);
+          playerRef.current = event.target;
+
+          // Get available quality levels
+          setTimeout(() => {
+            if (event.target && typeof event.target.getAvailableQualityLevels === 'function') {
+              const qualities = event.target.getAvailableQualityLevels();
+              if (qualities && qualities.length > 0) {
+                setAvailableQualities(qualities.reverse());
+                if (typeof event.target.getPlaybackQuality === 'function') {
+                  const quality = event.target.getPlaybackQuality();
+                  setCurrentQuality(quality);
+                }
+              }
+            }
+          }, 1500);
+        },
+        onStateChange: (event: { data: number }) => {
+          if (event.data === window.YT.PlayerState.PLAYING) {
+            setIsPlaying(true);
+            onStateChange?.('playing');
+            refreshQualities();
+          } else if (event.data === window.YT.PlayerState.PAUSED) {
+            setIsPlaying(false);
+            onStateChange?.('paused');
+          } else if (event.data === window.YT.PlayerState.ENDED) {
+            setIsPlaying(false);
+            onStateChange?.('ended');
+          } else if (event.data === window.YT.PlayerState.BUFFERING) {
+            if (!isChangingQuality) {
+              refreshQualities();
+            }
+          }
+        },
+        onPlaybackQualityChange: (event: { data: string }) => {
+          setCurrentQuality(event.data);
+          setIsChangingQuality(false);
+        },
+      },
+    });
+
+    return () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+      if (player && typeof player.destroy === "function") {
+        player.destroy();
+      }
+    };
+  }, [isAPILoaded, videoId]);
+
+  // Time update interval
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isPlaying && playerRef.current) {
+        updateTime();
+      }
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, updateTime]);
+
+  // Security: Prevent right-click, keyboard shortcuts, and inspection
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) ||
+        (e.ctrlKey && e.key === "U")
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    };
+
+    const handleDragStart = (e: DragEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const handleSelectStart = (e: Event) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const handleCopy = (e: Event) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const element = containerRef.current;
+    if (element) {
+      element.addEventListener("contextmenu", handleContextMenu);
+      element.addEventListener("keydown", handleKeyDown);
+      element.addEventListener("dragstart", handleDragStart);
+      element.addEventListener("selectstart", handleSelectStart);
+      element.addEventListener("copy", handleCopy);
+    }
+
+    return () => {
+      if (element) {
+        element.removeEventListener("contextmenu", handleContextMenu);
+        element.removeEventListener("keydown", handleKeyDown);
+        element.removeEventListener("dragstart", handleDragStart);
+        element.removeEventListener("selectstart", handleSelectStart);
+        element.removeEventListener("copy", handleCopy);
+      }
+    };
+  }, []);
+
+  // Control functions
+  const togglePlayPause = useCallback(() => {
+    if (!playerRef.current || !isReady || typeof playerRef.current.playVideo !== 'function') return;
+
+    if (isPlaying) {
+      if (typeof playerRef.current.pauseVideo === 'function') {
+        playerRef.current.pauseVideo();
+      }
+    } else {
+      if (typeof playerRef.current.playVideo === 'function') {
+        playerRef.current.playVideo();
+      }
+    }
+    resetHideTimer();
+  }, [isPlaying, isReady, resetHideTimer]);
+
+  const handleForward = useCallback(() => {
+    if (!playerRef.current || !isReady || typeof playerRef.current.seekTo !== 'function') return;
+    const newTime = Math.min(currentTime + 10, duration);
+    playerRef.current.seekTo(newTime, true);
+    setCurrentTime(newTime);
+    resetHideTimer();
+  }, [currentTime, duration, isReady, resetHideTimer]);
+
+  const handleBackward = useCallback(() => {
+    if (!playerRef.current || !isReady || typeof playerRef.current.seekTo !== 'function') return;
+    const newTime = Math.max(currentTime - 10, 0);
+    playerRef.current.seekTo(newTime, true);
+    setCurrentTime(newTime);
+    resetHideTimer();
+  }, [currentTime, isReady, resetHideTimer]);
+
+  const handleFullscreen = useCallback(() => {
+    if (!containerRef.current) return;
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      containerRef.current.requestFullscreen();
+    }
+    resetHideTimer();
+  }, [resetHideTimer]);
+
+  const handleSeek = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!playerRef.current || !isReady || typeof playerRef.current.seekTo !== 'function') return;
+    const time = parseFloat(e.target.value);
+    playerRef.current.seekTo(time, true);
+    setCurrentTime(time);
+  }, [isReady]);
+
+  const handleQualityChange = useCallback(async (quality: string) => {
+    if (!playerRef.current || !isReady) return;
+
+    setIsChangingQuality(true);
+    setShowQualityMenu(false);
+
+    // Get current state
+    const wasPlaying = isPlaying;
+    const currentTimePos = playerRef.current.getCurrentTime();
+
+    // Pause video to ensure quality change takes effect
+    if (wasPlaying) {
+      playerRef.current.pauseVideo();
+    }
+
+    // Small delay before changing quality
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Set playback quality
+    if (typeof playerRef.current.setPlaybackQuality === 'function') {
+      playerRef.current.setPlaybackQuality(quality);
+    }
+
+    // Force a seek to trigger quality change (re-buffers video)
+    playerRef.current.seekTo(currentTimePos, true);
+
+    // Wait for quality change to take effect
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Resume if was playing
+    if (wasPlaying) {
+      playerRef.current.playVideo();
+    }
+
+    setCurrentQuality(quality);
+
+    // Reset changing quality flag after delay
+    setTimeout(() => {
+      setIsChangingQuality(false);
+      refreshQualities();
+    }, 1500);
+
+    resetHideTimer();
+  }, [isReady, isPlaying, refreshQualities, resetHideTimer]);
+
+  const formatQualityLabel = (quality: string) => {
+    const qualityMap: Record<string, string> = {
+      'auto': 'Auto',
+      'highres': '4K',
+      'hd2160': '4K',
+      'hd1440': '1440p',
+      'hd1080': '1080p',
+      'hd720': '720p',
+      'large': '480p',
+      'medium': '360p',
+      'small': '240p',
+      'tiny': '144p',
+    };
+    return qualityMap[quality] || quality;
+  };
+
+  // Format time helper
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative bg-black aspect-video w-full rounded-lg overflow-hidden shadow-xl select-none"
+      tabIndex={0}
+      data-video-player="true"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+    >
+      {/* YouTube Iframe Container */}
+      <div
+        key={`yt-player-${videoId}`}
+        ref={iframeContainerRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ pointerEvents: 'none' }}
+      />
+
+      {/* Security CSS - Hide YouTube native elements */}
+      <style jsx global>{`
+        /* Hide YouTube's native controls and annotations */
+        .ytp-chrome-controls,
+        .ytp-chrome-bottom,
+        .ytp-gradient-bottom,
+        .ytp-progress-bar-container,
+        .ytp-progress-bar,
+        .ytp-pause-overlay,
+        .ytp-title,
+        .ytp-title-text,
+        .ytp-title-channel,
+        .html5-video-player,
+        .ytp-big-play-button,
+        .ytp-doubletap-ui,
+        .ytp-touch-feedback,
+        .iv-branding,
+        .video-ads,
+        .ytp-ad-player-overlay,
+        .ytp-ad-overlay-container,
+        .ytp-ad-module,
+        .ytp-ad-progress-list,
+        .ytp-ad-progress,
+        .ytp-paid-content-overlay,
+        .ytp-show-ad-titles {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+
+        /* Prevent text selection on video container */
+        [data-video-player] {
+          -webkit-user-select: none !important;
+          -moz-user-select: none !important;
+          -ms-user-select: none !important;
+          user-select: none !important;
+          -webkit-touch-callout: none !important;
+        }
+
+        /* Hide YouTube watermark */
+        .ytp-watermark,
+        .ytp-watermark yt-icon-shape,
+        .ytp-watermark .yt-uix-tooltip,
+        .ytp-share-button,
+        .ytp-share-icon,
+        .ytp-subtitles-button,
+        .ytp-settings-button {
+          display: none !important;
+          visibility: hidden !important;
+        }
+
+        /* Force hide any context menu */
+        .ytp-contextmenu {
+          display: none !important;
+        }
+      `}</style>
+
+      {/* Transparent Overlay - prevents direct interaction with YouTube iframe */}
+      <div
+        className="absolute inset-0 z-10 bg-transparent"
+        onDoubleClick={handleFullscreen}
+        onClick={() => {
+          if (isReady && !isChangingQuality) {
+            togglePlayPause();
+          }
+        }}
+      />
+
+      {/* Loading State */}
+      {!isReady && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black z-20">
+          <div className="w-12 h-12 border-4 border-[#0099ff] border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+
+      {/* Quality changing indicator */}
+      {isChangingQuality && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 bg-black/80 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
+          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          Changing quality...
+        </div>
+      )}
+
+      {/* Custom Controls - Auto hide */}
+      <div
+        ref={controlsRef}
+        className={`absolute bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-black via-black/80 to-transparent transition-opacity duration-300 ${
+          showControls ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        {/* Progress Bar */}
+        <div className="px-4 pt-6">
+          <input
+            type="range"
+            min="0"
+            max={duration || 100}
+            value={currentTime}
+            onChange={handleSeek}
+            className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-[#0099ff] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:hover:scale-125 [&::-webkit-slider-thumb]:transition-transform [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-[#0099ff] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none"
+          />
+        </div>
+
+        {/* Control Buttons */}
+        <div className="flex items-center justify-between px-4 pb-4 pt-2">
+          <div className="flex items-center gap-3">
+            {/* Play/Pause Button */}
+            <button
+              onClick={togglePlayPause}
+              disabled={!isReady || isChangingQuality}
+              className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-gray-100 text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? (
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                </svg>
+              ) : (
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              )}
+            </button>
+
+            {/* Backward 10s Button */}
+            <button
+              onClick={handleBackward}
+              disabled={!isReady || isChangingQuality}
+              className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/90 hover:bg-white text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              aria-label="Backward 10 seconds"
+            >
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z" />
+              </svg>
+            </button>
+
+            {/* Forward 10s Button */}
+            <button
+              onClick={handleForward}
+              disabled={!isReady || isChangingQuality}
+              className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/90 hover:bg-white text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              aria-label="Forward 10 seconds"
+            >
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z" />
+              </svg>
+            </button>
+
+            {/* Time Display */}
+            <div className="flex items-center gap-2 text-white text-sm font-semibold bg-black/50 px-3 py-1 rounded">
+              <span>{formatTime(currentTime)}</span>
+              <span className="text-white/70">/</span>
+              <span className="text-white/70">{formatTime(duration)}</span>
+            </div>
+          </div>
+
+          {/* Right side controls */}
+          <div className="flex items-center gap-2" ref={qualityMenuRef}>
+            {/* Quality Button */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setShowQualityMenu(!showQualityMenu);
+                  resetHideTimer();
+                }}
+                disabled={!isReady || isChangingQuality}
+                className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/90 hover:bg-white text-black text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md relative"
+                aria-label="Video Quality"
+              >
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                {availableQualities.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0099ff] text-white text-xs rounded-full flex items-center justify-center">
+                    {availableQualities.length}
+                  </span>
+                )}
+              </button>
+
+              {/* Quality Dropdown Menu */}
+              {showQualityMenu && (
+                <div className="absolute bottom-full right-0 mb-2 bg-black/95 text-white rounded-lg shadow-xl overflow-hidden min-w-40 z-50">
+                  <div className="px-3 py-2 text-xs font-semibold text-gray-400 border-b border-gray-700">
+                    Video Quality {isChangingQuality && '(Changing...)'}
+                  </div>
+                  <div className="max-h-64 overflow-y-auto">
+                    {availableQualities.length > 0 ? (
+                      availableQualities.map((quality) => (
+                        <button
+                          key={quality}
+                          onClick={() => handleQualityChange(quality)}
+                          disabled={isChangingQuality}
+                          className={`w-full px-4 py-2.5 text-sm font-medium text-left hover:bg-[#0099ff] transition-colors flex items-center justify-between ${
+                            currentQuality === quality ? 'bg-[#0099ff]/20 text-[#0099ff]' : ''
+                          } ${isChangingQuality ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          <span>{formatQualityLabel(quality)}</span>
+                          {currentQuality === quality && !isChangingQuality && (
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                          )}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="px-4 py-3 text-sm text-gray-400">
+                        Loading qualities...
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Fullscreen Button */}
+            <button
+              onClick={handleFullscreen}
+              disabled={!isReady}
+              className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/90 hover:bg-white text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              aria-label="Fullscreen"
+            >
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Center play button for paused state */}
+      {!isPlaying && isReady && !isChangingQuality && (
+        <button
+          onClick={togglePlayPause}
+          className="absolute inset-0 flex items-center justify-center z-20 group/play"
+          aria-label="Play"
+        >
+          <div className="w-24 h-24 rounded-full bg-white/95 hover:bg-white flex items-center justify-center transition-all shadow-2xl group-hover/play:scale-110">
+            <svg width="40" height="40" fill="black" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </button>
+      )}
+    </div>
+  );
+}

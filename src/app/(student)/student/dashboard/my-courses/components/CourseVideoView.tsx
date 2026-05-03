@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo } from "react";
 import { studentService } from "@/lib/api/studentService";
 import { EnrolledCourse, fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
 import { useAppDispatch } from "@/lib/redux/hooks";
+import { CustomVideoPlayer } from "@/components/video";
 
 interface Props {
   enrolledCourse: EnrolledCourse;
@@ -144,16 +145,9 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
         <div className="flex-1 overflow-y-auto bg-gray-50 p-3 sm:p-6">
           <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4">
             {/* Video player */}
-            <div className="relative bg-black aspect-video w-full rounded-xl overflow-hidden shadow-xl">
-              <iframe
-                key={currentLesson?.youtubeId}
-                className="absolute inset-0 w-full h-full"
-                src={`https://www.youtube.com/embed/${currentLesson?.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
-                title={currentLesson?.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
+            <CustomVideoPlayer
+              videoId={currentLesson?.youtubeId || ''}
+            />
 
             {/* Lesson info */}
             <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 shadow-sm">
