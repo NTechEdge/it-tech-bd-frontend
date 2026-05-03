@@ -7,7 +7,7 @@ import BanStudentModal from '@/components/admin/BanStudentModal';
 import UnbanStudentModal from '@/components/admin/UnbanStudentModal';
 import CourseBanModal from '@/components/admin/CourseBanModal';
 
-type TabType = 'all' | 'banned';
+type TabType = 'all' | 'banned' | 'course-bans';
 
 interface CourseOption {
   _id: string;
@@ -22,6 +22,19 @@ interface CourseBanTarget {
   courseTitle: string;
 }
 
+interface CourseBanEntry {
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  courseId: string;
+  courseTitle: string;
+  courseCategory: string;
+  courseThumbnail: string;
+  banReason?: string;
+  bannedAt?: string;
+  banExpiresAt?: string;
+}
+
 export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +44,10 @@ export default function AdminStudentsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [activeTab, setActiveTab] = useState<TabType>('all');
+
+  // Course bans state
+  const [courseBans, setCourseBans] = useState<CourseBanEntry[]>([]);
+  const [loadingCourseBans, setLoadingCourseBans] = useState(false);
 
   // Account-level ban modals
   const [banModalOpen, setBanModalOpen] = useState(false);
@@ -52,6 +69,12 @@ export default function AdminStudentsPage() {
     try {
       setLoading(true);
       setError('');
+
+      if (activeTab === 'course-bans') {
+        await loadCourseBans();
+        return;
+      }
+
       const response = activeTab === 'banned'
         ? await adminService.getBannedStudents({ page: currentPage, limit: 10, search: searchTerm || undefined })
         : await adminService.getStudents({ page: currentPage, limit: 10, search: searchTerm || undefined });
@@ -66,6 +89,58 @@ export default function AdminStudentsPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load students');
     } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadCourseBans = async () => {
+    try {
+      setLoadingCourseBans(true);
+      setError('');
+
+      // Get all students first to find those with course bans
+      const allStudentsResponse = await adminService.getStudents({ page: 1, limit: 100 });
+
+      if (!allStudentsResponse.success) {
+        setError('Failed to load students');
+        return;
+      }
+
+      const allStudents = allStudentsResponse.data.students;
+      const courseBanEntries: CourseBanEntry[] = [];
+
+      // Fetch course bans for each student
+      await Promise.all(allStudents.map(async (student) => {
+        try {
+          const courseBansResponse = await adminService.getStudentCourseBans(student._id);
+          if (courseBansResponse.success && courseBansResponse.data.courseBans.length > 0) {
+            courseBansResponse.data.courseBans.forEach((ban: any) => {
+              courseBanEntries.push({
+                studentId: student._id,
+                studentName: student.name,
+                studentEmail: student.email,
+                courseId: ban.courseId._id,
+                courseTitle: ban.courseId.title,
+                courseCategory: ban.courseId.category,
+                courseThumbnail: ban.courseId.thumbnailUrl,
+                banReason: ban.courseBan.banReason,
+                bannedAt: ban.courseBan.bannedAt,
+                banExpiresAt: ban.courseBan.banExpiresAt,
+              });
+            });
+          }
+        } catch (err) {
+          // Skip students with errors
+        }
+      }));
+
+      setCourseBans(courseBanEntries);
+      setTotal(courseBanEntries.length);
+      setTotalPages(1);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load course bans');
+    } finally {
+      setLoadingCourseBans(false);
       setLoading(false);
     }
   };
@@ -132,6 +207,19 @@ export default function AdminStudentsPage() {
     });
   };
 
+  const handleUnbanFromCourse = async (studentId: string, studentName: string, courseId: string, courseTitle: string) => {
+    try {
+      const response = await adminService.unbanStudentFromCourse(studentId, courseId);
+      if (response.success) {
+        loadStudents();
+      } else {
+        setError('Failed to unban student from course');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to unban student from course');
+    }
+  };
+
   const getBanStatus = (student: Student) => {
     if (!student.isBanned) return null;
     const expiryDate = student.banExpiresAt ? new Date(student.banExpiresAt) : null;
@@ -153,7 +241,7 @@ export default function AdminStudentsPage() {
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-gray-200">
-        {(['all', 'banned'] as TabType[]).map((tab) => (
+        {(['all', 'banned', 'course-bans'] as TabType[]).map((tab) => (
           <button
             key={tab}
             onClick={() => { setActiveTab(tab); setCurrentPage(1); }}
@@ -163,7 +251,7 @@ export default function AdminStudentsPage() {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            {tab === 'all' ? 'All Students' : 'Banned Students'}
+            {tab === 'all' ? 'All Students' : tab === 'banned' ? 'Banned Students' : 'Course Bans'}
           </button>
         ))}
       </div>
@@ -185,9 +273,10 @@ export default function AdminStudentsPage() {
       {error && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">{error}</div>}
 
       {/* Students Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        {/* Desktop */}
-        <div className="hidden sm:block overflow-x-auto">
+      {activeTab !== 'course-bans' && (
+        <div className="bg-white rounded-lg shadow">
+          {/* Desktop */}
+          <div className="hidden sm:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -269,7 +358,7 @@ export default function AdminStudentsPage() {
                             </button>
 
                             {isPickerOpen && (
-                              <div className="absolute right-0 top-full mt-1.5 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-20 overflow-hidden">
+                              <div className="absolute right-0 bottom-full mb-1.5 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                                 <div className="px-3 py-2 border-b border-gray-100">
                                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Ban from course</p>
                                 </div>
@@ -374,7 +463,7 @@ export default function AdminStudentsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="bg-white px-4 py-3 border-t flex items-center justify-between">
+          <div className="bg-white px-4 py-3 border-t border-t-gray-200 flex items-center justify-between">
             <div className="text-sm text-gray-700">Page {currentPage} of {totalPages}</div>
             <div className="flex gap-2">
               <button
@@ -395,6 +484,143 @@ export default function AdminStudentsPage() {
           </div>
         )}
       </div>
+      )}
+
+      {/* Course Bans Table */}
+      {activeTab === 'course-bans' && (
+        <div className="bg-white rounded-lg shadow">
+          <div className="hidden sm:block overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Title</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ban Reason</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Banned At</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expires At</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {loading || loadingCourseBans ? (
+                  <AdminTableLoadingState colSpan={8} message="Loading course bans..." />
+                ) : courseBans.length === 0 ? (
+                  <tr><td colSpan={8} className="px-6 py-4 text-center text-gray-500">No course bans found</td></tr>
+                ) : (
+                  courseBans.map((entry) => {
+                    const expiryDate = entry.banExpiresAt ? new Date(entry.banExpiresAt) : null;
+                    const isExpired = expiryDate && expiryDate < new Date();
+                    return (
+                      <tr key={`${entry.studentId}-${entry.courseId}`} className="relative">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">{entry.studentName}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{entry.studentEmail}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{entry.courseTitle}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="px-2 py-1 text-xs font-medium rounded bg-blue-50 text-blue-700">
+                            {entry.courseCategory}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{entry.banReason || '-'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {entry.bannedAt ? new Date(entry.bannedAt).toLocaleDateString() : '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {expiryDate ? (
+                            <span className={`px-2 py-1 text-xs font-medium rounded ${
+                              isExpired
+                                ? 'bg-gray-100 text-gray-600'
+                                : 'bg-orange-100 text-orange-700'
+                            }`}>
+                              {expiryDate.toLocaleDateString()}
+                              {isExpired && ' (Expired)'}
+                            </span>
+                          ) : (
+                            <span className="px-2 py-1 text-xs font-medium rounded bg-red-100 text-red-700">
+                              Permanent
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <button
+                            onClick={() => handleUnbanFromCourse(entry.studentId, entry.studentName, entry.courseId, entry.courseTitle)}
+                            title="Unban from course"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-green-50 text-green-600 hover:bg-green-100 border border-green-200 transition-colors"
+                          >
+                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile */}
+          <div className="sm:hidden divide-y divide-gray-100">
+            {loading || loadingCourseBans ? (
+              <AdminMobileListLoadingState />
+            ) : courseBans.length === 0 ? (
+              <p className="px-4 py-6 text-center text-gray-500 text-sm">No course bans found</p>
+            ) : (
+              courseBans.map((entry) => {
+                const expiryDate = entry.banExpiresAt ? new Date(entry.banExpiresAt) : null;
+                const isExpired = expiryDate && expiryDate < new Date();
+                return (
+                  <div key={`${entry.studentId}-${entry.courseId}`} className="px-4 py-3 space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{entry.studentName}</p>
+                        <p className="text-xs text-gray-500 truncate">{entry.studentEmail}</p>
+                      </div>
+                      <span className={`px-2 py-1 text-xs font-medium rounded shrink-0 ${
+                        isExpired
+                          ? 'bg-gray-100 text-gray-600'
+                          : expiryDate
+                          ? 'bg-orange-100 text-orange-700'
+                          : 'bg-red-100 text-red-700'
+                      }`}>
+                        {isExpired ? 'Expired' : expiryDate ? expiryDate.toLocaleDateString() : 'Permanent'}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-900">{entry.courseTitle}</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-1 text-xs font-medium rounded bg-blue-50 text-blue-700">
+                          {entry.courseCategory}
+                        </span>
+                        {entry.banReason && (
+                          <span className="text-xs text-gray-600">Reason: {entry.banReason}</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-gray-400">
+                        Banned {entry.bannedAt ? new Date(entry.bannedAt).toLocaleDateString() : 'N/A'}
+                      </p>
+                      <button
+                        onClick={() => handleUnbanFromCourse(entry.studentId, entry.studentName, entry.courseId, entry.courseTitle)}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-green-50 text-green-600 hover:bg-green-100 border border-green-200 transition-colors"
+                      >
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Account-level ban modals */}
       {selectedStudent && (
@@ -434,7 +660,7 @@ export default function AdminStudentsPage() {
 
       {/* Close course picker on outside click */}
       {coursePickerOpen && (
-        <div className="fixed inset-0 z-10" onClick={() => setCoursePickerOpen(null)} />
+        <div className="fixed inset-0 z-40" onClick={() => setCoursePickerOpen(null)} />
       )}
     </div>
   );

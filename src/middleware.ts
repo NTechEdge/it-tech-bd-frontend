@@ -104,7 +104,7 @@ export function middleware(request: NextRequest) {
 
     try {
       const user = JSON.parse(decodeURIComponent(userCookie));
-      if (user.role !== 'admin' && user.role !== 'super_admin') {
+      if (user.role !== 'admin') {
         const url = request.nextUrl.clone();
         url.pathname = '/unauthorized';
         return NextResponse.redirect(url);

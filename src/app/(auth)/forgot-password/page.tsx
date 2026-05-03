@@ -31,14 +31,14 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 border border-gray-200 rounded-lg p-8 bg-white shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 border border-gray-200 rounded-lg p-6 sm:p-8 bg-white shadow-lg">
         {/* Logo */}
         <div className="text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Logo width={180} height={50} className="rounded-xl" />
+          <div className="flex items-center justify-center mb-3 sm:mb-4">
+            <Logo width={160} height={44} className="rounded-xl sm:w-[180px]" />
           </div>
-          <h2 className="text-3xl font-extrabold text-gray-900">Forgot your password?</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Forgot your password?</h2>
           <p className="mt-2 text-sm text-gray-600">
             Enter your email and we'll send you an OTP to reset your password.
           </p>

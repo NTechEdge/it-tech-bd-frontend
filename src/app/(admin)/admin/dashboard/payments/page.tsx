@@ -68,9 +68,9 @@ export default function AdminPaymentsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Payments & Enrollments</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Payments & Enrollments</h2>
           <p className="text-sm text-gray-600">
             Total {total} payment{total !== 1 ? 's' : ''}
           </p>
@@ -85,7 +85,7 @@ export default function AdminPaymentsPage() {
                 setStatusFilter(status);
                 setCurrentPage(1);
               }}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                 statusFilter === status
                   ? 'bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white'
                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -259,7 +259,7 @@ export default function AdminPaymentsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="bg-white px-4 py-3 border-t flex items-center justify-between">
+          <div className="bg-white px-4 py-3 border-t border-t-gray-200 flex items-center justify-between">
             <div className="text-sm text-gray-700">
               Showing page {currentPage} of {totalPages}
             </div>

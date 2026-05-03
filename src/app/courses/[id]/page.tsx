@@ -249,7 +249,7 @@ export default function CoursePage() {
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <div className="sticky top-6 bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-4">
+              <div className="lg:sticky lg:top-6 bg-white rounded-xl border border-gray-200 p-5 sm:p-6 shadow-sm space-y-4">
                 <div className="text-3xl font-bold text-gray-900">
                   {course.price === 0 ? 'Free' : `৳${course.price.toLocaleString()}`}
                 </div>
@@ -322,6 +322,7 @@ export default function CoursePage() {
                 amount: enrollment.amount,
                 paymentStatus: enrollment.paymentStatus,
                 progress: enrollment.progress || [],
+                courseBan: enrollment.courseBan || { isBanned: false },
               },
               course,
             }));

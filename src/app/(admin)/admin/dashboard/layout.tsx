@@ -32,18 +32,18 @@ export default function AdminDashboardLayout({
     );
   }
 
-  if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+  if (!user || (user.role !== 'admin')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
-          <p className="text-gray-600 mb-4">You don't have permission to access this page.</p>
-          <a
+          <p className="text-gray-600 mb-4">You don&apos;t have permission to access this page.</p>
+          <link
             href="/"
             className="text-[#0099ff] hover:text-[#003399] font-medium"
           >
             Go back to home
-          </a>
+          </link>
         </div>
       </div>
     );

@@ -244,11 +244,11 @@ export default function CourseFormPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
             {isEditing ? 'Edit Course' : 'Create New Course'}
           </h2>
           <p className="text-sm text-gray-600">
@@ -258,7 +258,7 @@ export default function CourseFormPage() {
         <button
           type="button"
           onClick={() => router.push('/admin/dashboard/courses')}
-          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          className="self-start sm:self-auto px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
         >
           Back to Courses
         </button>
@@ -489,7 +489,7 @@ export default function CourseFormPage() {
                   <div className="space-y-2">
                     {section.lessons.map((lesson, lessonIndex) => (
                       <div key={lessonIndex} className="border border-gray-200 rounded p-3 bg-gray-50 overflow-hidden">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-2">
                           <input
                             type="text"
                             value={lesson.title}

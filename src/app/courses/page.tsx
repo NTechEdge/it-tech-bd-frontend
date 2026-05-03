@@ -52,16 +52,16 @@ export default function CoursesPage() {
     <PublicLayout>
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white py-16">
+        <section className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white py-10 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
             Explore Our Courses
           </h1>
-          <p className="text-lg sm:text-xl text-[#0099ff]-100 max-w-2xl mx-auto mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-blue-100 max-w-2xl mx-auto mb-6 sm:mb-8">
             Master in-demand skills with our comprehensive courses. Learn at your own pace,
             anytime, anywhere.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 lg:gap-8 text-sm">
             <div className="flex items-center gap-2">
               <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />

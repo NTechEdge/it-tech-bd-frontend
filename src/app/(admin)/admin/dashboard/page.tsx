@@ -54,15 +54,15 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header with refresh button */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Dashboard</h2>
           <p className="text-sm text-gray-500">Overview of platform statistics and recent activity</p>
         </div>
         <button
           onClick={loadDashboardStats}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="self-start sm:self-auto flex items-center gap-2 px-4 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
         >
           <svg
             width="16"

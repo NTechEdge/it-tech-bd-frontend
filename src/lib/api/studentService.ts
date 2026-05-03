@@ -43,6 +43,11 @@ export interface Enrollment {
   purchasedAt: string;
   approvedAt?: string;
   progress: LessonProgress[];
+  courseBan?: {
+    isBanned: boolean;
+    banReason?: string;
+    banExpiresAt?: string;
+  };
 }
 
 export interface EnrolledCourse {
