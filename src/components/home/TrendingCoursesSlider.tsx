@@ -184,7 +184,7 @@ export default function TrendingCoursesSlider({ courses }: TrendingCoursesSlider
                   </span>
                 )}
                 <p className="text-base sm:text-lg font-bold text-gray-900">
-                  {course.price === 0 ? 'Free' : `$${course.price}`}
+                  {course.price === 0 ? 'Free' : `Tk ${course.price.toLocaleString()}`}
                 </p>
               </div>
             </div>

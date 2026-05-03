@@ -69,11 +69,11 @@ export default function EnrollmentModal({ course, onClose, onSuccess }: Props) {
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-700">Course Fee</span>
-            <span className="text-lg font-bold text-gray-900">৳{course.price.toLocaleString()}</span>
+            <span className="text-lg font-bold text-gray-900">Tk {course.price.toLocaleString()}</span>
           </div>
           <div className="text-sm text-gray-600 space-y-1">
             <p className="font-medium text-blue-700">Payment Instructions:</p>
-            <p>1. Send ৳{course.price.toLocaleString()} to our bKash number</p>
+            <p>1. Send Tk {course.price.toLocaleString()} to our bKash number</p>
             <p className="font-mono font-bold text-gray-900">01XXXXXXXXXX</p>
             <p>2. Copy the Transaction ID (TrxID)</p>
             <p>3. Paste it below and submit</p>

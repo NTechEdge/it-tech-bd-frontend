@@ -92,97 +92,194 @@ export default function MyCoursesPage() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {approvedCourses.map((ec) => {
-            const totalLessons = ec.course.sections?.reduce((acc, s) => acc + s.lessons.length, 0) || 0;
-            const completedLessons = ec.enrollment.progress?.filter((p) => p.isCompleted).length || 0;
-            const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-            const isBanned = ec.enrollment.courseBan?.isBanned;
-            const banExpiry = ec.enrollment.courseBan?.banExpiresAt
-              ? new Date(ec.enrollment.courseBan.banExpiresAt)
-              : null;
+        <>
+          {/* Mobile layout: horizontal card list */}
+          <div className="flex flex-col gap-3 sm:hidden">
+            {approvedCourses.map((ec) => {
+              const totalLessons = ec.course.sections?.reduce((acc, s) => acc + s.lessons.length, 0) || 0;
+              const completedLessons = ec.enrollment.progress?.filter((p) => p.isCompleted).length || 0;
+              const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+              const isBanned = ec.enrollment.courseBan?.isBanned;
+              const banExpiry = ec.enrollment.courseBan?.banExpiresAt
+                ? new Date(ec.enrollment.courseBan.banExpiresAt)
+                : null;
 
-            return (
-              <div
-                key={ec.enrollment.id}
-                className={`bg-white rounded-xl border overflow-hidden shadow-sm transition-all duration-300 ${
-                  isBanned
-                    ? 'border-red-200 opacity-80 cursor-not-allowed'
-                    : 'border-gray-200 hover:shadow-lg cursor-pointer group'
-                }`}
-                onClick={() => !isBanned && router.push(`/student/dashboard/my-courses/${ec.course._id}`)}
-              >
-                <div className="relative aspect-video overflow-hidden">
-                  {ec.course.thumbnailUrl ? (
-                    <img
-                      src={ec.course.thumbnailUrl}
-                      alt={ec.course.title}
-                      className={`w-full h-full object-cover transition-transform duration-300 ${!isBanned ? 'group-hover:scale-105' : 'grayscale'}`}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
-                      <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  )}
-                  {isBanned ? (
-                    <div className="absolute top-3 left-3 px-2 py-1 bg-red-600 text-white text-xs font-semibold rounded-lg flex items-center gap-1">
-                      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                      </svg>
-                      Access Restricted
-                    </div>
-                  ) : (
-                    <div className="absolute top-3 left-3 px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1">
-                      <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                      </svg>
-                      Enrolled
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-4">
-                  <h3 className={`font-bold mb-1 line-clamp-2 transition-colors ${isBanned ? 'text-gray-500' : 'text-gray-900 group-hover:text-[#0099ff]'}`}>
-                    {ec.course.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 mb-3">{ec.course.instructorName}</p>
-
-                  {isBanned ? (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-700">
-                      <p className="font-semibold mb-0.5">Access restricted</p>
-                      {ec.enrollment.courseBan?.banReason && (
-                        <p className="text-red-600">Reason: {ec.enrollment.courseBan.banReason}</p>
+              return (
+                <div
+                  key={ec.enrollment.id}
+                  className={`bg-white rounded-2xl border overflow-hidden shadow-sm transition-all duration-200 active:scale-[0.98] ${
+                    isBanned
+                      ? 'border-red-200 opacity-80 cursor-not-allowed'
+                      : 'border-gray-200 cursor-pointer'
+                  }`}
+                  onClick={() => !isBanned && router.push(`/student/dashboard/my-courses/${ec.course._id}`)}
+                >
+                  <div className="flex gap-0">
+                    {/* Thumbnail strip */}
+                    <div className="relative w-28 shrink-0">
+                      {ec.course.thumbnailUrl ? (
+                        <img
+                          src={ec.course.thumbnailUrl}
+                          alt={ec.course.title}
+                          className={`w-full h-full object-cover ${isBanned ? 'grayscale' : ''}`}
+                        />
+                      ) : (
+                        <div className="w-full h-full min-h-[100px] bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
+                          <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
                       )}
-                      {banExpiry && (
-                        <p className="text-red-500 mt-0.5">Until: {banExpiry.toLocaleDateString()}</p>
+                      {/* Play overlay */}
+                      {!isBanned && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                          <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center">
+                            <svg width="14" height="14" fill="#0099ff" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
                       )}
                     </div>
-                  ) : (
-                    <>
-                      <div className="mb-3">
-                        <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                          <span>{completedLessons}/{totalLessons} lessons</span>
-                          <span>{progressPct}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-1.5">
-                          <div
-                            className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full transition-all"
-                            style={{ width: `${progressPct}%` }}
-                          />
-                        </div>
+
+                    {/* Content */}
+                    <div className="flex-1 p-3 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h3 className={`font-bold text-sm leading-snug line-clamp-2 flex-1 ${isBanned ? 'text-gray-500' : 'text-gray-900'}`}>
+                          {ec.course.title}
+                        </h3>
+                        {isBanned ? (
+                          <span className="shrink-0 px-1.5 py-0.5 bg-red-100 text-red-600 text-[10px] font-semibold rounded-md">Banned</span>
+                        ) : (
+                          <span className="shrink-0 px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] font-semibold rounded-md">Active</span>
+                        )}
                       </div>
-                      <button className="w-full py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white text-sm font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-all">
-                        {progressPct > 0 ? 'Continue Learning' : 'Start Learning'}
-                      </button>
-                    </>
-                  )}
+                      <p className="text-xs text-gray-400 mb-2 truncate">{ec.course.instructorName}</p>
+
+                      {isBanned ? (
+                        <div className="text-xs text-red-600">
+                          {ec.enrollment.courseBan?.banReason && (
+                            <p className="line-clamp-1">Reason: {ec.enrollment.courseBan.banReason}</p>
+                          )}
+                          {banExpiry && <p className="text-red-400">Until: {banExpiry.toLocaleDateString()}</p>}
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1">
+                            <span>{completedLessons}/{totalLessons} lessons</span>
+                            <span className="font-semibold text-[#0099ff]">{progressPct}%</span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-1.5">
+                            <div
+                              className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full transition-all"
+                              style={{ width: `${progressPct}%` }}
+                            />
+                          </div>
+                          <p className="text-[11px] text-[#0099ff] font-semibold mt-2">
+                            {progressPct > 0 ? 'Continue →' : 'Start Learning →'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop/tablet layout: grid cards */}
+          <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {approvedCourses.map((ec) => {
+              const totalLessons = ec.course.sections?.reduce((acc, s) => acc + s.lessons.length, 0) || 0;
+              const completedLessons = ec.enrollment.progress?.filter((p) => p.isCompleted).length || 0;
+              const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+              const isBanned = ec.enrollment.courseBan?.isBanned;
+              const banExpiry = ec.enrollment.courseBan?.banExpiresAt
+                ? new Date(ec.enrollment.courseBan.banExpiresAt)
+                : null;
+
+              return (
+                <div
+                  key={ec.enrollment.id}
+                  className={`bg-white rounded-xl border overflow-hidden shadow-sm transition-all duration-300 ${
+                    isBanned
+                      ? 'border-red-200 opacity-80 cursor-not-allowed'
+                      : 'border-gray-200 hover:shadow-lg cursor-pointer group'
+                  }`}
+                  onClick={() => !isBanned && router.push(`/student/dashboard/my-courses/${ec.course._id}`)}
+                >
+                  <div className="relative aspect-video overflow-hidden">
+                    {ec.course.thumbnailUrl ? (
+                      <img
+                        src={ec.course.thumbnailUrl}
+                        alt={ec.course.title}
+                        className={`w-full h-full object-cover transition-transform duration-300 ${!isBanned ? 'group-hover:scale-105' : 'grayscale'}`}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
+                        <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    )}
+                    {isBanned ? (
+                      <div className="absolute top-3 left-3 px-2 py-1 bg-red-600 text-white text-xs font-semibold rounded-lg flex items-center gap-1">
+                        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                        </svg>
+                        Access Restricted
+                      </div>
+                    ) : (
+                      <div className="absolute top-3 left-3 px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1">
+                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                        Enrolled
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4">
+                    <h3 className={`font-bold mb-1 line-clamp-2 transition-colors ${isBanned ? 'text-gray-500' : 'text-gray-900 group-hover:text-[#0099ff]'}`}>
+                      {ec.course.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 mb-3">{ec.course.instructorName}</p>
+
+                    {isBanned ? (
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-700">
+                        <p className="font-semibold mb-0.5">Access restricted</p>
+                        {ec.enrollment.courseBan?.banReason && (
+                          <p className="text-red-600">Reason: {ec.enrollment.courseBan.banReason}</p>
+                        )}
+                        {banExpiry && (
+                          <p className="text-red-500 mt-0.5">Until: {banExpiry.toLocaleDateString()}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <>
+                        <div className="mb-3">
+                          <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                            <span>{completedLessons}/{totalLessons} lessons</span>
+                            <span>{progressPct}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1.5">
+                            <div
+                              className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full transition-all"
+                              style={{ width: `${progressPct}%` }}
+                            />
+                          </div>
+                        </div>
+                        <button className="w-full py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white text-sm font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-all">
+                          {progressPct > 0 ? 'Continue Learning' : 'Start Learning'}
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );

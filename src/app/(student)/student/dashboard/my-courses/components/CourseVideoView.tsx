@@ -175,9 +175,30 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
           </div>
         </div>
 
-        {/* Curriculum sidebar */}
-        <div className={`${showCurriculum ? 'flex' : 'hidden'} lg:flex flex-col bg-white border-t lg:border-t-0 lg:border-l border-gray-200 shrink-0 w-full lg:w-80 max-h-[50vh] lg:max-h-full overflow-y-auto`}>
+        {/* Mobile bottom-sheet overlay */}
+        {showCurriculum && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black/40 z-40"
+            onClick={() => setShowCurriculum(false)}
+          />
+        )}
+
+        {/* Curriculum sidebar / bottom-sheet */}
+        <div className={`
+          lg:flex flex-col bg-white shrink-0
+          fixed lg:static bottom-0 left-0 right-0 z-50
+          lg:border-t-0 lg:border-l border-gray-200
+          lg:w-80 lg:max-h-full
+          rounded-t-2xl lg:rounded-none
+          transition-transform duration-300 ease-in-out
+          ${showCurriculum ? 'flex translate-y-0' : 'hidden lg:flex translate-y-full lg:translate-y-0'}
+          max-h-[75vh] lg:max-h-full overflow-y-auto
+        `}>
           <div className="p-3 sm:p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+            {/* Drag handle for mobile bottom sheet */}
+            <div className="lg:hidden flex justify-center mb-3">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+            </div>
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-gray-900 text-sm">Course Content</h3>

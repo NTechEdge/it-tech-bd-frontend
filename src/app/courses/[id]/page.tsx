@@ -96,7 +96,39 @@ export default function CoursePage() {
 
   return (
     <PublicLayout>
-      <div className="min-h-screen bg-gray-50">
+      {/* Mobile sticky bottom CTA */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-between gap-3 shadow-lg">
+        <div>
+          <p className="text-xs text-gray-500 leading-none mb-0.5">{getTotalLessons()} lessons · {getTotalDuration()}</p>
+          <p className="text-lg font-bold text-gray-900 leading-none">
+            {course.price === 0 ? "Free" : `Tk ${course.price.toLocaleString()}`}
+          </p>
+        </div>
+        {hasAccess ? (
+          <button
+            onClick={() => router.push(`/student/dashboard/my-courses/${courseId}`)}
+            className="flex-1 py-2.5 bg-green-500 text-white font-semibold rounded-xl text-sm"
+          >
+            Continue Learning
+          </button>
+        ) : pendingEnrollment ? (
+          <div className="flex-1 py-2.5 bg-yellow-50 text-yellow-700 border border-yellow-200 font-semibold rounded-xl text-center text-sm">
+            Pending Approval
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              if (!isAuthenticated) router.push(`/login?redirect=/courses/${courseId}`);
+              else setShowEnrollModal(true);
+            }}
+            className="flex-1 py-2.5 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl text-sm"
+          >
+            {isAuthenticated ? "Enroll Now" : "Login to Enroll"}
+          </button>
+        )}
+      </div>
+
+      <div className="min-h-screen bg-gray-50 pb-20 sm:pb-0">
         {/* Hero */}
         <div className="bg-gray-900 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -148,7 +180,7 @@ export default function CoursePage() {
                     }}
                     className="px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-lg"
                   >
-                    {isAuthenticated ? `Enroll Now — ৳${course.price.toLocaleString()}` : 'Login to Enroll'}
+                    {isAuthenticated ? `Enroll Now — Tk ${course.price.toLocaleString()}` : 'Login to Enroll'}
                   </button>
                 )}
               </div>
@@ -247,11 +279,11 @@ export default function CoursePage() {
               </div>
             </div>
 
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
+            {/* Sidebar — hidden on mobile (sticky bottom bar handles CTA) */}
+            <div className="hidden sm:block lg:col-span-1">
               <div className="lg:sticky lg:top-6 bg-white rounded-xl border border-gray-200 p-5 sm:p-6 shadow-sm space-y-4">
                 <div className="text-3xl font-bold text-gray-900">
-                  {course.price === 0 ? 'Free' : `৳${course.price.toLocaleString()}`}
+                  {course.price === 0 ? 'Free' : `Tk ${course.price.toLocaleString()}`}
                 </div>
 
                 {hasAccess ? (
@@ -306,7 +338,7 @@ export default function CoursePage() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
       </div>
 
       {showEnrollModal && course && (

@@ -98,7 +98,7 @@ export default function CourseDetailPanel() {
           </div>
         </div>
         <button className="bg-[#0099ff] hover:bg-[#d05a09] text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors">
-          Enroll — $1200
+          Enroll — Tk 1200
         </button>
       </div>
 

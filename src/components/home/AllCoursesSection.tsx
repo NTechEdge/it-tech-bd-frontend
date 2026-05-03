@@ -226,7 +226,7 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
               <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-gray-100">
                 <span className="text-[10px] sm:text-xs text-gray-500">{course.category || 'Course'}</span>
                 <p className="text-base sm:text-lg font-bold text-gray-900">
-                  {course.price === 0 ? 'Free' : `$${course.price}`}
+                  {course.price === 0 ? 'Free' : `Tk ${course.price.toLocaleString()}`}
                 </p>
               </div>
             </div>
