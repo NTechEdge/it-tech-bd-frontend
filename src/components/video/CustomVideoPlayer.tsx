@@ -476,7 +476,7 @@ export default function CustomVideoPlayer({
       {!isMobile && (
         <div
           ref={controlsRef}
-          className={`absolute bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-black via-black/80 to-transparent transition-opacity duration-300 ${
+          className={`absolute bottom-0 left-0 right-0 z-30 bg-linear-to-t from-black via-black/80 to-transparent transition-opacity duration-300 ${
             showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         >
@@ -629,7 +629,7 @@ export default function CustomVideoPlayer({
           }`}
         >
           {/* Top gradient */}
-          <div className="h-16 bg-gradient-to-b from-black/60 to-transparent" />
+          <div className="h-16 bg-linear-to-b from-black/60 to-transparent" />
 
           {/* Center play controls */}
           <div className="flex items-center justify-center gap-8">
@@ -673,7 +673,7 @@ export default function CustomVideoPlayer({
           </div>
 
           {/* Bottom controls */}
-          <div className="bg-gradient-to-t from-black/90 via-black/60 to-transparent px-3 pb-3 pt-8">
+          <div className="bg-linear-to-t from-black/90 via-black/60 to-transparent px-3 pb-3 pt-8">
             {/* Progress Bar */}
             <input
               type="range"
