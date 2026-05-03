@@ -60,6 +60,15 @@ export default function UnauthorizedPage() {
             </Link>
           )}
 
+          {user?.role === "teacher" && (
+            <Link
+              href="/teacher/dashboard"
+              className="px-6 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              Go to Teacher Dashboard
+            </Link>
+          )}
+
           <Link
             href="/"
             className="px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200"

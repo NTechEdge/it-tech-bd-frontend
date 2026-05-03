@@ -97,19 +97,27 @@ export default function MyCoursesPage() {
             const totalLessons = ec.course.sections?.reduce((acc, s) => acc + s.lessons.length, 0) || 0;
             const completedLessons = ec.enrollment.progress?.filter((p) => p.isCompleted).length || 0;
             const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+            const isBanned = ec.enrollment.courseBan?.isBanned;
+            const banExpiry = ec.enrollment.courseBan?.banExpiresAt
+              ? new Date(ec.enrollment.courseBan.banExpiresAt)
+              : null;
 
             return (
               <div
                 key={ec.enrollment.id}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                onClick={() => router.push(`/student/dashboard/my-courses/${ec.course._id}`)}
+                className={`bg-white rounded-xl border overflow-hidden shadow-sm transition-all duration-300 ${
+                  isBanned
+                    ? 'border-red-200 opacity-80 cursor-not-allowed'
+                    : 'border-gray-200 hover:shadow-lg cursor-pointer group'
+                }`}
+                onClick={() => !isBanned && router.push(`/student/dashboard/my-courses/${ec.course._id}`)}
               >
                 <div className="relative aspect-video overflow-hidden">
                   {ec.course.thumbnailUrl ? (
                     <img
                       src={ec.course.thumbnailUrl}
                       alt={ec.course.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className={`w-full h-full object-cover transition-transform duration-300 ${!isBanned ? 'group-hover:scale-105' : 'grayscale'}`}
                     />
                   ) : (
                     <div className="w-full h-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
@@ -118,37 +126,58 @@ export default function MyCoursesPage() {
                       </svg>
                     </div>
                   )}
-                  <div className="absolute top-3 left-3 px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1">
-                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                    </svg>
-                    Enrolled
-                  </div>
+                  {isBanned ? (
+                    <div className="absolute top-3 left-3 px-2 py-1 bg-red-600 text-white text-xs font-semibold rounded-lg flex items-center gap-1">
+                      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                      </svg>
+                      Access Restricted
+                    </div>
+                  ) : (
+                    <div className="absolute top-3 left-3 px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1">
+                      <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                      </svg>
+                      Enrolled
+                    </div>
+                  )}
                 </div>
 
                 <div className="p-4">
-                  <h3 className="font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-[#0099ff] transition-colors">
+                  <h3 className={`font-bold mb-1 line-clamp-2 transition-colors ${isBanned ? 'text-gray-500' : 'text-gray-900 group-hover:text-[#0099ff]'}`}>
                     {ec.course.title}
                   </h3>
                   <p className="text-xs text-gray-500 mb-3">{ec.course.instructorName}</p>
 
-                  {/* Progress */}
-                  <div className="mb-3">
-                    <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                      <span>{completedLessons}/{totalLessons} lessons</span>
-                      <span>{progressPct}%</span>
+                  {isBanned ? (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-700">
+                      <p className="font-semibold mb-0.5">Access restricted</p>
+                      {ec.enrollment.courseBan?.banReason && (
+                        <p className="text-red-600">Reason: {ec.enrollment.courseBan.banReason}</p>
+                      )}
+                      {banExpiry && (
+                        <p className="text-red-500 mt-0.5">Until: {banExpiry.toLocaleDateString()}</p>
+                      )}
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
-                      <div
-                        className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full transition-all"
-                        style={{ width: `${progressPct}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  <button className="w-full py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white text-sm font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-all">
-                    {progressPct > 0 ? 'Continue Learning' : 'Start Learning'}
-                  </button>
+                  ) : (
+                    <>
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                          <span>{completedLessons}/{totalLessons} lessons</span>
+                          <span>{progressPct}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-1.5">
+                          <div
+                            className="bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] h-1.5 rounded-full transition-all"
+                            style={{ width: `${progressPct}%` }}
+                          />
+                        </div>
+                      </div>
+                      <button className="w-full py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white text-sm font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-all">
+                        {progressPct > 0 ? 'Continue Learning' : 'Start Learning'}
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             );

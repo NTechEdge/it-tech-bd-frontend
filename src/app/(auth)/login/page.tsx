@@ -27,7 +27,7 @@ export default function LoginPage() {
       console.log('Login page result:', result);
 
       if (result.success) {
-        console.log('Login successful, waiting for redirect...');
+        // redirect handled by useEffect below
       } else {
         console.error('Login failed:', result.message);
         setError(result.message || 'Login failed');
@@ -44,6 +44,8 @@ export default function LoginPage() {
     if (user && loading) {
       if (user.role === 'admin') {
         router.push('/admin/dashboard');
+      } else if (user.role === 'teacher') {
+        router.push('/teacher/dashboard');
       } else if (user.role === 'student') {
         router.push('/student/dashboard');
       } else {

@@ -7,6 +7,12 @@ export interface LessonProgress {
   isCompleted: boolean;
 }
 
+export interface CourseBanInfo {
+  isBanned: boolean;
+  banReason?: string;
+  banExpiresAt?: string;
+}
+
 export interface EnrolledCourse {
   enrollment: {
     id: string;
@@ -14,6 +20,7 @@ export interface EnrolledCourse {
     amount: number;
     paymentStatus: 'pending' | 'approved' | 'rejected';
     progress: LessonProgress[];
+    courseBan: CourseBanInfo;
   };
   course: {
     _id: string;
@@ -146,6 +153,14 @@ const normalizeEnrollment = async (item: unknown): Promise<EnrolledCourse | null
 
   const id = getStringId(nestedEnrollment._id ?? nestedEnrollment.id) || `${course._id}-${getString(nestedEnrollment.purchasedAt)}`;
 
+  // Extract courseBan info
+  const rawCourseBan = isRecord(nestedEnrollment.courseBan) ? nestedEnrollment.courseBan : null;
+  const courseBan: CourseBanInfo = {
+    isBanned: rawCourseBan ? Boolean(rawCourseBan.isBanned) : false,
+    banReason: rawCourseBan && typeof rawCourseBan.banReason === 'string' ? rawCourseBan.banReason : undefined,
+    banExpiresAt: rawCourseBan && typeof rawCourseBan.banExpiresAt === 'string' ? rawCourseBan.banExpiresAt : undefined,
+  };
+
   return {
     enrollment: {
       id,
@@ -155,6 +170,7 @@ const normalizeEnrollment = async (item: unknown): Promise<EnrolledCourse | null
       progress: Array.isArray(nestedEnrollment.progress)
         ? (nestedEnrollment.progress as LessonProgress[])
         : [],
+      courseBan,
     },
     course,
   };

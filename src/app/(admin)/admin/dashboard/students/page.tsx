@@ -5,8 +5,22 @@ import { adminService, Student } from '@/lib/api/adminService';
 import { AdminTableLoadingState, AdminMobileListLoadingState } from '@/components/ui/loading-states';
 import BanStudentModal from '@/components/admin/BanStudentModal';
 import UnbanStudentModal from '@/components/admin/UnbanStudentModal';
+import CourseBanModal from '@/components/admin/CourseBanModal';
 
 type TabType = 'all' | 'banned';
+
+interface CourseOption {
+  _id: string;
+  title: string;
+  isCourseBanned?: boolean;
+}
+
+interface CourseBanTarget {
+  studentId: string;
+  studentName: string;
+  courseId: string;
+  courseTitle: string;
+}
 
 export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -18,10 +32,17 @@ export default function AdminStudentsPage() {
   const [total, setTotal] = useState(0);
   const [activeTab, setActiveTab] = useState<TabType>('all');
 
-  // Modal states
+  // Account-level ban modals
   const [banModalOpen, setBanModalOpen] = useState(false);
   const [unbanModalOpen, setUnbanModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<{ id: string; name: string } | null>(null);
+
+  // Course-level ban
+  const [courseBanModalOpen, setCourseBanModalOpen] = useState(false);
+  const [courseBanTarget, setCourseBanTarget] = useState<CourseBanTarget | null>(null);
+  const [coursePickerOpen, setCoursePickerOpen] = useState<string | null>(null); // studentId
+  const [studentCourses, setStudentCourses] = useState<Record<string, CourseOption[]>>({});
+  const [loadingCourses, setLoadingCourses] = useState<string | null>(null);
 
   useEffect(() => {
     loadStudents();
@@ -31,18 +52,9 @@ export default function AdminStudentsPage() {
     try {
       setLoading(true);
       setError('');
-
       const response = activeTab === 'banned'
-        ? await adminService.getBannedStudents({
-            page: currentPage,
-            limit: 10,
-            search: searchTerm || undefined,
-          })
-        : await adminService.getStudents({
-            page: currentPage,
-            limit: 10,
-            search: searchTerm || undefined,
-          });
+        ? await adminService.getBannedStudents({ page: currentPage, limit: 10, search: searchTerm || undefined })
+        : await adminService.getStudents({ page: currentPage, limit: 10, search: searchTerm || undefined });
 
       if (response.success) {
         setStudents(response.data.students);
@@ -74,24 +86,58 @@ export default function AdminStudentsPage() {
     setUnbanModalOpen(true);
   };
 
+  // Load enrolled courses for a student to pick from for course-ban
+  const openCoursePicker = async (student: Student) => {
+    const sid = student._id;
+    setCoursePickerOpen(sid);
+    if (studentCourses[sid]) return; // already loaded
+
+    try {
+      setLoadingCourses(sid);
+      const res = await adminService.getStudentEnrolledCourses(sid);
+      if (res.success) {
+        setStudentCourses((prev) => ({
+          ...prev,
+          [sid]: res.data.courses.map((c) => ({
+            _id: c._id,
+            title: c.title,
+            isCourseBanned: c.isCourseBanned,
+          })),
+        }));
+      }
+    } catch {
+      // ignore
+    } finally {
+      setLoadingCourses(null);
+    }
+  };
+
+  const selectCourseForBan = (student: Student, course: CourseOption) => {
+    setCourseBanTarget({
+      studentId: student._id,
+      studentName: student.name,
+      courseId: course._id,
+      courseTitle: course.title,
+    });
+    setCoursePickerOpen(null);
+    setCourseBanModalOpen(true);
+  };
+
+  // Invalidate cached enrolled courses for a student so the dropdown refreshes after a ban
+  const invalidateStudentCourseCache = (studentId: string) => {
+    setStudentCourses((prev) => {
+      const next = { ...prev };
+      delete next[studentId];
+      return next;
+    });
+  };
+
   const getBanStatus = (student: Student) => {
     if (!student.isBanned) return null;
-
-    const isTemporary = student.banExpiresAt;
     const expiryDate = student.banExpiresAt ? new Date(student.banExpiresAt) : null;
     const isExpired = expiryDate && expiryDate < new Date();
-
-    if (isExpired) {
-      return { label: 'Ban Expired', color: 'bg-gray-100 text-gray-800' };
-    }
-
-    if (isTemporary) {
-      return {
-        label: `Banned until ${expiryDate?.toLocaleDateString()}`,
-        color: 'bg-orange-100 text-orange-800'
-      };
-    }
-
+    if (isExpired) return { label: 'Ban Expired', color: 'bg-gray-100 text-gray-800' };
+    if (expiryDate) return { label: `Banned until ${expiryDate.toLocaleDateString()}`, color: 'bg-orange-100 text-orange-800' };
     return { label: 'Permanently Banned', color: 'bg-red-100 text-red-800' };
   };
 
@@ -101,34 +147,25 @@ export default function AdminStudentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Students</h2>
-          <p className="text-sm text-gray-600">
-            Total {total} student{total !== 1 ? 's' : ''}
-          </p>
+          <p className="text-sm text-gray-600">Total {total} student{total !== 1 ? 's' : ''}</p>
         </div>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-gray-200">
-        <button
-          onClick={() => { setActiveTab('all'); setCurrentPage(1); }}
-          className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-            activeTab === 'all'
-              ? 'border-[#0099ff] text-[#0099ff]'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          All Students
-        </button>
-        <button
-          onClick={() => { setActiveTab('banned'); setCurrentPage(1); }}
-          className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-            activeTab === 'banned'
-              ? 'border-[#0099ff] text-[#0099ff]'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          Banned Students
-        </button>
+        {(['all', 'banned'] as TabType[]).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => { setActiveTab(tab); setCurrentPage(1); }}
+            className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors capitalize ${
+              activeTab === tab
+                ? 'border-[#0099ff] text-[#0099ff]'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {tab === 'all' ? 'All Students' : 'Banned Students'}
+          </button>
+        ))}
       </div>
 
       {/* Search */}
@@ -140,23 +177,16 @@ export default function AdminStudentsPage() {
           placeholder="Search by name or email..."
           className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900 placeholder-gray-400"
         />
-        <button
-          type="submit"
-          className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-colors"
-        >
+        <button type="submit" className="px-6 py-2 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-colors">
           Search
         </button>
       </form>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
-          {error}
-        </div>
-      )}
+      {error && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">{error}</div>}
 
       {/* Students Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        {/* Desktop table */}
+        {/* Desktop */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -177,14 +207,13 @@ export default function AdminStudentsPage() {
               ) : (
                 students.map((student) => {
                   const banStatus = getBanStatus(student);
+                  const isPickerOpen = coursePickerOpen === student._id;
                   return (
-                    <tr key={student._id}>
+                    <tr key={student._id} className="relative">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">{student.name}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{student.email}</div>
-                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{student.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           student.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
@@ -203,27 +232,71 @@ export default function AdminStudentsPage() {
                         {new Date(student.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {student.isBanned ? (
-                          <button
-                            onClick={() => openUnbanModal(student)}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-all duration-200 font-medium text-sm border border-green-200 shadow-sm hover:shadow"
-                          >
-                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Unban
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => openBanModal(student)}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-all duration-200 font-medium text-sm border border-red-200 shadow-sm hover:shadow"
-                          >
-                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                            </svg>
-                            Ban
-                          </button>
-                        )}
+                        <div className="flex items-center gap-1.5">
+                          {/* Account ban/unban */}
+                          {student.isBanned ? (
+                            <button
+                              onClick={() => openUnbanModal(student)}
+                              title="Unban student"
+                              className="w-8 h-8 flex items-center justify-center rounded-lg bg-green-50 text-green-600 hover:bg-green-100 border border-green-200 transition-colors"
+                            >
+                              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => openBanModal(student)}
+                              title="Ban student"
+                              className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-colors"
+                            >
+                              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                              </svg>
+                            </button>
+                          )}
+
+                          {/* Course-level ban picker */}
+                          <div className="relative">
+                            <button
+                              onClick={() => isPickerOpen ? setCoursePickerOpen(null) : openCoursePicker(student)}
+                              title="Ban from a course"
+                              className="w-8 h-8 flex items-center justify-center rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 border border-orange-200 transition-colors"
+                            >
+                              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                              </svg>
+                            </button>
+
+                            {isPickerOpen && (
+                              <div className="absolute right-0 top-full mt-1.5 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-20 overflow-hidden">
+                                <div className="px-3 py-2 border-b border-gray-100">
+                                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Ban from course</p>
+                                </div>
+                                <div className="max-h-44 overflow-y-auto">
+                                  {loadingCourses === student._id ? (
+                                    <p className="px-3 py-3 text-xs text-gray-400 text-center">Loading...</p>
+                                  ) : (studentCourses[student._id] || []).length === 0 ? (
+                                    <p className="px-3 py-3 text-xs text-gray-400 text-center">Not enrolled in any courses</p>
+                                  ) : (
+                                    (studentCourses[student._id] || []).map((course) => (
+                                      <button
+                                        key={course._id}
+                                        onClick={() => selectCourseForBan(student, course)}
+                                        className="w-full text-left px-3 py-2 text-xs transition-colors flex items-center justify-between gap-2 hover:bg-orange-50 group"
+                                      >
+                                        <span className="truncate text-gray-700 group-hover:text-orange-700">{course.title}</span>
+                                        {course.isCourseBanned && (
+                                          <span className="shrink-0 px-1.5 py-0.5 bg-red-100 text-red-600 rounded text-[10px] font-medium">Banned</span>
+                                        )}
+                                      </button>
+                                    ))
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -233,7 +306,7 @@ export default function AdminStudentsPage() {
           </table>
         </div>
 
-        {/* Mobile card list */}
+        {/* Mobile */}
         <div className="sm:hidden divide-y divide-gray-100">
           {loading ? (
             <AdminMobileListLoadingState />
@@ -246,7 +319,7 @@ export default function AdminStudentsPage() {
                 <div key={student._id} className="px-4 py-3 space-y-2">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium text-gray-900">{student.name}</p>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap justify-end">
                       <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
                         student.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                       }`}>{student.isVerified ? 'Verified' : 'Pending'}</span>
@@ -260,27 +333,38 @@ export default function AdminStudentsPage() {
                   <p className="text-xs text-gray-500">{student.email}</p>
                   <div className="flex items-center justify-between">
                     <p className="text-xs text-gray-400">Joined {new Date(student.createdAt).toLocaleDateString()}</p>
-                    {student.isBanned ? (
+                    <div className="flex gap-1.5">
+                      {student.isBanned ? (
+                        <button
+                          onClick={() => openUnbanModal(student)}
+                          title="Unban"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-green-50 text-green-600 hover:bg-green-100 border border-green-200 transition-colors"
+                        >
+                          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => openBanModal(student)}
+                          title="Ban"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-colors"
+                        >
+                          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                          </svg>
+                        </button>
+                      )}
                       <button
-                        onClick={() => openUnbanModal(student)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-all duration-200 font-medium text-xs border border-green-200 shadow-sm"
+                        onClick={() => openCoursePicker(student)}
+                        title="Course ban"
+                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 border border-orange-200 transition-colors"
                       >
-                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
-                        Unban
                       </button>
-                    ) : (
-                      <button
-                        onClick={() => openBanModal(student)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-all duration-200 font-medium text-xs border border-red-200 shadow-sm"
-                      >
-                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                        </svg>
-                        Ban
-                      </button>
-                    )}
+                    </div>
                   </div>
                 </div>
               );
@@ -291,9 +375,7 @@ export default function AdminStudentsPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="bg-white px-4 py-3 border-t flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              Showing page {currentPage} of {totalPages}
-            </div>
+            <div className="text-sm text-gray-700">Page {currentPage} of {totalPages}</div>
             <div className="flex gap-2">
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -314,7 +396,7 @@ export default function AdminStudentsPage() {
         )}
       </div>
 
-      {/* Modals */}
+      {/* Account-level ban modals */}
       {selectedStudent && (
         <>
           <BanStudentModal
@@ -332,6 +414,27 @@ export default function AdminStudentsPage() {
             onSuccess={loadStudents}
           />
         </>
+      )}
+
+      {/* Course-level ban modal */}
+      {courseBanTarget && (
+        <CourseBanModal
+          isOpen={courseBanModalOpen}
+          onClose={() => { setCourseBanModalOpen(false); setCourseBanTarget(null); }}
+          studentId={courseBanTarget.studentId}
+          studentName={courseBanTarget.studentName}
+          courseId={courseBanTarget.courseId}
+          courseTitle={courseBanTarget.courseTitle}
+          onSuccess={() => {
+            invalidateStudentCourseCache(courseBanTarget.studentId);
+            loadStudents();
+          }}
+        />
+      )}
+
+      {/* Close course picker on outside click */}
+      {coursePickerOpen && (
+        <div className="fixed inset-0 z-10" onClick={() => setCoursePickerOpen(null)} />
       )}
     </div>
   );

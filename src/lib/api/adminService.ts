@@ -364,6 +364,13 @@ export const adminService = {
   },
 
   // Ban/Unban Students
+  async getBanReasons(): Promise<{
+    success: boolean;
+    data: { reasons: string[] };
+  }> {
+    return httpClient.get('/admin/ban-reasons');
+  },
+
   async banStudent(id: string, data: {
     banReason: string;
     durationHours?: number;
@@ -411,6 +418,96 @@ export const adminService = {
 
     const query = queryParams.toString();
     return httpClient.get(`/admin/students/banned${query ? `?${query}` : ''}`);
+  },
+
+  // Course-level ban
+  async banStudentFromCourse(studentId: string, courseId: string, data: {
+    banReason: string;
+    durationHours?: number;
+  }): Promise<{
+    success: boolean;
+    message: string;
+    data: {
+      enrollmentId: string;
+      userId: string;
+      courseId: string;
+      banReason: string;
+      bannedAt: string;
+      banExpiresAt?: string;
+      isTemporary: boolean;
+    };
+  }> {
+    return httpClient.patch(`/admin/students/${studentId}/courses/${courseId}/ban`, data);
+  },
+
+  async unbanStudentFromCourse(studentId: string, courseId: string): Promise<{
+    success: boolean;
+    message: string;
+    data: { enrollmentId: string; userId: string; courseId: string; isBanned: boolean };
+  }> {
+    return httpClient.patch(`/admin/students/${studentId}/courses/${courseId}/unban`);
+  },
+
+  async getCourseBannedStudents(courseId: string, params?: {
+    page?: number;
+    limit?: number;
+  }): Promise<{
+    success: boolean;
+    data: {
+      students: Array<{
+        _id: string;
+        userId: { _id: string; name: string; email: string; image?: string };
+        courseBan: {
+          isBanned: boolean;
+          banReason?: string;
+          bannedAt?: string;
+          banExpiresAt?: string;
+          bannedBy?: { name: string; email: string };
+        };
+      }>;
+      pagination: Pagination;
+    };
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const query = queryParams.toString();
+    return httpClient.get(`/admin/courses/${courseId}/banned-students${query ? `?${query}` : ''}`);
+  },
+
+  async getStudentCourseBans(studentId: string): Promise<{
+    success: boolean;
+    data: {
+      courseBans: Array<{
+        _id: string;
+        courseId: { _id: string; title: string; category: string; thumbnailUrl: string };
+        courseBan: {
+          isBanned: boolean;
+          banReason?: string;
+          bannedAt?: string;
+          banExpiresAt?: string;
+        };
+      }>;
+    };
+  }> {
+    return httpClient.get(`/admin/students/${studentId}/course-bans`);
+  },
+
+  async getStudentEnrolledCourses(studentId: string): Promise<{
+    success: boolean;
+    data: {
+      courses: Array<{
+        _id: string;
+        title: string;
+        category: string;
+        thumbnailUrl: string;
+        isCourseBanned: boolean;
+        courseBanReason?: string;
+        courseBanExpiresAt?: string;
+      }>;
+    };
+  }> {
+    return httpClient.get(`/admin/students/${studentId}/enrolled-courses`);
   },
 
   // Location Analytics

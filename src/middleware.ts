@@ -31,6 +31,8 @@ export function middleware(request: NextRequest) {
 
       if (user.role === 'admin') {
         url.pathname = '/admin/dashboard';
+      } else if (user.role === 'teacher') {
+        url.pathname = '/teacher/dashboard';
       } else if (user.role === 'student') {
         url.pathname = '/student/dashboard';
       } else {
@@ -57,6 +59,29 @@ export function middleware(request: NextRequest) {
     try {
       const user = JSON.parse(decodeURIComponent(userCookie));
       if (user.role !== 'student' && user.role !== 'admin') {
+        const url = request.nextUrl.clone();
+        url.pathname = '/unauthorized';
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Check for teacher routes
+  if (pathname.startsWith('/teacher')) {
+    if (!token || !userCookie) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      url.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(url);
+    }
+
+    try {
+      const user = JSON.parse(decodeURIComponent(userCookie));
+      if (user.role !== 'teacher' && user.role !== 'admin') {
         const url = request.nextUrl.clone();
         url.pathname = '/unauthorized';
         return NextResponse.redirect(url);
