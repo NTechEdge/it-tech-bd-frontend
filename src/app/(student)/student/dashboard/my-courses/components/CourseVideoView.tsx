@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { studentService } from "@/lib/api/studentService";
-import { EnrolledCourse } from "@/lib/redux/slices/myCoursesSlice";
+import { EnrolledCourse, fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
+import { useAppDispatch } from "@/lib/redux/hooks";
 
 interface Props {
   enrolledCourse: EnrolledCourse;
@@ -12,17 +13,20 @@ interface Props {
 }
 
 export default function CourseVideoView({ enrolledCourse, allCourses, onCourseChange, onBack }: Props) {
+  const dispatch = useAppDispatch();
   const { course, enrollment } = enrolledCourse;
 
-  const allLessons = course.sections?.flatMap((s, sIdx) =>
-    s.lessons.map((l, lIdx) => ({
-      ...l,
-      sectionTitle: s.title,
-      sectionIndex: sIdx,
-      lessonIndex: lIdx,
-      lessonId: `${sIdx}-${lIdx}`,
-    }))
-  ) || [];
+  const allLessons = useMemo(() =>
+    course.sections?.flatMap((s, sIdx) =>
+      s.lessons.map((l, lIdx) => ({
+        ...l,
+        sectionTitle: s.title,
+        sectionIndex: sIdx,
+        lessonIndex: lIdx,
+        lessonId: `${sIdx}-${lIdx}`,
+      }))
+    ) || [], [course.sections]
+  );
 
   const [selectedLessonId, setSelectedLessonId] = useState(allLessons[0]?.lessonId || '');
   const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0]));
@@ -56,6 +60,8 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
         watchTimeSeconds: currentLesson.durationSeconds || 0,
         isCompleted: true,
       });
+      // Refresh enrollment data to update UI
+      dispatch(fetchMyCourses());
       // Move to next lesson
       const currentIdx = allLessons.findIndex((l) => l.lessonId === selectedLessonId);
       if (currentIdx < allLessons.length - 1) {
@@ -66,7 +72,7 @@ export default function CourseVideoView({ enrolledCourse, allCourses, onCourseCh
     } finally {
       setUpdatingProgress(false);
     }
-  }, [currentLesson, course._id, selectedLessonId, allLessons, updatingProgress]);
+  }, [currentLesson, course._id, selectedLessonId, allLessons, updatingProgress, dispatch]);
 
   const formatDuration = (seconds: number) => {
     const m = Math.floor(seconds / 60);
