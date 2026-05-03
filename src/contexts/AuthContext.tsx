@@ -109,7 +109,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     authService.logout();
     setUser(null);
-    router.push('/');
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
   };
 
   const refreshUser = async () => {

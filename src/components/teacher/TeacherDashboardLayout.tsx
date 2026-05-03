@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode, useState, useEffect } from "react";
 import Logo from "@/components/Logo";
@@ -54,13 +54,11 @@ const navItems: NavItem[] = [
 
 export default function TeacherDashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
-    router.push("/");
   };
 
   useEffect(() => {
