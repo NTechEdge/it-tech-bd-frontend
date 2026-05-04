@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { ReactNode, useState, useEffect } from "react";
-import Logo from "@/components/Logo";
+import { ReactNode, useState, useEffect, useRef } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
+import CollapsibleSidebar from "./CollapsibleSidebar";
 
 interface NavItem {
   href: string;
@@ -58,126 +57,98 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const mobileSidebarOpenRef = useRef(mobileSidebarOpen);
 
   const handleLogout = () => {
     logout();
     router.push("/");
   };
 
-  // Close sidebar on route change
+  // Sync ref with state
   useEffect(() => {
-    setSidebarOpen(false);
+    mobileSidebarOpenRef.current = mobileSidebarOpen;
+  }, [mobileSidebarOpen]);
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    if (mobileSidebarOpenRef.current) {
+      setMobileSidebarOpen(false);
+    }
   }, [pathname]);
 
-  // Close sidebar on lg+ resize
+  // Close mobile sidebar on lg+ resize
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) setSidebarOpen(false);
+      if (window.innerWidth >= 1024 && mobileSidebarOpenRef.current) {
+        setMobileSidebarOpen(false);
+      }
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const sidebarContent = (
-    <>
-      {/* Logo */}
-      <div className="h-16 flex items-center px-6  shrink-0">
-        <Link href="/" className="flex items-center mt-6">
-          <Logo width={200} height={50} className="" />
-        </Link>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-6 px-4">
-        <ul className="space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                    isActive
-                      ? "bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white shadow-lg shadow-blue-500/30"
-                      : "text-gray-300 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <span className={`${isActive ? "text-white" : "text-gray-500 group-hover:text-[#0099ff]"} transition-colors`}>
-                    {item.icon}
-                  </span>
-                  <span className="font-medium flex-1">{item.label}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      {/* User Profile Section */}
-      <div className="p-4 border-t border-gray-700 shrink-0">
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800 mb-3">
-          {user?.image ? (
-            <Image
-              src={user.image}
-              alt={user.name || "User"}
-              width={40}
-              height={40}
-              className="rounded-full object-cover shrink-0"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
-              {user?.name?.[0] || "S"}
-            </div>
-          )}
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-white truncate">{user?.name || "Student"}</p>
-            <p className="text-xs text-gray-400 truncate">{user?.email || "student@example.com"}</p>
-          </div>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-red-600/20 hover:text-red-400 rounded-xl transition-all duration-200 font-medium"
-        >
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          Logout
-        </button>
-      </div>
-    </>
-  );
-
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Desktop Sidebar — always visible on lg+ */}
-      <aside className="hidden lg:flex w-64 bg-[#292727] flex-col h-screen sticky top-0 left-0 shrink-0">
-        {sidebarContent}
-      </aside>
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-violet-50/30 flex">
+      {/* Desktop Collapsible Sidebar */}
+      <div className="hidden lg:block">
+        <CollapsibleSidebar
+          navItems={navItems}
+          user={user ? {
+            name: user.name || "Student",
+            email: user.email || "student@example.com",
+            role: user.role || "student",
+            avatar: user.image,
+          } : undefined}
+          onLogout={handleLogout}
+          logoLink="/student/dashboard"
+          collapsed={sidebarCollapsed}
+          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
+      </div>
 
-      {/* Mobile/Tablet Sidebar Drawer */}
-      {sidebarOpen && (
+      {/* Mobile Sidebar Drawer */}
+      {mobileSidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
-          {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 transition-opacity"
-            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileSidebarOpen(false)}
             aria-hidden="true"
           />
-          {/* Drawer */}
-          <aside className="relative w-72 max-w-[85vw] bg-[#292727] flex flex-col h-full shadow-2xl">
-            {/* Close button */}
+          <div className="relative w-72 max-w-[85vw] bg-white shadow-2xl flex flex-col h-full">
             <button
-              onClick={() => setSidebarOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors z-10"
+              onClick={() => setMobileSidebarOpen(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors z-10"
               aria-label="Close sidebar"
             >
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            {sidebarContent}
-          </aside>
+            <div className="p-6 mt-8">
+              <nav className="space-y-2">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                        isActive
+                          ? "bg-linear-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {item.icon}
+                      <span className="font-medium">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          </div>
         </div>
       )}
 
@@ -190,7 +161,7 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
               <div className="flex items-center gap-3">
                 {/* Hamburger — only on mobile/tablet */}
                 <button
-                  onClick={() => setSidebarOpen(true)}
+                  onClick={() => setMobileSidebarOpen(true)}
                   className="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
                   aria-label="Open sidebar"
                 >

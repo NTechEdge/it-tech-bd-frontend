@@ -137,18 +137,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           </div>
         ) : (
           <div className="space-y-1">
-            <Link
-              href="/login"
-              className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-xl transition-all duration-200 font-medium"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="w-full flex items-center gap-3 px-4 py-3 text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-xl transition-all duration-200 font-medium"
-            >
-              Sign Up
-            </Link>
+            
           </div>
         )}
       </div>
@@ -159,7 +148,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Desktop Sidebar — always visible on lg+ */}
-      <aside className="hidden lg:flex w-64 bg-[#292727] flex-col h-screen sticky top-0 left-0 shrink-0">
+      <aside className="hidden lg:flex w-64 bg-black flex-col h-screen sticky top-0 left-0 shrink-0">
         {sidebarContent}
       </aside>
 
