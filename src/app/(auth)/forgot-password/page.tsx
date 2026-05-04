@@ -36,11 +36,11 @@ export default function ForgotPasswordPage() {
         {/* Logo */}
         <div className="text-center">
           <div className="flex items-center justify-center mb-3 sm:mb-4">
-            <Logo width={160} height={44} className="rounded-xl sm:w-[180px]" />
+            <Logo width={160} height={44} className="rounded-xl sm:w-45" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Forgot your password?</h2>
           <p className="mt-2 text-sm text-gray-600">
-            Enter your email and we'll send you an OTP to reset your password.
+            Enter your email and we&lsquo;ll send you an OTP to reset your password.
           </p>
         </div>
 

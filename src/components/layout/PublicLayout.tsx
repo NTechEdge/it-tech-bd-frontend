@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -117,9 +118,11 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         {isAuthenticated && user ? (
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800">
             {user.image ? (
-              <img
+              <Image
                 src={user.image}
                 alt={user.name || "User"}
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-full object-cover shrink-0"
               />
             ) : (

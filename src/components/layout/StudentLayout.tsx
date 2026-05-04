@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode, useState, useEffect } from "react";
@@ -116,10 +117,12 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
       <div className="p-4 border-t border-gray-700 shrink-0">
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800 mb-3">
           {user?.image ? (
-            <img
+            <Image
               src={user.image}
               alt={user.name || "User"}
-              className="w-10 h-10 rounded-full object-cover shrink-0"
+              width={40}
+              height={40}
+              className="rounded-full object-cover shrink-0"
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">

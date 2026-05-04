@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -137,9 +138,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <div className="p-4 border-t border-gray-700 shrink-0">
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800 mb-3">
           {user?.image ? (
-            <img
+            <Image
               src={user.image}
               alt={user.name || "User"}
+              width={40}
+              height={40}
               className="w-10 h-10 rounded-full object-cover shrink-0"
             />
           ) : (
