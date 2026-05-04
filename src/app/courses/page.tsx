@@ -141,7 +141,7 @@ export default function CoursesPage() {
                     <Link
                       key={product._id}
                       href={`/courses/${product._id}`}
-                      className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm active:scale-[0.98] transition-transform flex"
+                      className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm active:scale-[0.98] transition-transform flex"
                     >
                       {/* Thumbnail */}
                       <div className="relative w-28 shrink-0 bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff]">
@@ -186,9 +186,9 @@ export default function CoursesPage() {
                             {product.price === 0 ? "Free" : `Tk ${product.price.toLocaleString()}`}
                           </span>
                           {enrolled ? (
-                            <span className="text-[11px] text-green-600 font-semibold">Enrolled ✓</span>
+                            <span className="text-[11px] text-green-600 font-semibold">Enrolled</span>
                           ) : (
-                            <span className="text-[11px] text-[#0099ff] font-semibold">View →</span>
+                            <span className="text-[11px] text-[#0099ff] font-semibold">View</span>
                           )}
                         </div>
                       </div>
@@ -273,13 +273,13 @@ export default function CoursesPage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
                   href="/register"
-                  className="w-full sm:w-auto px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-blue-500/40 transition-all text-center"
+                  className=" sm:w-auto px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-blue-500/40 transition-all text-center"
                 >
                   Get Started for Free
                 </Link>
                 <Link
                   href="/login"
-                  className="w-full sm:w-auto px-8 py-3 border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-gray-900 transition-all text-center"
+                  className=" sm:w-auto px-8 py-3 border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-gray-900 transition-all text-center"
                 >
                   Sign In
                 </Link>

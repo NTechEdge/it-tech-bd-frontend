@@ -30,7 +30,11 @@ export default function CustomVideoPlayer({
   const controlsRef = useRef<HTMLDivElement>(null);
   const qualityMenuRef = useRef<HTMLDivElement>(null);
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastInteractionRef = useRef<number>(Date.now());
+  const lastInteractionRef = useRef<number>(0);
+
+  useEffect(() => {
+    lastInteractionRef.current = Date.now();
+  }, []);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(startTime);
@@ -151,7 +155,7 @@ export default function CustomVideoPlayer({
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
     window.onYouTubeIframeAPIReady = () => setIsAPILoaded(true);
-    return () => { window.onYouTubeIframeAPIReady = () => {}; };
+    return () => { window.onYouTubeIframeAPIReady = () => { }; };
   }, []);
 
   const refreshQualities = useCallback(() => {
@@ -332,13 +336,13 @@ export default function CustomVideoPlayer({
       await document.exitFullscreen();
       // Unlock orientation when exiting fullscreen
       if (screen.orientation && typeof (screen.orientation as any).unlock === 'function') {
-        try { (screen.orientation as any).unlock(); } catch (_) {}
+        try { (screen.orientation as any).unlock(); } catch (_) { }
       }
     } else {
       await containerRef.current.requestFullscreen();
       // Lock to landscape on mobile after entering fullscreen
       if (isMobile && screen.orientation && typeof (screen.orientation as any).lock === 'function') {
-        try { await (screen.orientation as any).lock('landscape'); } catch (_) {}
+        try { await (screen.orientation as any).lock('landscape'); } catch (_) { }
       }
     }
     resetHideTimer();
@@ -409,7 +413,8 @@ export default function CustomVideoPlayer({
       />
 
       {/* Security + Responsive CSS */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .ytp-chrome-controls, .ytp-chrome-bottom, .ytp-gradient-bottom,
         .ytp-progress-bar-container, .ytp-progress-bar, .ytp-pause-overlay,
         .ytp-title, .ytp-title-text, .ytp-title-channel, .html5-video-player,
@@ -476,9 +481,8 @@ export default function CustomVideoPlayer({
       {!isMobile && (
         <div
           ref={controlsRef}
-          className={`absolute bottom-0 left-0 right-0 z-30 bg-linear-to-t from-black via-black/80 to-transparent transition-opacity duration-300 ${
-            showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+          className={`absolute bottom-0 left-0 right-0 z-30 bg-linear-to-t from-black via-black/80 to-transparent transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
         >
           {/* Progress Bar */}
           <div className="px-4 pt-6">
@@ -579,9 +583,8 @@ export default function CustomVideoPlayer({
                           key={quality}
                           onClick={() => handleQualityChange(quality)}
                           disabled={isChangingQuality}
-                          className={`w-full px-4 py-2.5 text-sm font-medium text-left hover:bg-[#0099ff] transition-colors flex items-center justify-between ${
-                            currentQuality === quality ? 'bg-[#0099ff]/20 text-[#0099ff]' : ''
-                          } ${isChangingQuality ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          className={`w-full px-4 py-2.5 text-sm font-medium text-left hover:bg-[#0099ff] transition-colors flex items-center justify-between ${currentQuality === quality ? 'bg-[#0099ff]/20 text-[#0099ff]' : ''
+                            } ${isChangingQuality ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                           <span>{formatQualityLabel(quality)}</span>
                           {currentQuality === quality && !isChangingQuality && (
@@ -624,9 +627,8 @@ export default function CustomVideoPlayer({
       {/* ── MOBILE CONTROLS ── */}
       {isMobile && (
         <div
-          className={`absolute inset-0 z-30 flex flex-col justify-between transition-opacity duration-300 ${
-            showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+          className={`absolute inset-0 z-30 flex flex-col justify-between transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
         >
           {/* Top gradient */}
           <div className="h-16 bg-linear-to-b from-black/60 to-transparent" />
@@ -730,9 +732,8 @@ export default function CustomVideoPlayer({
                             key={quality}
                             onClick={(e) => { e.stopPropagation(); handleQualityChange(quality); }}
                             disabled={isChangingQuality}
-                            className={`w-full px-3 py-2 text-sm text-left hover:bg-[#0099ff] transition-colors flex items-center justify-between ${
-                              currentQuality === quality ? 'bg-[#0099ff]/20 text-[#0099ff]' : ''
-                            } ${isChangingQuality ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`w-full px-3 py-2 text-sm text-left hover:bg-[#0099ff] transition-colors flex items-center justify-between ${currentQuality === quality ? 'bg-[#0099ff]/20 text-[#0099ff]' : ''
+                              } ${isChangingQuality ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                             <span>{formatQualityLabel(quality)}</span>
                             {currentQuality === quality && !isChangingQuality && (

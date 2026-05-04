@@ -19,7 +19,7 @@ export default function AppHeader({ isShowTitle = false, title = '', showNotific
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Left side - Title and Logo */}
+          {/* Left side - Logo and Auth */}
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center mt-6">
               <Logo width={200} height={50} className="" />
@@ -27,37 +27,8 @@ export default function AppHeader({ isShowTitle = false, title = '', showNotific
                 <h1 className="text-xl font-bold text-gray-900 ml-4">{title}</h1>
               )}
             </Link>
-          </div>
 
-          {/* Center - Search Bar */}
-          <div className="flex-1 max-w-xl mx-8 hidden sm:block">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search courses..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:border-transparent text-sm bg-gray-50 text-gray-900"
-              />
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Right side - Notifications and Auth */}
-          <div className="flex items-center gap-3">
-            {showNotification && isAuthenticated && (
-              <button className="relative w-10 h-10 rounded-xl hover:bg-gray-100 flex items-center justify-center transition-colors">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                {notificationCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 w-5 h-5 bg-red-500 text-white text-xs font-semibold rounded-full flex items-center justify-center">
-                    {notificationCount}
-                  </span>
-                )}
-              </button>
-            )}
-
+            {/* Auth Buttons on Left */}
             {isAuthenticated ? (
               <Link
                 href={user?.role === "admin" ? "/admin/dashboard" : "/student/dashboard"}
@@ -80,6 +51,22 @@ export default function AppHeader({ isShowTitle = false, title = '', showNotific
                   Sign Up
                 </Link>
               </>
+            )}
+          </div>
+
+          {/* Right side - Notifications */}
+          <div className="flex items-center gap-3">
+            {showNotification && isAuthenticated && (
+              <button className="relative w-10 h-10 rounded-xl hover:bg-gray-100 flex items-center justify-center transition-colors">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-600">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                {notificationCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-5 h-5 bg-red-500 text-white text-xs font-semibold rounded-full flex items-center justify-center">
+                    {notificationCount}
+                  </span>
+                )}
+              </button>
             )}
           </div>
         </div>

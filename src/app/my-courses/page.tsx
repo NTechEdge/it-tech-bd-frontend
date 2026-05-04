@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -77,7 +78,7 @@ export default function MyCoursesPage() {
                 {pendingCourses.length} enrollment{pendingCourses.length !== 1 ? 's' : ''} pending approval
               </p>
               <p className="text-sm text-yellow-600">
-                Your payment is being reviewed. You'll get access once approved.
+                Your payment is being reviewed. You&apos;ll get access once approved.
               </p>
               <div className="mt-2 space-y-1">
                 {pendingCourses.map((ec) => (
@@ -123,10 +124,12 @@ export default function MyCoursesPage() {
                   >
                     <div className="relative aspect-video overflow-hidden">
                       {ec.course.thumbnailUrl ? (
-                        <img
+                        <Image
                           src={ec.course.thumbnailUrl}
                           alt={ec.course.title}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 33vw"
                         />
                       ) : (
                         <div className="w-full h-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
