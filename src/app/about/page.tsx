@@ -20,10 +20,10 @@ export default function AboutPage() {
           <div className="max-w-3xl">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Our Mission</h2>
             <p className="text-base sm:text-lg text-gray-600 mb-4 sm:mb-6">
-              At IT-TECH-BD, we believe that quality education should be accessible to everyone. Our mission is to bridge the gap between traditional education and industry demands by providing practical, hands-on training in the latest technologies.
+              At IT TECH BD, we believe that quality education should be accessible to everyone. Our mission is to bridge the gap between traditional education and industry demands by providing practical, hands-on training in the latest technologies.
             </p>
             <p className="text-base sm:text-lg text-gray-600">
-              We work with industry experts to create courses that are not just informative but directly applicable to real-world scenarios. Whether you're a beginner starting your journey or a professional looking to upskill, we have the right course for you.
+              We work with industry experts to create courses that are not just informative but directly applicable to real-world scenarios. Whether you&apos;re a beginner starting your journey or a professional looking to upskill, we have the right course for you.
             </p>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Our Story</h2>
               <p className="text-base sm:text-lg text-gray-600 mb-3 sm:mb-4">
-                IT-TECH-BD was founded with a simple goal: to make quality IT education accessible to everyone in Bangladesh. We noticed a gap between what was being taught in traditional institutions and what the industry actually needed.
+                IT TECH BD was founded with a simple goal: to make quality IT education accessible to everyone in Bangladesh. We noticed a gap between what was being taught in traditional institutions and what the industry actually needed.
               </p>
               <p className="text-base sm:text-lg text-gray-600 mb-3 sm:mb-4">
                 Starting with just a handful of courses, we've grown into a comprehensive platform offering training in web development, mobile development, data science, cloud computing, and more.

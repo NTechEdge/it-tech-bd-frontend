@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode, useState, useEffect, useRef } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
 import CollapsibleSidebar from "@/components/layout/CollapsibleSidebar";
+import ProfileDropdown from "@/components/layout/ProfileDropdown";
 
 interface NavItem {
   href: string;
@@ -55,14 +56,10 @@ const navItems: NavItem[] = [
 
 export default function TeacherDashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const mobileSidebarOpenRef = useRef(mobileSidebarOpen);
-
-  const handleLogout = () => {
-    logout();
-  };
 
   // Sync ref with state
   useEffect(() => {
@@ -88,18 +85,11 @@ export default function TeacherDashboardLayout({ children }: { children: ReactNo
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 to-violet-50/30 flex">
+    <div className="min-h-screen bg-slate-50 flex">
       {/* Desktop Collapsible Sidebar */}
       <div className="hidden lg:block">
         <CollapsibleSidebar
           navItems={navItems}
-          user={user ? {
-            name: user.name || "Teacher",
-            email: user.email || "teacher@example.com",
-            role: user.role || "teacher",
-            avatar: user.image,
-          } : undefined}
-          onLogout={handleLogout}
           logoLink="/teacher/dashboard"
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -174,24 +164,8 @@ export default function TeacherDashboardLayout({ children }: { children: ReactNo
                 {/* Notifications */}
                 <NotificationBell />
 
-                {/* Profile */}
-                <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-                  {user?.image ? (
-                    <img
-                      src={user.image}
-                      alt={user.name || "User"}
-                      className="w-9 h-9 rounded-full object-cover shrink-0"
-                    />
-                  ) : (
-                    <div className="w-9 h-9 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0 text-sm">
-                      {user?.name?.[0] || "T"}
-                    </div>
-                  )}
-                  <div className="hidden lg:block">
-                    <p className="text-sm font-semibold text-gray-900">{user?.name || "Teacher"}</p>
-                    <p className="text-xs text-gray-500 capitalize">{user?.role || "teacher"}</p>
-                  </div>
-                </div>
+                {/* Profile Dropdown */}
+                <ProfileDropdown />
               </div>
             </div>
           </div>

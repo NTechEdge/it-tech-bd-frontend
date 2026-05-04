@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 
@@ -57,124 +56,196 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const mobileSidebarOpenRef = useRef(mobileSidebarOpen);
 
   const handleLogout = () => {
     logout();
     router.push("/");
   };
 
-  // Close sidebar on route change
+  // Sync ref with state
   useEffect(() => {
-    setSidebarOpen(false);
+    mobileSidebarOpenRef.current = mobileSidebarOpen;
+  }, [mobileSidebarOpen]);
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    if (mobileSidebarOpenRef.current) {
+      setMobileSidebarOpen(false);
+    }
   }, [pathname]);
 
-  // Close sidebar on lg+ resize
+  // Close mobile sidebar on lg+ resize
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) setSidebarOpen(false);
+      if (window.innerWidth >= 1024 && mobileSidebarOpenRef.current) {
+        setMobileSidebarOpen(false);
+      }
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const sidebarContent = (
-    <>
-      {/* Logo */}
-      <div className="h-16 flex items-center px-6  shrink-0">
-        <Link href="/" className="flex items-center mt-6">
-          <Logo width={200} height={50} className="" />
-        </Link>
-      </div>
+  return (
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Desktop Sidebar with names under icons */}
+      <aside className={`
+        hidden lg:flex flex-col h-screen sticky top-0 left-0 shrink-0 z-50
+        transition-all duration-300 ease-in-out
+        ${sidebarCollapsed ? "w-24" : "w-72"}
+        border-r border-slate-200/60
+      `}
+        style={{
+          background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)",
+        }}
+      >
+        {/* Top Accent Line */}
+        <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500" />
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-6 px-4">
-        <ul className="space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                    isActive
-                      ? "bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white shadow-lg shadow-blue-500/30"
-                      : "text-gray-300 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <span className={`${isActive ? "text-white" : "text-gray-500 group-hover:text-[#0099ff]"} transition-colors`}>
-                    {item.icon}
-                  </span>
-                  <span className="font-medium flex-1">{item.label}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      {/* Auth/User Section */}
-      <div className="p-4  shrink-0">
-        {isAuthenticated && user ? (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800">
-            {user.image ? (
-              <Image
-                src={user.image}
-                alt={user.name || "User"}
-                width={40}
-                height={40}
-                className="w-10 h-10 rounded-full object-cover shrink-0"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
-                {user.name?.[0] || "U"}
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white truncate">{user.name || "User"}</p>
-              <p className="text-xs text-gray-400 truncate">{user.email || "user@example.com"}</p>
+        {/* Logo Section */}
+        <div className="h-16 flex items-center justify-center px-4 shrink-0">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative shrink-0">
+              <div className="absolute inset-0 bg-blue-500 rounded-lg blur-md opacity-40 group-hover:opacity-60 transition-opacity duration-300" />
+              <Logo width={sidebarCollapsed ? 32 : 40} height={sidebarCollapsed ? 32 : 40} className="relative rounded-lg" priority />
             </div>
-          </div>
-        ) : (
-          <div className="space-y-1">
-            
+            {!sidebarCollapsed && (
+              <span className="text-base font-bold text-white tracking-tight">
+                IT TECH BD
+              </span>
+            )}
+          </Link>
+
+          {/* Collapse Button */}
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 w-7 h-7 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 border border-slate-600"
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              className={`text-slate-300 transition-transform duration-200 ${sidebarCollapsed ? "" : "-rotate-180"}`}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4 px-2">
+          <ul className="space-y-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`
+                      relative rounded-lg transition-all duration-200 group
+                      ${sidebarCollapsed
+                        ? "flex flex-col items-center justify-center px-1 py-2.5 gap-1"
+                        : "flex items-center gap-3 px-3 py-3"
+                      }
+                      ${isActive
+                        ? "bg-gradient-to-r from-blue-600/20 to-indigo-600/20 text-white"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                      }
+                    `}
+                  >
+                    {/* Active Indicator — only when expanded */}
+                    {isActive && !sidebarCollapsed && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-r-full" />
+                    )}
+
+                    {/* Icon */}
+                    <span className={`
+                      shrink-0 flex items-center justify-center rounded-lg
+                      transition-all duration-200
+                      ${sidebarCollapsed ? "w-8 h-8" : "w-9 h-9"}
+                      ${isActive
+                        ? "bg-blue-500/20 text-blue-400"
+                        : "bg-slate-800/50 text-slate-500 group-hover:bg-slate-700/50 group-hover:text-slate-300"
+                      }
+                    `}>
+                      {item.icon}
+                    </span>
+
+                    {/* Label */}
+                    {sidebarCollapsed ? (
+                      <span className="text-[10px] font-medium text-center leading-tight whitespace-nowrap">
+                        {item.label}
+                      </span>
+                    ) : (
+                      <span className="font-medium text-sm whitespace-nowrap">
+                        {item.label}
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Version Info */}
+        {!sidebarCollapsed && (
+          <div className="px-4 pb-4">
+            <p className="text-[10px] text-slate-500 font-medium text-center">
+              © 2026 IT TECH BD
+            </p>
           </div>
         )}
-      </div>
-    </>
-  );
-                
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Desktop Sidebar — always visible on lg+ */}
-      <aside className="hidden lg:flex w-64 bg-black flex-col h-screen sticky top-0 left-0 shrink-0">
-        {sidebarContent}
       </aside>
 
-      {/* Mobile/Tablet Sidebar Drawer */}
-      {sidebarOpen && (
+      {/* Mobile Sidebar Drawer */}
+      {mobileSidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
-          {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 transition-opacity"
-            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileSidebarOpen(false)}
             aria-hidden="true"
           />
-          {/* Drawer */}
-          <aside className="relative w-72 max-w-[85vw] bg-[#292727] flex flex-col h-full shadow-2xl">
-            {/* Close button */}
+          <div className="relative w-72 max-w-[85vw] bg-slate-900 text-white flex flex-col h-full shadow-2xl">
             <button
-              onClick={() => setSidebarOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors z-10"
+              onClick={() => setMobileSidebarOpen(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors z-10"
               aria-label="Close sidebar"
             >
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            {sidebarContent}
-          </aside>
+            <div className="p-6 mt-8">
+              <nav className="space-y-2">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                        isActive
+                          ? "bg-linear-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                          : "text-slate-300 hover:bg-slate-800"
+                      }`}
+                    >
+                      {item.icon}
+                      <span className="font-medium">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          </div>
         </div>
       )}
 
@@ -186,7 +257,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
             <div className="flex items-center h-14 sm:h-16 gap-2 sm:gap-3">
               {/* Hamburger — only on mobile/tablet */}
               <button
-                onClick={() => setSidebarOpen(true)}
+                onClick={() => setMobileSidebarOpen(true)}
                 className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors shrink-0"
                 aria-label="Open sidebar"
               >
@@ -293,7 +364,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               </div>
             </div>
             <div className="border-t border-gray-200 mt-6 sm:mt-8 pt-4 sm:pt-8 text-center text-[10px] sm:text-xs text-gray-600">
-              <p>&copy; 2026 IT-TECH-BD. All rights reserved.</p>
+              <p>&copy; 2026 IT TECH BD. All rights reserved.</p>
             </div>
           </div>
         </footer>

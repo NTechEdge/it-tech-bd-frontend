@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode, useState, useEffect, useRef } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
 import CollapsibleSidebar from "./CollapsibleSidebar";
+import ProfileDropdown from "./ProfileDropdown";
 
 interface NavItem {
   href: string;
@@ -82,7 +83,7 @@ const navItems: NavItem[] = [
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const mobileSidebarOpenRef = useRef(mobileSidebarOpen);
@@ -111,18 +112,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 to-violet-50/30 flex">
+    <div className="min-h-screen bg-slate-50 flex">
       {/* Desktop Collapsible Sidebar */}
       <div className="hidden lg:block">
         <CollapsibleSidebar
           navItems={navItems}
-          user={user ? {
-            name: user.name || "Admin",
-            email: user.email || "admin@example.com",
-            role: user.role || "admin",
-            avatar: user.image,
-          } : undefined}
-          onLogout={logout}
           logoLink="/admin/dashboard"
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -208,6 +202,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
                 {/* Notifications */}
                 <NotificationBell />
+
+                {/* Profile Dropdown */}
+                <ProfileDropdown />
               </div>
             </div>
           </div>

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
+import Logo from "@/components/Logo";
 
 const navItems = [
   {
@@ -61,52 +62,114 @@ interface StudentDashboardLayoutProps {
 
 export default function StudentDashboardLayout({ children }: StudentDashboardLayoutProps) {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <aside className="w-20 bg-[#292727] flex flex-col items-center py-6 shrink-0 border-r border-gray-700">
-        {/* Logo */}
-        <Link href="/student/dashboard" className="w-12 h-12 rounded-xl bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center mb-8 shadow-lg shadow-blue-500/30">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </Link>
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Professional Sidebar with names under icons */}
+      <aside className={`
+        flex flex-col h-screen sticky top-0 left-0 shrink-0 z-50
+        transition-all duration-300 ease-in-out
+        ${sidebarCollapsed ? "w-24" : "w-72"}
+        border-r border-slate-200/60
+      `}
+        style={{
+          background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)",
+        }}
+      >
+        {/* Top Accent Line */}
+        <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500" />
 
-        {/* Nav items */}
-        <nav className="flex flex-col items-center gap-2 flex-1 w-full px-3">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-col items-center gap-1 w-full py-3 px-2 rounded-xl transition-all duration-200 group ${
-                  isActive
-                    ? "text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] shadow-lg shadow-blue-500/30"
-                    : "text-gray-400 hover:text-white hover:bg-white/10"
-                }`}
-                title={item.label}
-              >
-                {item.icon}
-                <span className="text-[10px] font-medium leading-tight text-center">{item.label}</span>
-              </Link>
-            );
-          })}
+        {/* Logo Section */}
+        <div className="h-16 flex items-center justify-center px-4 shrink-0">
+          <Link href="/student/dashboard" className="flex items-center gap-3 group">
+            <div className="relative shrink-0">
+              <div className="absolute inset-0 bg-blue-500 rounded-lg blur-md opacity-40 group-hover:opacity-60 transition-opacity duration-300" />
+              <Logo width={sidebarCollapsed ? 32 : 40} height={sidebarCollapsed ? 32 : 40} className="relative rounded-lg" priority />
+            </div>
+            {!sidebarCollapsed && (
+              <span className="text-base font-bold text-white tracking-tight">
+                IT TECH BD
+              </span>
+            )}
+          </Link>
+
+          {/* Collapse Button */}
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 w-7 h-7 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 border border-slate-600"
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              className={`text-slate-300 transition-transform duration-200 ${sidebarCollapsed ? "" : "-rotate-180"}`}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Navigation - Horizontal (icon + text side by side) */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3">
+          <ul className="space-y-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`
+                      relative flex items-center gap-3 px-3 py-3 rounded-lg
+                      transition-all duration-200 group
+                      ${isActive
+                        ? "bg-gradient-to-r from-blue-600/20 to-indigo-600/20 text-white"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                      }
+                    `}
+                  >
+                    {/* Active Indicator */}
+                    {isActive && !sidebarCollapsed && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-r-full" />
+                    )}
+
+                    {/* Icon */}
+                    <span className={`
+                      shrink-0 flex items-center justify-center w-9 h-9 rounded-lg
+                      transition-all duration-200
+                      ${isActive
+                        ? "bg-blue-500/20 text-blue-400"
+                        : "bg-slate-800/50 text-slate-500 group-hover:bg-slate-700/50 group-hover:text-slate-300"
+                      }
+                    `}>
+                      {item.icon}
+                    </span>
+
+                    {/* Label - hidden when collapsed */}
+                    <span className={`font-medium text-sm whitespace-nowrap transition-all duration-200 ${sidebarCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"}`}>
+                      {item.label}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
 
-        {/* Logout */}
-        <button
-          onClick={logout}
-          className="flex flex-col items-center gap-1 text-gray-400 hover:text-red-400 py-3 px-2 transition-colors"
-          title="Logout"
-        >
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          <span className="text-[10px] font-medium">Logout</span>
-        </button>
+        {/* Version Info */}
+        {!sidebarCollapsed && (
+          <div className="px-4 pb-4">
+            <p className="text-[10px] text-slate-500 font-medium text-center">
+              © 2026 IT TECH BD
+            </p>
+          </div>
+        )}
       </aside>
 
       {/* Main Content */}
@@ -124,7 +187,7 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
 
             {/* Profile */}
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold">
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
                 {user?.name?.[0] || "S"}
               </div>
               <div className="hidden lg:block">

@@ -73,8 +73,9 @@ export default function RegisterPage() {
       <div className="max-w-md w-full space-y-6 sm:space-y-8 border border-gray-200 rounded-lg p-6 sm:p-8 bg-white shadow-lg">
         {/* Logo */}
         <div className="text-center">
-          <div className="flex items-center justify-center mb-3 sm:mb-4">
-            <Logo width={160} height={44} className="rounded-xl sm:w-45" />
+          <div className="flex items-center justify-center gap-3 mb-3 sm:mb-4">
+            <Logo width={44} height={44} className="rounded-xl" />
+            <span className="text-2xl font-bold text-gray-900 tracking-tight">IT TECH BD</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Create your account</h2>
           <p className="mt-2 text-sm text-gray-600">

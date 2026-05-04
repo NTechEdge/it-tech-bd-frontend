@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode, useState, useEffect, useRef } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
 import CollapsibleSidebar from "./CollapsibleSidebar";
+import ProfileDropdown from "./ProfileDropdown";
 
 interface NavItem {
   href: string;
@@ -55,16 +56,10 @@ const navItems: NavItem[] = [
 
 export default function StudentLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const mobileSidebarOpenRef = useRef(mobileSidebarOpen);
-
-  const handleLogout = () => {
-    logout();
-    router.push("/");
-  };
 
   // Sync ref with state
   useEffect(() => {
@@ -90,18 +85,11 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 to-violet-50/30 flex">
+    <div className="min-h-screen bg-slate-50 flex">
       {/* Desktop Collapsible Sidebar */}
       <div className="hidden lg:block">
         <CollapsibleSidebar
           navItems={navItems}
-          user={user ? {
-            name: user.name || "Student",
-            email: user.email || "student@example.com",
-            role: user.role || "student",
-            avatar: user.image,
-          } : undefined}
-          onLogout={handleLogout}
           logoLink="/student/dashboard"
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -175,6 +163,9 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
               <div className="flex items-center gap-2 sm:gap-4">
                 {/* Notifications */}
                 <NotificationBell />
+
+                {/* Profile Dropdown */}
+                <ProfileDropdown />
               </div>
             </div>
           </div>

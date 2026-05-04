@@ -276,7 +276,7 @@ export default function MainLayout({ children, variant = 'public' }: MainLayoutP
         return 'Admin Dashboard';
       case 'public':
       default:
-        return 'IT-TECH-BD';
+        return 'IT TECH BD';
     }
   };
 
@@ -440,7 +440,7 @@ export default function MainLayout({ children, variant = 'public' }: MainLayoutP
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <span className="text-lg font-bold text-gray-900">IT-TECH-BD</span>
+                <span className="text-lg font-bold text-gray-900">IT TECH BD</span>
               </div>
               <p className="text-sm text-gray-600">Empowering learners with quality IT courses and training programs.</p>
             </div>
@@ -476,7 +476,7 @@ export default function MainLayout({ children, variant = 'public' }: MainLayoutP
             </div>
           </div>
           <div className="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-gray-600">
-            <p>&copy; 2026 IT-TECH-BD. All rights reserved.</p>
+            <p>&copy; 2026 IT TECH BD. All rights reserved.</p>
           </div>
         </div>
       </footer>
