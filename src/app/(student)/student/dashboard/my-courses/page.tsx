@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
 
@@ -59,7 +60,7 @@ export default function MyCoursesPage() {
             {pendingCourses.length} enrollment{pendingCourses.length !== 1 ? 's' : ''} pending approval
           </div>
           <p className="text-sm text-yellow-600">
-            Your payment is being reviewed. You'll get access once approved.
+            Your payment is being reviewed. You&apos;ll get access once approved.
           </p>
           <div className="mt-2 space-y-1">
             {pendingCourses.map((ec) => (
@@ -118,9 +119,11 @@ export default function MyCoursesPage() {
                     {/* Thumbnail strip */}
                     <div className="relative w-28 shrink-0">
                       {ec.course.thumbnailUrl ? (
-                        <img
+                        <Image
                           src={ec.course.thumbnailUrl}
                           alt={ec.course.title}
+                          width={112}
+                          height={100}
                           className={`w-full h-full object-cover ${isBanned ? 'grayscale' : ''}`}
                         />
                       ) : (
@@ -210,9 +213,11 @@ export default function MyCoursesPage() {
                 >
                   <div className="relative aspect-video overflow-hidden">
                     {ec.course.thumbnailUrl ? (
-                      <img
+                      <Image
                         src={ec.course.thumbnailUrl}
                         alt={ec.course.title}
+                        width={400}
+                        height={225}
                         className={`w-full h-full object-cover transition-transform duration-300 ${!isBanned ? 'group-hover:scale-105' : 'grayscale'}`}
                       />
                     ) : (
