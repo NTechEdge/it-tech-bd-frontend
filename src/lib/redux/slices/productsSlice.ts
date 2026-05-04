@@ -12,11 +12,14 @@ interface Product {
   fullDesc: string;
   price: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
-  instructorId: string;
-  instructorName: string;
-  instructorTitle?: string;
-  instructorBio?: string;
-  instructorImage?: string;
+  teacherId?: string;
+  teacherName?: string;
+  teacherTitle?: string;
+  teacherBio?: string;
+  teacherImage?: string;
+  // For backward compatibility with old courses
+  instructorId?: string;
+  instructorName?: string;
   sections: Array<{
     title: string;
     lessons: Array<{

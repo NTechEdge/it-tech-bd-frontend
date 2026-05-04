@@ -39,10 +39,27 @@ class HttpClient {
       });
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({
+        const errorData = await response.json().catch(() => ({
           message: 'An error occurred',
         }));
-        throw new Error(error.message || `HTTP ${response.status}: ${response.statusText}`);
+
+        // Handle validation errors
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          const validationErrorMessages = errorData.errors
+            .map((e: any) => e.msg || e.message)
+            .filter(Boolean)
+            .join(', ');
+
+          const error: any = new Error(validationErrorMessages || `Validation failed`);
+          error.response = { data: errorData };
+          throw error;
+        }
+
+        // Handle other errors
+        const errorMessage = errorData.message || errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+        const error: any = new Error(errorMessage);
+        error.response = { data: errorData };
+        throw error;
       }
 
       return response.json();

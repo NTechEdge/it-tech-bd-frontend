@@ -149,7 +149,7 @@ export default function CoursePage() {
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" className="text-blue-400">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
-                    {course.instructorName}
+                    {course.teacherName || course.instructorName}
                   </span>
                   <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs font-medium">
                     {course.level}
@@ -332,7 +332,7 @@ export default function CoursePage() {
                     <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" className="text-[#0099ff] shrink-0">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
-                    <span>{course.instructorName}</span>
+                    <span>{course.teacherName || course.instructorName}</span>
                   </div>
                 </div>
               </div>

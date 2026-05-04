@@ -145,7 +145,7 @@ export default function MyCoursesPage() {
 
                     <div className="p-5">
                       <h3 className="font-bold text-gray-900 text-lg mb-1 line-clamp-2">{ec.course.title}</h3>
-                      <p className="text-xs text-gray-500 mb-3">{ec.course.instructorName}</p>
+                      <p className="text-xs text-gray-500 mb-3">{ec.course.teacherName || ec.course.instructorName}</p>
 
                       <div className="mb-4">
                         <div className="flex items-center justify-between text-xs text-gray-600 mb-1">

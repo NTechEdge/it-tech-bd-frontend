@@ -8,7 +8,8 @@ interface Course {
   title: string;
   shortDesc?: string;
   thumbnailUrl?: string;
-  instructorName?: string;
+  teacherName?: string;
+  instructorName?: string; // For backward compatibility
   price: number;
   level?: string;
   rating?: number;

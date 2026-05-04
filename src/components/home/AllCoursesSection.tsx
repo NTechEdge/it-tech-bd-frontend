@@ -8,7 +8,8 @@ interface Course {
   title: string;
   shortDesc?: string;
   thumbnailUrl?: string;
-  instructorName?: string;
+  teacherName?: string;
+  instructorName?: string; // For backward compatibility
   price: number;
   level?: string;
   rating?: number;
@@ -172,14 +173,18 @@ export default function AllCoursesSection({ courses }: AllCoursesSectionProps) {
                 {course.title}
               </h3>
 
-              {/* Instructor - always reserve space for alignment */}
+              {/* Teacher - always reserve space for alignment */}
               <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 h-5 sm:h-6">
-                {course.instructorName ? (
+                {(course.teacherName || course.instructorName) ? (
                   <>
                     <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-linear-to-br from-[#003399] to-[#00d4ff] flex items-center justify-center shrink-0">
-                      <span className="text-white text-[10px] sm:text-xs font-semibold">{course.instructorName[0]}</span>
+                      <span className="text-white text-[10px] sm:text-xs font-semibold">
+                        {(course.teacherName || course.instructorName || '')[0]}
+                      </span>
                     </div>
-                    <span className="text-[10px] sm:text-xs text-gray-600 truncate">{course.instructorName}</span>
+                    <span className="text-[10px] sm:text-xs text-gray-600 truncate">
+                      {course.teacherName || course.instructorName}
+                    </span>
                   </>
                 ) : null}
               </div>

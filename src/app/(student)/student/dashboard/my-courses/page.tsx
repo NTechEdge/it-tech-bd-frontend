@@ -157,7 +157,7 @@ export default function MyCoursesPage() {
                           <span className="shrink-0 px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] font-semibold rounded-md">Active</span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-400 mb-2 truncate">{ec.course.instructorName}</p>
+                      <p className="text-xs text-gray-400 mb-2 truncate">{ec.course.teacherName || ec.course.instructorName}</p>
 
                       {isBanned ? (
                         <div className="text-xs text-red-600">
@@ -248,7 +248,7 @@ export default function MyCoursesPage() {
                     <h3 className={`font-bold mb-1 line-clamp-2 transition-colors ${isBanned ? 'text-gray-500' : 'text-gray-900 group-hover:text-[#0099ff]'}`}>
                       {ec.course.title}
                     </h3>
-                    <p className="text-xs text-gray-500 mb-3">{ec.course.instructorName}</p>
+                    <p className="text-xs text-gray-500 mb-3">{ec.course.teacherName || ec.course.instructorName}</p>
 
                     {isBanned ? (
                       <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-700">

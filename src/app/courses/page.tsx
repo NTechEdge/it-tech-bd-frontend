@@ -23,7 +23,7 @@ export default function CoursesPage() {
 
   const filtered = products.filter((p) =>
     p.title.toLowerCase().includes(search.toLowerCase()) ||
-    (p.instructorName || "").toLowerCase().includes(search.toLowerCase())
+    (p.teacherName || p.instructorName || "").toLowerCase().includes(search.toLowerCase())
   );
 
   useEffect(() => {
@@ -170,7 +170,7 @@ export default function CoursesPage() {
                             {product.title}
                           </h3>
                         </div>
-                        <p className="text-xs text-gray-400 truncate mb-1.5">{product.instructorName}</p>
+                        <p className="text-xs text-gray-400 truncate mb-1.5">{product.teacherName || product.instructorName}</p>
                         <div className="flex items-center gap-1.5 flex-wrap mb-2">
                           {product.level && (
                             <span className="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded font-medium">
@@ -245,7 +245,7 @@ export default function CoursesPage() {
                           <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" className="text-[#0099ff]">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                           </svg>
-                          {product.instructorName}
+                          {product.teacherName || product.instructorName}
                         </div>
                         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                           <span className="text-xs text-gray-500">{product.category}</span>

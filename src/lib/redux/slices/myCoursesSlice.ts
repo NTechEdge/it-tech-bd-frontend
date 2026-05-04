@@ -31,7 +31,8 @@ export interface EnrolledCourse {
     fullDesc: string;
     price: number;
     level: 'Beginner' | 'Intermediate' | 'Advanced';
-    instructorName: string;
+    teacherName?: string;
+    instructorName?: string; // For backward compatibility
     sections: Array<{
       title: string;
       lessons: Array<{
@@ -113,7 +114,7 @@ const getCourse = (value: unknown): EnrolledCourse['course'] | null => {
     fullDesc: getString(value.fullDesc),
     price: getNumber(value.price),
     level: getLevel(value.level),
-    instructorName: getString(value.instructorName, 'Instructor'),
+    teacherName: getString(value.teacherName || value.instructorName, 'Teacher'),
     sections: sections as EnrolledCourse['course']['sections'],
     isActive: typeof value.isActive === 'boolean' ? value.isActive : true,
     createdAt: getString(value.createdAt),

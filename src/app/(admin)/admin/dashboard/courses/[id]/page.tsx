@@ -17,7 +17,8 @@ const initialFormData: FormData = {
   fullDesc: '',
   price: 0,
   level: 'Beginner',
-  instructorId: '',
+  teacherId: '',
+  isInstructorAdmin: false,
   sections: [],
   isActive: true,
 };
@@ -29,8 +30,8 @@ export default function CourseFormPage() {
   const isEditing = courseId !== 'new';
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [admins, setAdmins] = useState<Array<{ _id: string; name: string }>>([]);
   const [teachers, setTeachers] = useState<TeacherForDropdown[]>([]);
+  const [admins, setAdmins] = useState<Array<{ _id: string; name: string; email: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -45,48 +46,67 @@ export default function CourseFormPage() {
       setLoading(true);
 
       // Load admin instructors
-      const instructorsResponse = await adminService.getInstructors();
-      if (instructorsResponse.success) {
-        setAdmins(instructorsResponse.data.admins);
-        // Auto-select first admin if creating new course and no teachers yet
-        if (!isEditing && instructorsResponse.data.admins.length > 0 && !formData.instructorId) {
-          setFormData((prev) => ({ ...prev, instructorId: instructorsResponse.data.admins[0]._id }));
-          console.log('Auto-selected admin instructor:', instructorsResponse.data.admins[0]._id);
-        }
+      const adminsResponse = await adminService.getInstructors();
+      console.log('Admins response:', adminsResponse);
+      if (adminsResponse.success) {
+        setAdmins(adminsResponse.data.admins);
+        console.log(`Found ${adminsResponse.data.admins.length} admins`);
       } else {
-        console.error('Failed to load admins:', instructorsResponse);
+        console.error('Failed to load admins:', adminsResponse);
       }
 
       // Load available teachers
       const teachersResponse = await teacherService.getAvailableTeachers();
       console.log('Teachers response:', teachersResponse);
+      console.log('Teachers data:', teachersResponse.data);
       if (teachersResponse.success) {
+        console.log(`Found ${teachersResponse.data.teachers.length} teachers`);
         setTeachers(teachersResponse.data.teachers);
-        // Auto-select first teacher if creating new course and teachers exist
-        if (!isEditing && teachersResponse.data.teachers.length > 0) {
-          const firstTeacherId = teachersResponse.data.teachers[0].id;
-          setFormData((prev) => ({ ...prev, instructorId: firstTeacherId }));
-          console.log('Auto-selected teacher:', firstTeacherId, 'for teacher:', teachersResponse.data.teachers[0].name);
-        }
       } else {
         console.error('Failed to load teachers:', teachersResponse);
       }
 
-      // Log if no instructors available
-      if (!isEditing && !formData.instructorId) {
-        const adminCount = instructorsResponse.success ? instructorsResponse.data.admins.length : 0;
-        const teacherCount = teachersResponse.success ? teachersResponse.data.teachers.length : 0;
-        console.warn(`No instructors available. Admins: ${adminCount}, Teachers: ${teacherCount}`);
-        if (adminCount === 0 && teacherCount === 0) {
-          setError('No instructors available. Please create an admin user or teacher first before creating a course.');
-        }
-      }
-
-      // Load course data if editing
+      // Load course data if editing (after teachers and admins are loaded)
       if (isEditing) {
         const courseResponse = await adminService.getCourseById(courseId);
         if (courseResponse.success) {
           const course = courseResponse.data;
+          console.log('Loaded course data:', course);
+
+          // Handle teacherId - could be string, object, or undefined (for old courses with instructorId)
+          let teacherIdValue = '';
+          let isInstructorAdminValue = false;
+
+          if (course.teacherId) {
+            const teacherIdStr = typeof course.teacherId === 'string' ? course.teacherId : course.teacherId._id;
+            teacherIdValue = teacherIdStr;
+
+            // Check if this is a teacher or admin by looking up in our lists
+            // First, try to find in teachers list (by their userId)
+            const teacher = teachersResponse.data.teachers.find((t: any) => t.id === teacherIdStr);
+            if (teacher) {
+              isInstructorAdminValue = false;
+              // Use the teacher's _id for the dropdown
+              teacherIdValue = teacher.id;
+            } else {
+              // Check if it's an admin
+              const admin = adminsResponse.data.admins.find((a: any) => a._id === teacherIdStr);
+              if (admin) {
+                isInstructorAdminValue = true;
+              } else {
+                // Not found in either list - default to admin behavior
+                isInstructorAdminValue = true;
+              }
+            }
+          } else if ((course as any).instructorId) {
+            // Backward compatibility: old courses might have instructorId
+            const oldInstructorId = (course as any).instructorId;
+            teacherIdValue = typeof oldInstructorId === 'string' ? oldInstructorId : oldInstructorId._id;
+            isInstructorAdminValue = true;
+          }
+
+          console.log('Setting instructor:', { teacherIdValue, isInstructorAdminValue });
+
           setFormData({
             title: course.title,
             category: course.category,
@@ -95,10 +115,33 @@ export default function CourseFormPage() {
             fullDesc: course.fullDesc,
             price: course.price,
             level: course.level,
-            instructorId: typeof course.instructorId === 'string' ? course.instructorId : course.instructorId._id,
+            teacherId: teacherIdValue,
+            isInstructorAdmin: isInstructorAdminValue,
             sections: course.sections,
             isActive: course.isActive,
           });
+        }
+      } else {
+        // Auto-select first available instructor if creating new course
+        if (adminsResponse.data.admins.length > 0) {
+          const firstAdminId = adminsResponse.data.admins[0]._id;
+          console.log('Auto-selecting first admin:', firstAdminId);
+          setFormData((prev) => ({ ...prev, teacherId: firstAdminId, isInstructorAdmin: true }));
+        } else if (teachersResponse.data.teachers.length > 0) {
+          const firstTeacherId = teachersResponse.data.teachers[0].id;
+          console.log('Auto-selecting first teacher:', firstTeacherId);
+          setFormData((prev) => ({ ...prev, teacherId: firstTeacherId, isInstructorAdmin: false }));
+        }
+      }
+
+      // Log if no instructors available
+      if (!isEditing && !formData.teacherId) {
+        const adminCount = adminsResponse.success ? adminsResponse.data.admins.length : 0;
+        const teacherCount = teachersResponse.success ? teachersResponse.data.teachers.length : 0;
+        const totalInstructors = adminCount + teacherCount;
+        console.warn(`No instructors selected. Admins: ${adminCount}, Teachers: ${teacherCount}`);
+        if (totalInstructors === 0) {
+          setError('No instructors available. Please create an admin user or teacher first before creating a course.');
         }
       }
     } catch (err) {
@@ -195,8 +238,21 @@ export default function CourseFormPage() {
       setError('Full Description is required');
       return;
     }
-    if (!formData.instructorId?.trim()) {
+
+    // Check teacherId specifically
+    if (!formData.teacherId) {
+      console.error('Instructor ID is missing or empty. Current value:', formData.teacherId);
+      console.error('Available admins:', admins);
+      console.error('Available teachers:', teachers);
       setError('Please select an instructor. If no instructors are available, please create an admin user or teacher first.');
+      return;
+    }
+
+    // Validate teacherId format (MongoDB ObjectId is 24 character hex string)
+    const teacherIdRegex = /^[0-9a-fA-F]{24}$/;
+    if (!teacherIdRegex.test(formData.teacherId)) {
+      console.error('Invalid instructorId format:', formData.teacherId);
+      setError('Invalid instructor ID format. Please re-select an instructor from the dropdown.');
       return;
     }
 
@@ -230,13 +286,16 @@ export default function CourseFormPage() {
         fullDesc: formData.fullDesc,
         price: formData.price,
         level: formData.level,
-        instructorId: formData.instructorId,
+        teacherId: formData.teacherId,
+        isInstructorAdmin: formData.isInstructorAdmin,
         sections: formData.sections,
         isActive: formData.isActive,
       };
 
-      console.log('Submitting course data with instructorId:', formData.instructorId);
-      console.log('Full submit data:', submitData);
+      console.log('Submitting course data...');
+      console.log('teacherId:', formData.teacherId, 'Type:', typeof formData.teacherId);
+      console.log('isInstructorAdmin:', formData.isInstructorAdmin);
+      console.log('Full submit data:', JSON.stringify(submitData, null, 2));
 
       if (isEditing) {
         await adminService.updateCourse(courseId, submitData);
@@ -246,16 +305,24 @@ export default function CourseFormPage() {
       }
 
       router.push('/admin/dashboard/courses');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Course submission error:', err);
 
-      // Provide more helpful error messages
+      // Handle validation errors from backend
+      if (err.response?.data?.errors) {
+        const validationErrors = err.response.data.errors;
+        const errorMessages = validationErrors.map((e: any) => e.msg || e.message).join(', ');
+        setError(`Validation error: ${errorMessages}`);
+        return;
+      }
+
+      // Handle other errors
       let errorMessage = `Failed to ${isEditing ? 'update' : 'create'} course`;
 
       if (err instanceof Error) {
         const errorLower = err.message.toLowerCase();
 
-        if (errorLower.includes('instructor')) {
+        if (errorLower.includes('teacher') || errorLower.includes('instructor')) {
           errorMessage = 'Instructor error: The selected instructor may not be valid. Please try selecting a different instructor or contact support.';
         } else if (errorLower.includes('validation') || errorLower.includes('required')) {
           errorMessage = `Validation error: ${err.message}`;
@@ -409,13 +476,27 @@ export default function CourseFormPage() {
               </label>
               <select
                 required
-                value={formData.instructorId}
-                onChange={(e) => setFormData({ ...formData, instructorId: e.target.value })}
+                value={formData.teacherId}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const isAdmin = admins.some(a => a._id === selectedId);
+                  setFormData({ ...formData, teacherId: selectedId, isInstructorAdmin: isAdmin });
+                }}
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] bg-white text-gray-900 ${
                   admins.length === 0 && teachers.length === 0 ? 'border-red-300 bg-red-50' : 'border-gray-300'
                 }`}
+                disabled={admins.length === 0 && teachers.length === 0}
               >
                 <option value="">Select an instructor</option>
+                {admins.length > 0 && (
+                  <optgroup label="Administrators">
+                    {admins.map((admin) => (
+                      <option key={admin._id} value={admin._id}>
+                        {admin.name} (Admin)
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
                 {teachers.length > 0 && (
                   <optgroup label="Teachers">
                     {teachers.map((teacher) => (
@@ -425,20 +506,45 @@ export default function CourseFormPage() {
                     ))}
                   </optgroup>
                 )}
-                {admins.length > 0 && (
-                  <optgroup label="Admins">
-                    {admins.map((admin) => (
-                      <option key={admin._id} value={admin._id}>
-                        {admin.name} (Admin)
-                      </option>
-                    ))}
-                  </optgroup>
-                )}
               </select>
               {admins.length === 0 && teachers.length === 0 ? (
-                <p className="text-xs text-red-600 mt-1">⚠️ No instructors available. Please create an admin user or teacher first.</p>
+                <div className="mt-1">
+                  <p className="text-xs text-red-600 font-medium">⚠️ No instructors available</p>
+                  <p className="text-xs text-gray-600 mt-1">You need to create an admin user or teacher first before creating a course.</p>
+                  <div className="flex gap-3 mt-1">
+                    <button
+                      type="button"
+                      onClick={() => router.push('/admin/dashboard/teachers')}
+                      className="text-xs text-[#0099ff] hover:underline inline-flex items-center gap-1"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Teachers Page
+                    </button>
+                  </div>
+                </div>
               ) : (
-                <p className="text-xs text-gray-500 mt-1">Select a teacher or admin as the course instructor</p>
+                <>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.teacherId
+                      ? (() => {
+                        const admin = admins.find((a) => a._id === formData.teacherId);
+                        const teacher = teachers.find((t) => t.id === formData.teacherId);
+                        if (admin) {
+                          return `Selected: ${admin.name} (Admin)`;
+                        } else if (teacher) {
+                          return `Selected: ${teacher.name} - ${teacher.category} (Teacher)`;
+                        }
+                        return 'Selected: Unknown';
+                      })()
+                      : 'Select an administrator or teacher for this course'
+                    }
+                  </p>
+                  {!formData.teacherId && (
+                    <p className="text-xs text-amber-600 mt-0.5">⚠️ Please select an instructor before submitting</p>
+                  )}
+                </>
               )}
             </div>
 

@@ -108,7 +108,14 @@ export interface Course {
   fullDesc: string;
   price: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
-  instructorId: string | { _id: string; name: string; email: string };
+  teacherId?: string | { _id: string; name: string; email: string; image?: string; category?: string } | null;
+  teacherName: string;
+  teacherTitle?: string;
+  teacherBio?: string;
+  teacherImage?: string;
+  // For backward compatibility with old courses
+  instructorId?: string | { _id: string; name: string; email: string } | null;
+  instructorName?: string;
   sections: CourseSection[];
   isActive: boolean;
   createdAt: string;
@@ -134,7 +141,8 @@ export interface CreateCourseData {
   fullDesc: string;
   price: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
-  instructorId: string;
+  teacherId: string;
+  isInstructorAdmin?: boolean;
   sections?: CourseSection[];
   isActive?: boolean;
 }

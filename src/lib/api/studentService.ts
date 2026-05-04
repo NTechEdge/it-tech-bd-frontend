@@ -15,7 +15,14 @@ export interface Course {
   fullDesc: string;
   price: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
-  instructorId: string;
+  teacherId?: string | null;
+  teacherName: string;
+  teacherTitle?: string;
+  teacherBio?: string;
+  teacherImage?: string;
+  // For backward compatibility with old courses
+  instructorId?: string | null;
+  instructorName?: string;
   sections: CourseSection[];
   isActive: boolean;
   createdAt: string;

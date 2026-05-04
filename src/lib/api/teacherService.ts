@@ -199,7 +199,7 @@ export const teacherDashboardService = {
         shortDesc: string;
         price: number;
         level: string;
-        instructorId: string;
+        teacherId: string;
         createdAt: string;
       }>;
       count: number;
