@@ -203,27 +203,10 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                 </svg>
               </button>
 
-              {/* Left spacer for balance on large screens */}
-              <div className="hidden lg:block flex-1"></div>
+              {/* Spacer */}
+              <div className="flex-1"></div>
 
-              {/* Search Bar - responsive sizing */}
-              <div className="flex-1 min-w-0 lg:flex-none lg:w-96">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-1.5 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:border-transparent text-xs sm:text-sm bg-white text-gray-900 placeholder:text-gray-400"
-                  />
-                  <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5 absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Right spacer for balance on large screens */}
-              <div className="hidden lg:block flex-1"></div>
-
-              {/* Right actions */}
+              {/* Right side - Auth Buttons */}
               <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                 {isAuthenticated ? (
                   <>
