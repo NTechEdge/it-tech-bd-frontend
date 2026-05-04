@@ -66,6 +66,27 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
 
   // Close sidebar on route change
   useEffect(() => {
+    const setSidebarOpen: (value: boolean | ((prevState: boolean) => boolean)) => void = (value) => {
+      if (typeof value === "function") {
+        setSidebarOpen((prev) => {
+          const newValue = value(prev);
+          if (newValue) {
+            document.body.style.overflow = "hidden";
+          } else {
+            document.body.style.overflow = "";
+          }
+          return newValue;
+        });
+      } else {
+        setSidebarOpen(value);
+        if (value) {
+          document.body.style.overflow = "hidden";
+        } else {
+          document.body.style.overflow = "";
+        }
+      }
+    };
+
     setSidebarOpen(false);
   }, [pathname]);
 
