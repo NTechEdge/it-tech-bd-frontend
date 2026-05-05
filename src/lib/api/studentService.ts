@@ -71,6 +71,7 @@ export interface EnrollCourseData {
   courseId: string;
   amount: number;
   trxId: string;
+  couponCode?: string;
 }
 
 export interface UpdateProgressData {

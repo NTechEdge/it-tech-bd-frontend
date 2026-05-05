@@ -119,7 +119,7 @@ export default function TrendingCoursesSlider({ courses }: TrendingCoursesSlider
                 />
               )}
               {/* Trending Badge */}
-              <div className="absolute top-2 sm:top-3 left-2 sm:left-3 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-red-500 text-white text-[10px] sm:text-xs font-semibold rounded-md sm:rounded-lg">
+              <div className="absolute top-2 sm:top-3 right-2 sm:right-3 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white/90 backdrop-blur-sm text-red-600 text-[10px] sm:text-xs font-semibold rounded-md sm:rounded-lg shadow-sm">
                 🔥 Trending
               </div>
             </div>

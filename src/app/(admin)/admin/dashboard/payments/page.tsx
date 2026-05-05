@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { adminService, PaymentEnrollment } from '@/lib/api/adminService';
 import { AdminTableLoadingState, AdminMobileListLoadingState } from '@/components/ui/loading-states';
+import CouponDisplayBadge from '@/components/admin/CouponDisplayBadge';
 
 export default function AdminPaymentsPage() {
   const [payments, setPayments] = useState<PaymentEnrollment[]>([]);
@@ -139,7 +140,12 @@ export default function AdminPaymentsPage() {
                       <div className="text-sm text-gray-900 font-mono">{payment.trxId}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">TK{payment.amount.toLocaleString()}</div>
+                      <CouponDisplayBadge
+                        couponCode={payment.couponCode}
+                        originalAmount={payment.originalAmount}
+                        discountAmount={payment.discountAmount}
+                        finalAmount={payment.amount}
+                      />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -223,7 +229,14 @@ export default function AdminPaymentsPage() {
                 <p className="text-sm text-gray-700">{payment.courseId.title}</p>
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span className="font-mono">{payment.trxId}</span>
-                  <span className="font-semibold text-gray-900">TK{payment.amount.toLocaleString()}</span>
+                  <div className="text-right">
+                    <CouponDisplayBadge
+                      couponCode={payment.couponCode}
+                      originalAmount={payment.originalAmount}
+                      discountAmount={payment.discountAmount}
+                      finalAmount={payment.amount}
+                    />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-400">{new Date(payment.purchasedAt).toLocaleDateString()}</span>

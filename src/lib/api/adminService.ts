@@ -1,6 +1,7 @@
 import { httpClient } from '@/lib/utils/httpClient';
 import { config } from '@/lib/config/env';
 import { authService } from './authService';
+import { couponService } from './couponService';
 
 // Dashboard Stats
 export interface DashboardStats {
@@ -71,6 +72,9 @@ export interface PaymentEnrollment {
   userId: { name: string; email: string };
   courseId: { title: string; price: number };
   amount: number;
+  originalAmount?: number;
+  discountAmount?: number;
+  couponCode?: string;
   trxId: string;
   paymentStatus: 'pending' | 'approved' | 'rejected';
   purchasedAt: string;
@@ -589,5 +593,69 @@ export const adminService = {
     };
   }> {
     return httpClient.get('/admin/location/report');
+  },
+
+  // Coupons
+  async getAllCoupons(params?: {
+    page?: number;
+    limit?: number;
+    status?: 'active' | 'expired' | 'disabled';
+    scope?: 'all' | 'specific' | 'category';
+    search?: string;
+    sort?: string;
+  }) {
+    return couponService.getAllCoupons(params);
+  },
+
+  async getCouponById(id: string) {
+    return couponService.getCouponById(id);
+  },
+
+  async createCoupon(data: {
+    code: string;
+    description: string;
+    discountType: 'percentage' | 'fixed';
+    discountValue: number;
+    maxDiscountAmount?: number;
+    scope: 'all' | 'specific' | 'category';
+    applicableCourses?: string[];
+    applicableCategories?: string[];
+    minPurchaseAmount?: number;
+    usageLimit: number;
+    perUserLimit: number;
+    validFrom: string;
+    validUntil: string;
+  }) {
+    return couponService.createCoupon(data);
+  },
+
+  async updateCoupon(id: string, data: {
+    description?: string;
+    discountType?: 'percentage' | 'fixed';
+    discountValue?: number;
+    maxDiscountAmount?: number;
+    scope?: 'all' | 'specific' | 'category';
+    applicableCourses?: string[];
+    applicableCategories?: string[];
+    minPurchaseAmount?: number;
+    usageLimit?: number;
+    perUserLimit?: number;
+    validFrom?: string;
+    validUntil?: string;
+    status?: 'active' | 'expired' | 'disabled';
+  }) {
+    return couponService.updateCoupon(id, data);
+  },
+
+  async deleteCoupon(id: string) {
+    return couponService.deleteCoupon(id);
+  },
+
+  async getCouponStats() {
+    return couponService.getCouponStats();
+  },
+
+  async generateCouponCode(length?: number) {
+    return couponService.generateCouponCode(length);
   },
 };

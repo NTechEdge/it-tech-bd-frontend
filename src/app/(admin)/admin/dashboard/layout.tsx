@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import AdminLayout from '@/components/layout/AdminLayout';
 
@@ -38,12 +39,12 @@ export default function AdminDashboardLayout({
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
           <p className="text-gray-600 mb-4">You don&apos;t have permission to access this page.</p>
-          <link
+          <Link
             href="/"
             className="text-[#0099ff] hover:text-[#003399] font-medium"
           >
             Go back to home
-          </link>
+          </Link>
         </div>
       </div>
     );

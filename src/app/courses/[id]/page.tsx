@@ -5,9 +5,8 @@ import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { fetchProductById } from "@/lib/redux/slices/productsSlice";
-import { fetchMyCourses, selectIsEnrolled, upsertEnrolledCourse } from "@/lib/redux/slices/myCoursesSlice";
+import { fetchMyCourses, selectIsEnrolled } from "@/lib/redux/slices/myCoursesSlice";
 import PublicLayout from "@/components/layout/PublicLayout";
-import EnrollmentModal from "@/components/course/EnrollmentModal";
 
 export default function CoursePage() {
   const router = useRouter();
@@ -65,6 +64,17 @@ export default function CoursePage() {
     return h > 0 ? `${h}h ${m}m` : `${m}m`;
   };
 
+  const handleEnrollClick = () => {
+    // Redirect to checkout (discount will be applied automatically there)
+    const checkoutUrl = `/checkout/${courseId}`;
+
+    if (!isAuthenticated) {
+      router.push(`/login?redirect=${encodeURIComponent(checkoutUrl)}&redirectAfterLogin=true`);
+    } else {
+      router.push(checkoutUrl);
+    }
+  };
+
   if (loading) {
     return (
       <PublicLayout>
@@ -117,10 +127,7 @@ export default function CoursePage() {
           </div>
         ) : (
           <button
-            onClick={() => {
-              if (!isAuthenticated) router.push(`/login?redirect=/courses/${courseId}`);
-              else setShowEnrollModal(true);
-            }}
+            onClick={handleEnrollClick}
             className="flex-1 py-2.5 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl text-sm"
           >
             {isAuthenticated ? "Enroll Now" : "Login to Enroll"}
@@ -174,10 +181,7 @@ export default function CoursePage() {
                   </div>
                 ) : (
                   <button
-                    onClick={() => {
-                      if (!isAuthenticated) router.push(`/login?redirect=/courses/${courseId}`);
-                      else setShowEnrollModal(true);
-                    }}
+                    onClick={handleEnrollClick}
                     className="px-8 py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-lg"
                   >
                     {isAuthenticated ? `Enroll Now — Tk ${course.price.toLocaleString()}` : 'Login to Enroll'}
@@ -282,8 +286,10 @@ export default function CoursePage() {
             {/* Sidebar — hidden on mobile (sticky bottom bar handles CTA) */}
             <div className="hidden sm:block lg:col-span-1">
               <div className="lg:sticky lg:top-6 bg-white rounded-xl border border-gray-200 p-5 sm:p-6 shadow-sm space-y-4">
-                <div className="text-3xl font-bold text-gray-900">
-                  {course.price === 0 ? 'Free' : `Tk ${course.price.toLocaleString()}`}
+                <div>
+                  <div className="text-3xl font-bold text-gray-900">
+                    {course.price === 0 ? 'Free' : `Tk ${course.price.toLocaleString()}`}
+                  </div>
                 </div>
 
                 {hasAccess ? (
@@ -299,13 +305,10 @@ export default function CoursePage() {
                   </div>
                 ) : (
                   <button
-                    onClick={() => {
-                      if (!isAuthenticated) router.push(`/login?redirect=/courses/${courseId}`);
-                      else setShowEnrollModal(true);
-                    }}
+                    onClick={handleEnrollClick}
                     className="w-full py-3 bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] text-white font-semibold rounded-xl hover:hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-md"
                   >
-                    {isAuthenticated ? 'Enroll Now' : 'Login to Enroll'}
+                    {isAuthenticated ? `Enroll Now — Tk ${course.price.toLocaleString()}` : 'Login to Enroll'}
                   </button>
                 )}
 
@@ -340,28 +343,6 @@ export default function CoursePage() {
           </div>
           </div>
       </div>
-
-      {showEnrollModal && course && (
-        <EnrollmentModal
-          course={course}
-          onClose={() => setShowEnrollModal(false)}
-          onSuccess={(enrollment) => {
-            setShowEnrollModal(false);
-            dispatch(upsertEnrolledCourse({
-              enrollment: {
-                id: enrollment._id,
-                purchasedAt: enrollment.purchasedAt,
-                amount: enrollment.amount,
-                paymentStatus: enrollment.paymentStatus,
-                progress: enrollment.progress || [],
-                courseBan: enrollment.courseBan || { isBanned: false },
-              },
-              course,
-            }));
-            dispatch(fetchMyCourses());
-          }}
-        />
-      )}
     </PublicLayout>
   );
 }

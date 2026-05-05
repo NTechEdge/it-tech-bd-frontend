@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PasswordInput from '@/components/auth/PasswordInput';
 import IconInput from '@/components/auth/IconInput';
 import { EmailIcon } from '@/components/auth/AuthIcons';
@@ -13,10 +13,14 @@ import BrandName from '@/components/BrandName';
 export default function LoginPage() {
   const { login, user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const redirectParam = searchParams.get('redirect');
+  const redirectAfterLogin = searchParams.get('redirectAfterLogin') === 'true';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +32,7 @@ export default function LoginPage() {
       console.log('Login page result:', result);
 
       if (result.success) {
-        // redirect handled by useEffect below
+        // Keep loading true to allow useEffect to handle redirect
       } else {
         console.error('Login failed:', result.message);
         setError(result.message || 'Login failed');
@@ -43,7 +47,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user && loading) {
-      if (user.role === 'admin') {
+      if (redirectAfterLogin && redirectParam) {
+        router.push(decodeURIComponent(redirectParam));
+      } else if (user.role === 'admin') {
         router.push('/admin/dashboard');
       } else if (user.role === 'teacher') {
         router.push('/teacher/dashboard');
@@ -53,7 +59,7 @@ export default function LoginPage() {
         router.push('/dashboard');
       }
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, redirectParam, redirectAfterLogin]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
