@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
+import BrandName from "@/components/BrandName";
+import ProfileDropdown from "@/components/layout/ProfileDropdown";
 
 interface NavItem {
   href: string;
@@ -112,9 +114,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               <Logo width={sidebarCollapsed ? 32 : 40} height={sidebarCollapsed ? 32 : 40} className="relative rounded-lg" priority />
             </div>
             {!sidebarCollapsed && (
-              <span className="text-base font-bold text-white tracking-tight">
-                IT TECH BD
-              </span>
+              <BrandName className="text-base text-white" />
             )}
           </Link>
 
@@ -224,6 +224,14 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               </svg>
             </button>
             <div className="p-6 mt-8">
+              {/* Mobile Logo */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="relative shrink-0">
+                  <div className="absolute inset-0 bg-blue-500 rounded-lg blur-md opacity-40" />
+                  <Logo width={36} height={36} className="relative rounded-lg" priority />
+                </div>
+                <BrandName className="text-lg text-white" />
+              </div>
               <nav className="space-y-2">
                 {navItems.map((item) => {
                   const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -254,46 +262,41 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         {/* Header */}
         <header className="bg-white shadow-md sticky top-0 z-40">
           <div className="px-3 sm:px-4 lg:px-8">
-            <div className="flex items-center h-14 sm:h-16 gap-2 sm:gap-3">
+            <div className="relative flex items-center h-14 sm:h-16">
               {/* Hamburger — only on mobile/tablet */}
               <button
                 onClick={() => setMobileSidebarOpen(true)}
                 className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors shrink-0"
                 aria-label="Open sidebar"
               >
-                <svg width="20" height="20" className="sm:w-5.5 sm:h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
 
-              {/* Spacer */}
-              <div className="flex-1"></div>
+              {/* Logo — centered absolutely on mobile/tablet */}
+              <Link href="/" className="lg:hidden absolute left-28 -translate-x-1/2 flex items-center gap-2">
+                <Logo width={30} height={30} className="rounded-lg shrink-0" />
+                <BrandName className="text-sm" />
+              </Link>
 
-              {/* Right side - Auth Buttons */}
+              {/* Spacer */}
+              <div className="flex-1" />
+
+              {/* Right side */}
               <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                 {isAuthenticated ? (
                   <>
-                    {/* Dashboard */}
                     <Link
-                      href={user?.role === "admin" ? "/admin/dashboard" : "/student/dashboard"}
-                      className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors group"
+                      href={user?.role === "admin" ? "/admin/dashboard" : user?.role === "teacher" ? "/teacher/dashboard" : "/student/dashboard"}
+                      className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors text-xs sm:text-sm font-medium text-gray-700"
                     >
-                      <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-500 shrink-0">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                       </svg>
-                      <span className="hidden sm:inline text-xs sm:text-sm font-medium text-gray-700">Dashboard</span>
+                      <span className="hidden sm:inline">Dashboard</span>
                     </Link>
-
-                    {/* Logout */}
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-red-50 transition-colors group"
-                    >
-                      <svg width="16" height="16" className="sm:w-4.5 sm:h-4.5 text-gray-600 group-hover:text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                      <span className="hidden sm:inline text-xs sm:text-sm font-medium text-gray-700 group-hover:text-red-600">Logout</span>
-                    </button>
+                    <ProfileDropdown />
                   </>
                 ) : (
                   <>
@@ -305,7 +308,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                     </Link>
                     <Link
                       href="/register"
-                      className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-linear-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-md"
+                      className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-lg hover:shadow-lg hover:shadow-blue-500/40 transition-all shadow-md"
                     >
                       Sign Up
                     </Link>
@@ -327,9 +330,10 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {/* Company Info */}
               <div className="sm:col-span-2 lg:col-span-1">
-                <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                  <Logo width={150} height={40} className="rounded-lg" />
-                </div>
+                <Link href="/" className="flex items-center gap-2 mb-3 sm:mb-4 w-fit">
+                  <Logo width={40} height={40} className="rounded-lg shrink-0" />
+                  <BrandName className="text-base" />
+                </Link>
                 <p className="text-xs sm:text-sm text-gray-600">Empowering learners with quality IT courses and training programs.</p>
               </div>
 

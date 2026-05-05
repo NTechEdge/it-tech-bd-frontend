@@ -8,6 +8,7 @@ import PasswordInput from '@/components/auth/PasswordInput';
 import IconInput from '@/components/auth/IconInput';
 import { EmailIcon } from '@/components/auth/AuthIcons';
 import Logo from '@/components/Logo';
+import BrandName from '@/components/BrandName';
 
 export default function LoginPage() {
   const { login, user } = useAuth();
@@ -60,8 +61,10 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center">
           <div className="flex items-center justify-center gap-3 mb-3 sm:mb-4">
-            <Logo width={44} height={44} className="rounded-xl" />
-            <span className="text-2xl font-bold text-gray-900 tracking-tight">IT TECH BD</span>
+            <Link href="/" className="flex items-center gap-3 group">
+              <Logo width={44} height={44} className="rounded-xl" />
+              <BrandName className="text-2xl" />
+            </Link>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
           <p className="mt-2 text-sm text-gray-600">

@@ -64,7 +64,7 @@ class HttpClient {
 
       return response.json();
     } catch (error) {
-      // Re-throw with more context
+      // Re-throw with more context for network errors only
       if (error instanceof Error) {
         // Check for common network errors
         if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
@@ -76,11 +76,7 @@ class HttpClient {
           throw new Error('Unable to connect to the server. Please ensure the backend server is running.');
         }
 
-        console.error('API Request Error:', {
-          endpoint: `${this.baseUrl}${endpoint}`,
-          method: fetchOptions.method || 'GET',
-          error: error.message,
-        });
+        // Re-throw API errors without additional logging (already logged above at line 60)
         throw error;
       }
       throw new Error('An unknown error occurred');

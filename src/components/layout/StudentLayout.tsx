@@ -7,6 +7,8 @@ import { ReactNode, useState, useEffect, useRef } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
 import CollapsibleSidebar from "./CollapsibleSidebar";
 import ProfileDropdown from "./ProfileDropdown";
+import Logo from "@/components/Logo";
+import BrandName from "@/components/BrandName";
 
 interface NavItem {
   href: string;
@@ -90,7 +92,7 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
       <div className="hidden lg:block">
         <CollapsibleSidebar
           navItems={navItems}
-          logoLink="/student/dashboard"
+          logoLink="/"
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
@@ -104,10 +106,12 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
             onClick={() => setMobileSidebarOpen(false)}
             aria-hidden="true"
           />
-          <div className="relative w-72 max-w-[85vw] bg-white shadow-2xl flex flex-col h-full">
+          <div className="relative w-72 max-w-[85vw] bg-slate-900 text-white shadow-2xl flex flex-col h-full"
+            style={{ background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)" }}
+          >
             <button
               onClick={() => setMobileSidebarOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors z-10"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors z-10"
               aria-label="Close sidebar"
             >
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -115,6 +119,11 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
               </svg>
             </button>
             <div className="p-6 mt-8">
+              {/* Mobile Logo */}
+              <div className="flex items-center gap-3 mb-6">
+                <Logo width={36} height={36} className="rounded-lg shrink-0" />
+                <BrandName className="text-lg" />
+              </div>
               <nav className="space-y-2">
                 {navItems.map((item) => {
                   const isActive = pathname === item.href;
@@ -125,8 +134,8 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
                       onClick={() => setMobileSidebarOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                         isActive
-                          ? "bg-linear-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg"
-                          : "text-gray-700 hover:bg-gray-100"
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                          : "text-slate-300 hover:bg-slate-800"
                       }`}
                     >
                       {item.icon}

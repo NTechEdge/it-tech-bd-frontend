@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState, useEffect, useRef } from "react";
 import Logo from "@/components/Logo";
+import BrandName from "@/components/BrandName";
 
 interface NavItem {
   href: string;
@@ -98,9 +99,7 @@ export default function CollapsibleSidebar({
             <Logo width={effectiveCollapsed ? 32 : 40} height={effectiveCollapsed ? 32 : 40} className="relative rounded-lg" priority />
           </div>
           {!effectiveCollapsed && (
-            <span className="text-base font-bold text-white tracking-tight">
-              IT TECH BD
-            </span>
+            <BrandName className="text-base text-white" />
           )}
         </Link>
 
