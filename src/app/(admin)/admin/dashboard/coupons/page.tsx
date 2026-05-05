@@ -7,6 +7,7 @@ import CouponStatsCards from "@/components/admin/coupons/CouponStatsCards";
 import CouponTable from "@/components/admin/coupons/CouponTable";
 import CouponFormModal from "@/components/admin/coupons/CouponFormModal";
 import DeleteConfirmModal from "@/components/admin/coupons/DeleteConfirmModal";
+import TopCouponsTable from "@/components/admin/coupons/TopCouponsTable";
 
 export default function CouponsPage() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
@@ -136,6 +137,9 @@ export default function CouponsPage() {
 
       {/* Stats Cards */}
       {stats && <CouponStatsCards stats={stats} />}
+
+      {/* Top Performing Coupons */}
+      {stats && <TopCouponsTable stats={stats} />}
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">

@@ -87,6 +87,11 @@ export default function CheckoutPage() {
   }, [courseId, isAuthenticated, dispatch]);
 
   const validateAndApplyCoupon = async (code: string) => {
+    if (!courseId) {
+      setCouponMessage("Unable to validate coupon - course not found");
+      return;
+    }
+
     try {
       setValidatingCoupon(true);
       setCouponMessage("");
@@ -137,6 +142,11 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!trxId.trim()) {
       setFormError("Please enter your bKash Transaction ID");
+      return;
+    }
+
+    if (!courseId) {
+      setFormError("Invalid course ID");
       return;
     }
 

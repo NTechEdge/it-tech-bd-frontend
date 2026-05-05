@@ -5,6 +5,9 @@ interface CouponStatsCardsProps {
 }
 
 export default function CouponStatsCards({ stats }: CouponStatsCardsProps) {
+  // Calculate unique users who used coupons from top coupons data
+  const uniqueUsersCount = stats.topCoupons?.reduce((sum, coupon) => sum + (coupon.usageCount || 0), 0) || 0;
+
   const cards = [
     {
       title: "Total Coupons",
@@ -18,9 +21,9 @@ export default function CouponStatsCards({ stats }: CouponStatsCardsProps) {
       color: "blue"
     },
     {
-      title: "Total Usage",
-      value: stats.usage.totalUsage || 0,
-      change: `${(stats?.overview?.totalUsageLimit || 0) - (stats.overview.totalUsageCount || 0)} remaining`,
+      title: "Total Redemptions",
+      value: stats.usage.totalUsage || stats.overview.totalUsageCount || 0,
+      change: `${stats.overview.totalUsageCount || 0} times coupons were used`,
       icon: (
         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -29,7 +32,7 @@ export default function CouponStatsCards({ stats }: CouponStatsCardsProps) {
       color: "green"
     },
     {
-      title: "Discount Given",
+      title: "Total Discount",
       value: `TK ${(stats.usage.totalDiscountAmount || 0).toLocaleString()}`,
       change: `From TK ${(stats.usage.totalOriginalAmount || 0).toLocaleString()} sales`,
       icon: (
