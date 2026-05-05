@@ -126,7 +126,7 @@ export default function TeacherDashboardLayout({ children }: { children: ReactNo
               </div>
               <nav className="space-y-2">
                 {navItems.map((item) => {
-                  const isActive = pathname === item.href || (item.href !== "/teacher/dashboard" && pathname.startsWith(item.href));
+                  const isActive = pathname === item.href;
                   return (
                     <Link
                       key={item.href}
