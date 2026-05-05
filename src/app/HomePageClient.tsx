@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, memo } from 'react';
 import PublicLayout from '@/components/layout/PublicLayout';
 import PromotionalBanner from '@/components/home/PromotionalBanner';
 import BannerIndicators from '@/components/home/BannerIndicators';
@@ -8,7 +8,7 @@ import TrendingCoursesSlider from '@/components/home/TrendingCoursesSlider';
 import AllCoursesSection from '@/components/home/AllCoursesSection';
 import { Course } from '@/lib/api/server';
 
-// Mock banners data
+// Mock banners data - memoized to prevent recreation
 const mockBanners = [
   {
     id: '1',
@@ -40,7 +40,7 @@ interface HomePageClientProps {
   courses: Course[];
 }
 
-export default function HomePageClient({ courses }: HomePageClientProps) {
+const HomePageClient = memo(function HomePageClient({ courses }: HomePageClientProps) {
   const [mounted, setMounted] = useState(false);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
@@ -94,4 +94,6 @@ export default function HomePageClient({ courses }: HomePageClientProps) {
       </div>
     </PublicLayout>
   );
-}
+});
+
+export default HomePageClient;

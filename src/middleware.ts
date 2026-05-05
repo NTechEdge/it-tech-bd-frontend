@@ -7,6 +7,18 @@ export function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
+  // Helper to parse user from cookie
+  const getUserFromCookie = () => {
+    if (!userCookie) return null;
+    try {
+      return JSON.parse(decodeURIComponent(userCookie));
+    } catch {
+      return null;
+    }
+  };
+
+  const user = getUserFromCookie();
+
   // Public routes that don't require authentication
   const publicRoutes = ['/', '/login', '/register', '/courses', '/about', '/contact'];
   const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'));
@@ -16,134 +28,72 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // If no token, redirect to login for protected routes
+  if (!token || !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    url.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(url);
+  }
+
   // Handle /dashboard route - redirect based on role
   if (pathname === '/dashboard' || pathname === '/dashboard/') {
-    if (!token || !userCookie) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      url.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(url);
+    const url = request.nextUrl.clone();
+
+    if (user.role === 'admin') {
+      url.pathname = '/admin/dashboard';
+    } else if (user.role === 'teacher') {
+      url.pathname = '/teacher/dashboard';
+    } else if (user.role === 'student') {
+      url.pathname = '/student/dashboard';
+    } else {
+      url.pathname = '/unauthorized';
     }
 
-    try {
-      const user = JSON.parse(decodeURIComponent(userCookie));
-      const url = request.nextUrl.clone();
-
-      if (user.role === 'admin') {
-        url.pathname = '/admin/dashboard';
-      } else if (user.role === 'teacher') {
-        url.pathname = '/teacher/dashboard';
-      } else if (user.role === 'student') {
-        url.pathname = '/student/dashboard';
-      } else {
-        url.pathname = '/unauthorized';
-      }
-
-      return NextResponse.redirect(url);
-    } catch (error) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      return NextResponse.redirect(url);
-    }
+    return NextResponse.redirect(url);
   }
 
   // Check for student routes
   if (pathname.startsWith('/student')) {
-    if (!token || !userCookie) {
+    if (user.role !== 'student' && user.role !== 'admin') {
       const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      url.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(url);
-    }
-
-    try {
-      const user = JSON.parse(decodeURIComponent(userCookie));
-      if (user.role !== 'student' && user.role !== 'admin') {
-        const url = request.nextUrl.clone();
-        url.pathname = '/unauthorized';
-        return NextResponse.redirect(url);
-      }
-    } catch (error) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
+      url.pathname = '/unauthorized';
       return NextResponse.redirect(url);
     }
   }
 
   // Check for teacher routes
   if (pathname.startsWith('/teacher')) {
-    if (!token || !userCookie) {
+    if (user.role !== 'teacher' && user.role !== 'admin') {
       const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      url.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(url);
-    }
-
-    try {
-      const user = JSON.parse(decodeURIComponent(userCookie));
-      if (user.role !== 'teacher' && user.role !== 'admin') {
-        const url = request.nextUrl.clone();
-        url.pathname = '/unauthorized';
-        return NextResponse.redirect(url);
-      }
-    } catch (error) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
+      url.pathname = '/unauthorized';
       return NextResponse.redirect(url);
     }
   }
 
   // Check for admin routes
   if (pathname.startsWith('/admin')) {
-    if (!token || !userCookie) {
+    if (user.role !== 'admin') {
       const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      url.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(url);
-    }
-
-    try {
-      const user = JSON.parse(decodeURIComponent(userCookie));
-      if (user.role !== 'admin') {
-        const url = request.nextUrl.clone();
-        url.pathname = '/unauthorized';
-        return NextResponse.redirect(url);
-      }
-    } catch (error) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
+      url.pathname = '/unauthorized';
       return NextResponse.redirect(url);
     }
   }
 
   // Redirect /my-courses to /student/dashboard/my-courses for authenticated students
   if (pathname === '/my-courses' || pathname === '/my-courses/') {
-    if (!token) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      url.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(url);
+    const url = request.nextUrl.clone();
+
+    // Redirect students to their dashboard
+    if (user.role === 'student') {
+      url.pathname = '/student/dashboard/my-courses';
+    }
+    // Admins accessing /my-courses go to student view
+    else if (user.role === 'admin' || user.role === 'super_admin') {
+      url.pathname = '/student/dashboard/my-courses';
     }
 
-    try {
-      const user = userCookie ? JSON.parse(decodeURIComponent(userCookie)) : null;
-      const url = request.nextUrl.clone();
-
-      // Redirect students to their dashboard
-      if (user?.role === 'student') {
-        url.pathname = '/student/dashboard/my-courses';
-        return NextResponse.redirect(url);
-      }
-      // Admins accessing /my-courses go to student view
-      else if (user?.role === 'admin' || user?.role === 'super_admin') {
-        url.pathname = '/student/dashboard/my-courses';
-        return NextResponse.redirect(url);
-      }
-    } catch (error) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      return NextResponse.redirect(url);
-    }
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();

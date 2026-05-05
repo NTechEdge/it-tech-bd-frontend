@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { adminService } from "@/lib/api/adminService";
 import { Coupon } from "@/lib/api/couponService";
 
@@ -14,7 +14,7 @@ interface Course {
   category: string;
 }
 
-export default function CouponFormModal({ coupon, onClose, onSave }: CouponFormModalProps) {
+const CouponFormModal = memo(function CouponFormModal({ coupon, onClose, onSave }: CouponFormModalProps) {
   const isEditing = !!coupon;
   const [loading, setLoading] = useState(false);
   const [generatingCode, setGeneratingCode] = useState(false);
@@ -72,16 +72,16 @@ export default function CouponFormModal({ coupon, onClose, onSave }: CouponFormM
     }
   };
 
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     try {
       const uniqueCategories = Array.from(new Set(courses.map(c => c.category)));
       setCategories(uniqueCategories);
     } catch (error) {
       console.error("Error loading categories:", error);
     }
-  };
+  }, [courses]);
 
-  const handleGenerateCode = async () => {
+  const handleGenerateCode = useCallback(async () => {
     try {
       setGeneratingCode(true);
       const response = await adminService.generateCouponCode(8);
@@ -91,9 +91,9 @@ export default function CouponFormModal({ coupon, onClose, onSave }: CouponFormM
     } finally {
       setGeneratingCode(false);
     }
-  };
+  }, [formData]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
@@ -172,30 +172,30 @@ export default function CouponFormModal({ coupon, onClose, onSave }: CouponFormM
         status: isEditing ? formData.status : undefined
       };
       await onSave(data);
-    } catch (error: any) {
-      setErrors({ submit: error.message || "Failed to save coupon" });
+    } catch (error: unknown) {
+      setErrors({ submit: (error as Error).message || "Failed to save coupon" });
     } finally {
       setLoading(false);
     }
-  };
+  }, [formData, isEditing, onSave]);
 
-  const toggleCourse = (courseId: string) => {
+  const toggleCourse = useCallback((courseId: string) => {
     setFormData({
       ...formData,
       applicableCourses: formData.applicableCourses.includes(courseId)
         ? formData.applicableCourses.filter(id => id !== courseId)
         : [...formData.applicableCourses, courseId]
     });
-  };
+  }, [formData]);
 
-  const toggleCategory = (category: string) => {
+  const toggleCategory = useCallback((category: string) => {
     setFormData({
       ...formData,
       applicableCategories: formData.applicableCategories.includes(category)
         ? formData.applicableCategories.filter(c => c !== category)
         : [...formData.applicableCategories, category]
     });
-  };
+  }, [formData]);
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -546,4 +546,6 @@ export default function CouponFormModal({ coupon, onClose, onSave }: CouponFormM
       </div>
     </div>
   );
-}
+});
+
+export default CouponFormModal;

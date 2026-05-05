@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback, memo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
-export default function ProfileDropdown() {
+const ProfileDropdown = memo(function ProfileDropdown() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -22,11 +22,11 @@ export default function ProfileDropdown() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setOpen(false);
     logout();
     router.push("/");
-  };
+  }, [logout, router]);
 
   return (
     <div ref={ref} className="relative pl-4 border-l border-gray-200">
@@ -47,7 +47,7 @@ export default function ProfileDropdown() {
             />
           </div>
         ) : (
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0 text-sm">
+          <div className="w-9 h-9 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0 text-sm">
             {user?.name?.[0] || "U"}
           </div>
         )}
@@ -85,7 +85,7 @@ export default function ProfileDropdown() {
                   />
                 </div>
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0">
                   {user?.name?.[0] || "U"}
                 </div>
               )}
@@ -115,4 +115,6 @@ export default function ProfileDropdown() {
       )}
     </div>
   );
-}
+});
+
+export default ProfileDropdown;

@@ -32,6 +32,15 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['react-redux', '@reduxjs/toolkit'],
   },
+
+  // Production-only optimizations
+  ...(process.env.NODE_ENV === 'production' && {
+    compiler: {
+      removeConsole: {
+        exclude: ['error', 'warn'],
+      },
+    },
+  }),
 };
 
 export default nextConfig;

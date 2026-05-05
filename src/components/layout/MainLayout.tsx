@@ -4,8 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { setCredentials, clearAuth } from "@/lib/redux/slices/authSlice";
+import { useAppDispatch } from "@/lib/redux/hooks";
 import { fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
 import Sidebar from "./Sidebar";
 
@@ -187,30 +186,14 @@ export default function MainLayout({ children, variant = 'public' }: MainLayoutP
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      const nameParts = user.name?.split(' ') || ['User'];
-      dispatch(setCredentials({
-        user: {
-          _id: user.id || '',
-          email: user.email,
-          firstName: nameParts[0],
-          lastName: nameParts.slice(1).join(' ') || '',
-          name: user.name,
-          role: user.role,
-        },
-        token: localStorage.getItem('token') || ''
-      }));
-      if (variant === 'student') {
-        dispatch(fetchMyCourses());
-      }
-    } else if (!loading && !isAuthenticated) {
-      dispatch(clearAuth());
+    // Fetch courses for authenticated students
+    if (isAuthenticated && variant === 'student') {
+      dispatch(fetchMyCourses());
     }
-  }, [isAuthenticated, user, loading, dispatch, variant]);
+  }, [isAuthenticated, variant, dispatch]);
 
   const handleLogout = () => {
     authLogout();
-    dispatch(clearAuth());
     router.push("/");
   };
 

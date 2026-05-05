@@ -1,13 +1,27 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
+import React, { createContext, useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '@/lib/redux/store';
+import {
+  login as loginAction,
+  register as registerAction,
+  checkAuth,
+  refreshUser as refreshUserAction,
+  logout as logoutAction,
+  clearError,
+  selectUser,
+  selectIsAuthenticated,
+  selectAuthLoading,
+  selectAuthError,
+} from '@/lib/redux/slices/authSlice';
 import { authService, User, LoginCredentials, RegisterCredentials, ForgotPasswordData, ResetPasswordData } from '@/lib/api/authService';
 import { profileService } from '@/lib/api/profileService';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  error: string | null;
   login: (credentials: LoginCredentials) => Promise<{ success: boolean; message: string; error?: string }>;
   register: (credentials: RegisterCredentials) => Promise<{ success: boolean; message: string; error?: string }>;
   forgotPassword: (data: ForgotPasswordData) => Promise<{ success: boolean; message: string; error?: string }>;
@@ -16,58 +30,30 @@ interface AuthContextType {
   refreshUser: () => Promise<void>;
   updateInterests: (topics: string[]) => Promise<{ success: boolean; message: string; error?: string }>;
   isAuthenticated: boolean;
+  clearAuthError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch<AppDispatch>();
 
+  // Read auth state from Redux (single source of truth)
+  const user = useSelector(selectUser);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const loading = useSelector(selectAuthLoading);
+  const error = useSelector(selectAuthError);
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const token = authService.getToken();
-      const savedUser = authService.getUser();
-
-      if (token && savedUser) {
-        setUser(savedUser);
-        // Verify token is still valid
-        const profile = await authService.getProfile();
-        if (profile.success) {
-          setUser(profile.data);
-          authService.saveUser(profile.data);
-        }
-      }
-    } catch (error) {
-      authService.logout();
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Check auth on mount - Redux will handle the state
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      console.log('Attempting login with:', credentials.email);
-      const response = await authService.login(credentials);
-      console.log('Login response:', response);
-
-      if (response.success) {
-        authService.saveToken(response.data.token);
-        authService.saveUser(response.data.user);
-        setUser(response.data.user);
-        console.log('Login successful, user set:', response.data.user);
-        return { success: true, message: response.message };
-      }
-      console.log('Login failed: response.success is false');
-      return { success: false, message: response.message || 'Login failed' };
+      await dispatch(loginAction(credentials)).unwrap();
+      return { success: true, message: 'Login successful' };
     } catch (error) {
-      console.error('Login error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Login failed';
       return { success: false, message: errorMessage, error: errorMessage };
     }
@@ -75,16 +61,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (credentials: RegisterCredentials) => {
     try {
-      const response = await authService.register(credentials);
-      if (response.success) {
-        authService.saveToken(response.data.token);
-        authService.saveUser(response.data.user);
-        setUser(response.data.user);
-        return { success: true, message: response.message };
-      }
-      return { success: false, message: 'Registration failed' };
+      await dispatch(registerAction(credentials)).unwrap();
+      return { success: true, message: 'Registration successful' };
     } catch (error) {
-      return { success: false, message: error instanceof Error ? error.message : 'Registration failed', error: error instanceof Error ? error.message : 'Unknown error' };
+      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
+      return { success: false, message: errorMessage, error: errorMessage };
     }
   };
 
@@ -93,7 +74,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await authService.forgotPassword(data);
       return { success: response.success, message: response.message };
     } catch (error) {
-      return { success: false, message: error instanceof Error ? error.message : 'Failed to send OTP', error: error instanceof Error ? error.message : 'Unknown error' };
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send OTP';
+      return { success: false, message: errorMessage, error: errorMessage };
     }
   };
 
@@ -102,25 +84,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await authService.resetPassword(data);
       return { success: response.success, message: response.message };
     } catch (error) {
-      return { success: false, message: error instanceof Error ? error.message : 'Password reset failed', error: error instanceof Error ? error.message : 'Unknown error' };
+      const errorMessage = error instanceof Error ? error.message : 'Password reset failed';
+      return { success: false, message: errorMessage, error: errorMessage };
     }
   };
 
   const logout = () => {
-    authService.logout();
-    setUser(null);
-    if (typeof window !== 'undefined') {
-      window.location.href = '/';
-    }
+    dispatch(logoutAction());
   };
 
   const refreshUser = async () => {
     try {
-      const profile = await authService.getProfile();
-      if (profile.success) {
-        setUser(profile.data);
-        authService.saveUser(profile.data);
-      }
+      await dispatch(refreshUserAction()).unwrap();
     } catch (error) {
       console.error('Failed to refresh user:', error);
     }
@@ -130,18 +105,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await profileService.updateInterests({ interestedTopics: topics });
       if (response.success) {
-        // Refresh the full user profile after updating interests
-        const profile = await authService.getProfile();
-        if (profile.success) {
-          setUser(profile.data);
-          authService.saveUser(profile.data);
-        }
+        // Refresh user from server to get updated data
+        await dispatch(refreshUserAction()).unwrap();
         return { success: true, message: response.message || 'Interests updated successfully' };
       }
       return { success: false, message: 'Failed to update interests' };
     } catch (error) {
-      return { success: false, message: error instanceof Error ? error.message : 'Failed to update interests', error: error instanceof Error ? error.message : 'Unknown error' };
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update interests';
+      return { success: false, message: errorMessage, error: errorMessage };
     }
+  };
+
+  const clearAuthError = () => {
+    dispatch(clearError());
   };
 
   return (
@@ -149,6 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         user,
         loading,
+        error,
         login,
         register,
         forgotPassword,
@@ -156,7 +133,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         refreshUser,
         updateInterests,
-        isAuthenticated: !!user,
+        isAuthenticated,
+        clearAuthError,
       }}
     >
       {children}
@@ -170,4 +148,14 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+}
+
+// Direct Redux hooks for components that don't need the full AuthContext
+export function useAuthState() {
+  return {
+    user: useSelector(selectUser),
+    isAuthenticated: useSelector(selectIsAuthenticated),
+    loading: useSelector(selectAuthLoading),
+    error: useSelector(selectAuthError),
+  };
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, memo } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
 import Link from "next/link";
@@ -13,7 +13,7 @@ interface CoursesClientProps {
   initialCourses: Course[];
 }
 
-export default function CoursesClient({ initialCourses }: CoursesClientProps) {
+const CoursesClient = memo(function CoursesClient({ initialCourses }: CoursesClientProps) {
   const dispatch = useAppDispatch();
   const { enrolledCourses } = useAppSelector((state) => state.myCourses);
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -23,13 +23,21 @@ export default function CoursesClient({ initialCourses }: CoursesClientProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const enrolledCourseIds = enrolledCourses
-    .filter((ec) => ec.enrollment.paymentStatus === "approved")
-    .map((ec) => ec.course._id);
+  // Memoize enrolled course IDs to prevent recalculation
+  const enrolledCourseIds = useMemo(
+    () => enrolledCourses
+      .filter((ec) => ec.enrollment.paymentStatus === "approved")
+      .map((ec) => ec.course._id),
+    [enrolledCourses]
+  );
 
-  const filtered = courses.filter((p) =>
-    p.title.toLowerCase().includes(search.toLowerCase()) ||
-    (p.teacherName || p.instructorName || "").toLowerCase().includes(search.toLowerCase())
+  // Memoize filtered courses for better performance
+  const filtered = useMemo(
+    () => courses.filter((p) =>
+      p.title.toLowerCase().includes(search.toLowerCase()) ||
+      (p.teacherName || p.instructorName || "").toLowerCase().includes(search.toLowerCase())
+    ),
+    [courses, search]
   );
 
   useEffect(() => {
@@ -295,4 +303,6 @@ export default function CoursesClient({ initialCourses }: CoursesClientProps) {
       </div>
     </PublicLayout>
   );
-}
+});
+
+export default CoursesClient;

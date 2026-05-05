@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
@@ -14,7 +14,7 @@ interface CourseClientProps {
   courseId: string;
 }
 
-export default function CourseClient({ course, courseId }: CourseClientProps) {
+const CourseClient = memo(function CourseClient({ course, courseId }: CourseClientProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user, isAuthenticated } = useAuth();
@@ -29,12 +29,18 @@ export default function CourseClient({ course, courseId }: CourseClientProps) {
 
   const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0]));
 
-  // Check if there's a pending enrollment
-  const pendingEnrollment = enrolledCourses.find(
-    (ec) => ec.course._id === courseId && ec.enrollment.paymentStatus === 'pending'
+  // Check if there's a pending enrollment - memoized
+  const pendingEnrollment = useMemo(
+    () => enrolledCourses.find(
+      (ec) => ec.course._id === courseId && ec.enrollment.paymentStatus === 'pending'
+    ),
+    [enrolledCourses, courseId]
   );
 
-  const hasAccess = user?.role === 'admin' || isEnrolled;
+  const hasAccess = useMemo(
+    () => user?.role === 'admin' || isEnrolled,
+    [user?.role, isEnrolled]
+  );
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -42,25 +48,27 @@ export default function CourseClient({ course, courseId }: CourseClientProps) {
     }
   }, [courseId, isAuthenticated, dispatch]);
 
-  const toggleSection = (index: number) => {
+  const toggleSection = useCallback((index: number) => {
     setExpandedSections((prev) => {
       const next = new Set(prev);
       if (next.has(index)) next.delete(index);
       else next.add(index);
       return next;
     });
-  };
+  }, []);
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = useCallback((seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;
-  };
+  }, []);
 
-  const getTotalLessons = () =>
-    course?.sections?.reduce((acc, s) => acc + s.lessons.length, 0) || 0;
+  const getTotalLessons = useCallback(() =>
+    course?.sections?.reduce((acc, s) => acc + s.lessons.length, 0) || 0,
+    [course]
+  );
 
-  const getTotalDuration = () => {
+  const getTotalDuration = useCallback(() => {
     const total = course?.sections?.reduce(
       (acc, s) => acc + s.lessons.reduce((a, l) => a + (l.durationSeconds || 0), 0),
       0
@@ -68,9 +76,9 @@ export default function CourseClient({ course, courseId }: CourseClientProps) {
     const h = Math.floor(total / 3600);
     const m = Math.floor((total % 3600) / 60);
     return h > 0 ? `${h}h ${m}m` : `${m}m`;
-  };
+  }, [course]);
 
-  const handleEnrollClick = () => {
+  const handleEnrollClick = useCallback(() => {
     const checkoutUrl = `/checkout/${courseId}`;
 
     if (!isAuthenticated) {
@@ -78,7 +86,7 @@ export default function CourseClient({ course, courseId }: CourseClientProps) {
     } else {
       router.push(checkoutUrl);
     }
-  };
+  }, [courseId, isAuthenticated, router]);
 
   return (
     <PublicLayout>
@@ -321,4 +329,6 @@ export default function CourseClient({ course, courseId }: CourseClientProps) {
       </div>
     </PublicLayout>
   );
-}
+});
+
+export default CourseClient;

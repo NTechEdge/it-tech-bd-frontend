@@ -1,23 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, memo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { fetchMyCourses } from "@/lib/redux/slices/myCoursesSlice";
 
-export default function CoursesList() {
+const CoursesList = memo(function CoursesList() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { enrolledCourses, loading, error } = useAppSelector((state) => state.myCourses);
 
-  // Only approved enrollments
-  const approvedCourses = enrolledCourses.filter(
-    (ec) => ec.enrollment.paymentStatus === 'approved'
+  // Only approved enrollments - memoized to prevent recalculation
+  const approvedCourses = useMemo(
+    () => enrolledCourses.filter((ec) => ec.enrollment.paymentStatus === 'approved'),
+    [enrolledCourses]
   );
 
-  const pendingCourses = enrolledCourses.filter(
-    (ec) => ec.enrollment.paymentStatus === 'pending'
+  const pendingCourses = useMemo(
+    () => enrolledCourses.filter((ec) => ec.enrollment.paymentStatus === 'pending'),
+    [enrolledCourses]
   );
 
   useEffect(() => {
@@ -284,4 +286,6 @@ export default function CoursesList() {
       )}
     </div>
   );
-}
+});
+
+export default CoursesList;
