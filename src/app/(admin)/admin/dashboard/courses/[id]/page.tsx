@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Image from 'next/image';
 import { adminService, Course, CreateCourseData, CourseSection, CourseLesson } from '@/lib/api/adminService';
 import { teacherService, TeacherForDropdown } from '@/lib/api/teacherService';
 
@@ -578,7 +579,15 @@ export default function CourseFormPage() {
           <div className="space-y-4">
             {formData.thumbnailUrl && (
               <div className="flex items-center gap-4">
-                <img src={formData.thumbnailUrl} alt="Thumbnail" className="h-32 w-56 object-cover rounded" />
+                <div className="relative h-32 w-56 shrink-0">
+                  <Image
+                    src={formData.thumbnailUrl}
+                    alt="Thumbnail"
+                    fill
+                    className="object-cover rounded"
+                    sizes="224px"
+                  />
+                </div>
                 <div>
                   <p className="text-sm text-gray-600">Current thumbnail</p>
                 </div>

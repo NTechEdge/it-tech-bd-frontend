@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { teacherDashboardService } from '@/lib/api/teacherService';
 
 export default function TeacherMyCoursesPage() {
@@ -69,7 +70,15 @@ export default function TeacherMyCoursesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map((course) => (
             <div key={course._id} className="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
-              <img src={course.thumbnailUrl} alt={course.title} className="w-full h-48 object-cover" />
+              <div className="relative w-full h-48">
+                <Image
+                  src={course.thumbnailUrl}
+                  alt={course.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+              </div>
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">

@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { fetchMyCourses } from '@/lib/redux/slices/myCoursesSlice';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect } from 'react';
 import { DashboardCardLoadingState, StatsCardLoadingState } from '@/components/ui/loading-states';
 
@@ -99,7 +100,15 @@ export default function StudentDashboardPage() {
                 <div key={ec.enrollment.id} className="flex items-center gap-4 px-6 py-4">
                   <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0">
                     {ec.course.thumbnailUrl ? (
-                      <img src={ec.course.thumbnailUrl} alt={ec.course.title} className="w-full h-full object-cover" />
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={ec.course.thumbnailUrl}
+                          alt={ec.course.title}
+                          fill
+                          className="object-cover"
+                          sizes="48px"
+                        />
+                      </div>
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center">
                         <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>

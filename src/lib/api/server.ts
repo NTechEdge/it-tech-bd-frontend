@@ -54,11 +54,11 @@ class ApiError extends Error {
 }
 
 /**
- * Fetch data from API with proper error handling
+ * Fetch data from API with proper error handling and caching
  */
 async function fetchFromAPI<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: RequestInit & { next?: { revalidate?: number; tags?: string[] } }
 ): Promise<T> {
   const url = `${API_URL}${endpoint}`;
 
@@ -69,9 +69,10 @@ async function fetchFromAPI<T>(
         'Content-Type': 'application/json',
         ...options?.headers,
       },
-      // Add cache control for server-side fetching
+      // Add cache control for server-side fetching with tag-based revalidation
       next: {
         revalidate: 60, // Default revalidate time
+        tags: [],
         ...options?.next,
       },
     });
@@ -95,7 +96,7 @@ async function fetchFromAPI<T>(
 }
 
 /**
- * Fetch all courses with optional filters
+ * Fetch all courses with optional filters and tag-based revalidation
  */
 export async function getCourses(params?: {
   page?: number;
@@ -116,14 +117,22 @@ export async function getCourses(params?: {
   const queryString = queryParams.toString();
   const endpoint = `/courses${queryString ? `?${queryString}` : ''}`;
 
-  return fetchFromAPI<PaginatedResponse<Course>>(endpoint);
+  return fetchFromAPI<PaginatedResponse<Course>>(endpoint, {
+    next: {
+      tags: ['courses'],
+    },
+  });
 }
 
 /**
- * Fetch a single course by ID
+ * Fetch a single course by ID with tag-based revalidation
  */
 export async function getCourseById(id: string): Promise<Course> {
-  const response = await fetchFromAPI<{ data: Course }>(`/courses/${id}`);
+  const response = await fetchFromAPI<{ data: Course }>(`/courses/${id}`, {
+    next: {
+      tags: [`course-${id}`, 'courses'],
+    },
+  });
   return response.data || response;
 }
 

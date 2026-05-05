@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { adminService, Course } from '@/lib/api/adminService';
 import { AdminTableLoadingState, AdminMobileListLoadingState } from '@/components/ui/loading-states';
 
@@ -183,7 +184,15 @@ export default function AdminCoursesPage() {
                   <tr key={course._id}>
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        <img src={course.thumbnailUrl} alt={course.title} className="h-12 w-12 rounded object-cover mr-4 shrink-0" />
+                        <div className="relative h-12 w-12 mr-4 shrink-0">
+                          <Image
+                            src={course.thumbnailUrl}
+                            alt={course.title}
+                            fill
+                            className="rounded object-cover"
+                            sizes="48px"
+                          />
+                        </div>
                         <div>
                           <div className="text-sm font-medium text-gray-900">{course.title}</div>
                           <div className="text-sm text-gray-500 truncate max-w-xs">{course.shortDesc}</div>
@@ -249,7 +258,15 @@ export default function AdminCoursesPage() {
             courses.map((course) => (
               <div key={course._id} className="p-4 space-y-2">
                 <div className="flex items-start gap-3">
-                  <img src={course.thumbnailUrl} alt={course.title} className="h-14 w-14 rounded object-cover shrink-0" />
+                  <div className="relative h-14 w-14 shrink-0">
+                    <Image
+                      src={course.thumbnailUrl}
+                      alt={course.title}
+                      fill
+                      className="rounded object-cover"
+                      sizes="56px"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 line-clamp-2">{course.title}</p>
                     <p className="text-xs text-gray-500 mt-0.5">{course.category} · {course.level}</p>

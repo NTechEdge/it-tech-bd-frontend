@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import CourseClient from './CourseClient';
-import { getCourseById } from '@/lib/api/server';
+import { getCourseById, getCourses } from '@/lib/api/server';
+import type { Course } from '@/lib/api/server';
 
 // ISR Configuration - Revalidate every hour
 export const revalidate = 3600;
@@ -48,11 +49,21 @@ export async function generateMetadata(
   }
 }
 
-// Generate static params for static generation
+// Generate static params for static generation at build time
 export async function generateStaticParams() {
-  // This will be called at build time to generate static pages
-  // For now, we'll return empty array and rely on ISR
-  return [];
+  try {
+    const response = await getCourses({ limit: 100 });
+    const courses = Array.isArray(response.data)
+      ? response.data
+      : response.data?.courses || [];
+
+    return courses.map((course: Course) => ({
+      id: course._id,
+    }));
+  } catch {
+    // Fallback to empty array if fetch fails
+    return [];
+  }
 }
 
 export default async function CoursePage({

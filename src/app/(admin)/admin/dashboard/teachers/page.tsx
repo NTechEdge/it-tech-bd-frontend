@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { teacherService, Teacher, CreateTeacherWithImageData } from '@/lib/api/teacherService';
 
 export default function AdminTeachersPage() {
@@ -242,11 +243,15 @@ export default function AdminTeachersPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         {teacher.image ? (
-                          <img
-                            src={teacher.image}
-                            alt={teacher.name}
-                            className="w-12 h-12 rounded-full object-cover mr-4 shrink-0"
-                          />
+                          <div className="relative w-12 h-12 mr-4 shrink-0">
+                            <Image
+                              src={teacher.image}
+                              alt={teacher.name}
+                              fill
+                              className="rounded-full object-cover"
+                              sizes="48px"
+                            />
+                          </div>
                         ) : (
                           <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold mr-4 shrink-0">
                             {teacher.name[0]}
@@ -312,11 +317,15 @@ export default function AdminTeachersPage() {
               <div key={teacher._id} className="p-4 space-y-3">
                 <div className="flex items-start gap-3">
                   {teacher.image ? (
-                    <img
-                      src={teacher.image}
-                      alt={teacher.name}
-                      className="w-12 h-12 rounded-full object-cover shrink-0"
-                    />
+                    <div className="relative w-12 h-12 shrink-0">
+                      <Image
+                        src={teacher.image}
+                        alt={teacher.name}
+                        fill
+                        className="rounded-full object-cover"
+                        sizes="48px"
+                      />
+                    </div>
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white font-semibold shrink-0">
                       {teacher.name[0]}
@@ -434,11 +443,15 @@ export default function AdminTeachersPage() {
                 {/* Image Preview */}
                 {imagePreview && (
                   <div className="mb-3 flex items-center gap-3">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
-                    />
+                    <div className="relative w-20 h-20">
+                      <Image
+                        src={imagePreview}
+                        alt="Preview"
+                        fill
+                        className="rounded-full object-cover border-2 border-gray-200"
+                        sizes="80px"
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={clearImage}

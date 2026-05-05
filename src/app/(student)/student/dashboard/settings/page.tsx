@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 import { profileService, Address, ProfileStatus } from '@/lib/api/profileService';
 import { authService } from '@/lib/api/authService';
 import { ReactNode } from 'react';
@@ -340,11 +341,15 @@ export default function StudentSettingsPage() {
               <div className="flex items-start gap-6 pb-6 border-b border-gray-200">
                 <div className="shrink-0">
                   {imagePreview ? (
-                    <img
-                      src={imagePreview}
-                      alt="Profile"
-                      className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
-                    />
+                    <div className="relative w-24 h-24">
+                      <Image
+                        src={imagePreview}
+                        alt="Profile"
+                        fill
+                        className="rounded-full object-cover border-4 border-white shadow-lg"
+                        sizes="96px"
+                      />
+                    </div>
                   ) : (
                     <div className="w-24 h-24 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white text-3xl font-bold">
                       {user?.name?.[0] || "S"}

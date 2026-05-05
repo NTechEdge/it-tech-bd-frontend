@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { studentService } from "@/lib/api/studentService";
@@ -168,7 +169,15 @@ export default function CheckoutClient({ course, courseId }: CheckoutClientProps
                 {/* Course Summary */}
                 <div className="flex gap-4 p-4 bg-gray-50 rounded-xl mb-8">
                   {course.thumbnailUrl ? (
-                    <img src={course.thumbnailUrl} alt={course.title} className="w-24 h-24 object-cover rounded-lg" />
+                    <div className="relative w-24 h-24 shrink-0">
+                      <Image
+                        src={course.thumbnailUrl}
+                        alt={course.title}
+                        fill
+                        className="object-cover rounded-lg"
+                        sizes="96px"
+                      />
+                    </div>
                   ) : (
                     <div className="w-24 h-24 bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-lg flex items-center justify-center">
                       <svg width="32" height="32" fill="white" viewBox="0 0 24 24">

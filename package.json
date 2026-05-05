@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:verify": "next build && node scripts/verify-build.js",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify": "node scripts/verify-build.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",

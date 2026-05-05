@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 import { adminService, PlatformSettings } from '@/lib/api/adminService';
 import { authService } from '@/lib/api/authService';
 
@@ -274,11 +275,15 @@ export default function AdminSettingsPage() {
             <div className="flex items-start gap-6">
               <div className="shrink-0">
                 {imagePreview ? (
-                  <img
-                    src={imagePreview}
-                    alt="Profile"
-                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
-                  />
+                  <div className="relative w-24 h-24">
+                    <Image
+                      src={imagePreview}
+                      alt="Profile"
+                      fill
+                      className="rounded-full object-cover border-4 border-white shadow-lg"
+                      sizes="96px"
+                    />
+                  </div>
                 ) : (
                   <div className="w-24 h-24 rounded-full bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] flex items-center justify-center text-white text-3xl font-bold">
                     {user?.name?.[0] || "A"}

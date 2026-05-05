@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import HomePageClient from './HomePageClient';
 import { getCourses } from '@/lib/api/server';
 
-// Force dynamic rendering for always-fresh data
-export const dynamic = 'force-dynamic';
+// ISR Configuration - Revalidate every 5 minutes for fresh content
+export const revalidate = 300;
 
 // Generate metadata for SEO
 export async function generateMetadata(): Promise<Metadata> {

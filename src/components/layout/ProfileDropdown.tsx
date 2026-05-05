@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProfileDropdown() {
@@ -36,11 +37,15 @@ export default function ProfileDropdown() {
         aria-label="Profile menu"
       >
         {user?.image ? (
-          <img
-            src={user.image}
-            alt={user.name || "User"}
-            className="w-9 h-9 rounded-full object-cover shrink-0"
-          />
+          <div className="relative w-9 h-9 shrink-0">
+            <Image
+              src={user.image}
+              alt={user.name || "User"}
+              fill
+              className="rounded-full object-cover"
+              sizes="36px"
+            />
+          </div>
         ) : (
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0 text-sm">
             {user?.name?.[0] || "U"}
@@ -70,11 +75,15 @@ export default function ProfileDropdown() {
           <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
             <div className="flex items-center gap-3">
               {user?.image ? (
-                <img
-                  src={user.image}
-                  alt={user.name || "User"}
-                  className="w-10 h-10 rounded-full object-cover shrink-0"
-                />
+                <div className="relative w-10 h-10 shrink-0">
+                  <Image
+                    src={user.image}
+                    alt={user.name || "User"}
+                    fill
+                    className="rounded-full object-cover"
+                    sizes="40px"
+                  />
+                </div>
               ) : (
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0">
                   {user?.name?.[0] || "U"}

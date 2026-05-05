@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import { couponService, CouponValidationResult } from "@/lib/api/couponService";
 
@@ -140,7 +141,15 @@ export default function DiscountPopupModal({ course, onClose }: Props) {
           {/* Course info */}
           <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100">
             {course.thumbnailUrl ? (
-              <img src={course.thumbnailUrl} alt={course.title} className="w-16 h-16 object-cover rounded-lg" />
+              <div className="relative w-16 h-16 shrink-0">
+                <Image
+                  src={course.thumbnailUrl}
+                  alt={course.title}
+                  fill
+                  className="object-cover rounded-lg"
+                  sizes="64px"
+                />
+              </div>
             ) : (
               <div className="w-16 h-16 bg-linear-to-br from-[#003399] via-[#0099ff] to-[#00d4ff] rounded-lg flex items-center justify-center">
                 <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
