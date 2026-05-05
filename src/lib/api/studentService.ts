@@ -55,6 +55,9 @@ export interface Enrollment {
     banReason?: string;
     banExpiresAt?: string;
   };
+  couponCode?: string;
+  couponUsageId?: string;
+  discountAmount?: number;
 }
 
 export interface EnrolledCourse {

@@ -75,6 +75,7 @@ export interface PaymentEnrollment {
   originalAmount?: number;
   discountAmount?: number;
   couponCode?: string;
+  couponUsageId?: string;
   trxId: string;
   paymentStatus: 'pending' | 'approved' | 'rejected';
   purchasedAt: string;
