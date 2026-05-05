@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { adminService, DashboardStats } from '@/lib/api/adminService';
 import { AdminDashboardLoadingState } from '@/components/ui/loading-states';
 
+// Force dynamic rendering for always-fresh analytics data
+export const dynamic = 'force-dynamic';
+
 interface CourseAnalytics {
   courseId: string;
   title: string;
@@ -95,10 +98,6 @@ export default function AdminAnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    loadAnalytics();
-  }, [activeTab]);
-
   const loadAnalytics = async () => {
     try {
       setLoading(true);
@@ -132,6 +131,10 @@ export default function AdminAnalyticsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadAnalytics();
+  }, [activeTab]);
 
   if (loading) {
     return <AdminDashboardLoadingState />;

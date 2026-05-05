@@ -5,6 +5,9 @@ import { adminService, PaymentEnrollment } from '@/lib/api/adminService';
 import { AdminTableLoadingState, AdminMobileListLoadingState } from '@/components/ui/loading-states';
 import CouponDisplayBadge from '@/components/admin/CouponDisplayBadge';
 
+// Force dynamic rendering for real-time payment data
+export const dynamic = 'force-dynamic';
+
 export default function AdminPaymentsPage() {
   const [payments, setPayments] = useState<PaymentEnrollment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -14,10 +17,6 @@ export default function AdminPaymentsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [processingId, setProcessingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    loadPayments();
-  }, [currentPage, statusFilter]);
 
   const loadPayments = async () => {
     try {
@@ -41,6 +40,10 @@ export default function AdminPaymentsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadPayments();
+  }, [currentPage, statusFilter]);
 
   const handleApprove = async (id: string) => {
     try {

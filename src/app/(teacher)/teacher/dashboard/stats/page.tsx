@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import { teacherDashboardService } from '@/lib/api/teacherService';
 
+// Force dynamic rendering for real-time teacher stats
+export const dynamic = 'force-dynamic';
+
 export default function TeacherStatsPage() {
   const [stats, setStats] = useState<any[]>([]);
   const [summary, setSummary] = useState({

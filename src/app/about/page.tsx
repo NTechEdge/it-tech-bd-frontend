@@ -1,4 +1,25 @@
+import { Metadata } from 'next';
 import PublicLayout from "@/components/layout/PublicLayout";
+
+// Force static generation
+export const dynamic = 'force-static';
+
+// Generate metadata for SEO
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'About IT TECH BD | Our Mission & Values',
+    description: 'Learn about IT TECH BD\'s mission to empower learners in Bangladesh with cutting-edge IT education and practical skills.',
+    keywords: 'IT TECH BD, about, mission, values, IT education Bangladesh',
+    openGraph: {
+      title: 'About IT TECH BD',
+      description: 'Empowering learners in Bangladesh and beyond with cutting-edge IT education.',
+      type: 'website',
+    },
+    alternates: {
+      canonical: '/about',
+    },
+  };
+}
 
 export default function AboutPage() {
   return (

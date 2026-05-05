@@ -10,6 +10,9 @@ import DeleteConfirmModal from "@/components/admin/coupons/DeleteConfirmModal";
 import TopCouponsTable from "@/components/admin/coupons/TopCouponsTable";
 import { authService } from "@/lib/api/authService";
 
+// Force dynamic rendering for real-time coupon data
+export const dynamic = 'force-dynamic';
+
 export default function CouponsPage() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [stats, setStats] = useState<CouponStats | null>(null);
